@@ -19,6 +19,9 @@ const deleteAdmin = async (req, res) => {
 
   try {
     // Step 1: Get document ID from the request parameters
+    if (!id) {
+      return res.status(400).json({ message: "Admin ID is missing or null." });
+    }
 
     // Step 2: Retrieve admin data by ID
     const adminData = await getDocumentDataById("admin", id);
@@ -26,6 +29,11 @@ const deleteAdmin = async (req, res) => {
     // Create Firestore database and batch
     const db = admin.firestore();
     const batch = db.batch();
+
+    // Step 5: Delete the user associated with the admin
+    if (adminData && adminData.email) {
+      await deleteUser(id);
+    }
 
     await updateOrCreateFieldsInDocument(db, batch, "admin", id, {
       disable: true,
@@ -58,7 +66,7 @@ const deleteAdmin = async (req, res) => {
       batch
     );
 
-    if (adminData.branchId) {
+    if (adminData && adminData.branchId) {
       await popArrayElement(
         "worker",
         { id: id },
