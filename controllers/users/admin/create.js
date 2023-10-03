@@ -128,8 +128,9 @@ const createAdmin = async (req, res) => {
     await createUserDocument(uid, fields, imageUrl, "staff", db, batch);
 
     // Create "Essentials" document (using batch)
-    await createDocument(
+    await createDocumentWithCustomId(
       "Essentials",
+      uid,
       {
         name: fields.fullName,
         address: fields.fullAddress,
