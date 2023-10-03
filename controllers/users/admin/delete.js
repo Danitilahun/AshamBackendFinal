@@ -1,11 +1,10 @@
 const deleteDocument = require("../../../service/mainCRUD/deleteDoc");
 const deleteUser = require("../../../service/users/firebaseAuth/deleteUser");
-// const deleteId1FieldAndReduceTotal = require("../..service/utils/deleteId1FieldAndReduceTotal");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const popArrayElement = require("../../../service/utils/popArrayElementFromObject");
 const updateOrCreateFieldsInDocument = require("../../../service/utils/updateOrCreateFieldsInDocument");
-const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const deleteId1FieldAndReduceTotal = require("../../../service/utils/deleteId1FieldAndReduceTotal");
+const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 
 /**
  * Delete an admin document from the "admin" Firestore collection.

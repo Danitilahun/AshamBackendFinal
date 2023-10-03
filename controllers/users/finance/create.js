@@ -17,6 +17,12 @@ const createFinance = async (req, res) => {
   let uid;
   try {
     const { fields, files } = await parseForm(req);
+    if (!fields) {
+      return res.status(400).json({
+        message: "Invalid request data",
+        type: "error",
+      });
+    }
     let uuid = UUID();
     uid = await createUser(fields.email);
     await grantFinanceAccess(uid);

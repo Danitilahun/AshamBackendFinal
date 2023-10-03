@@ -29,6 +29,13 @@ const createStaff = async (req, res) => {
     // Step 1: Parse form data from the request
     const { fields, files } = await parseForm(req);
 
+    if (!fields) {
+      return res.status(400).json({
+        message: "Invalid request data",
+        type: "error",
+      });
+    }
+
     fields.salary = parseInt(fields.salary);
     console.log(fields);
     // Step 2: Generate a unique identifier (UUID)

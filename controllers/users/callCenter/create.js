@@ -20,6 +20,13 @@ const createCallCenterData = async (req, res) => {
 
     let uuid = UUID();
 
+    if (!fields) {
+      return res.status(400).json({
+        message: "Invalid request data",
+        type: "error",
+      });
+    }
+
     uid = await createUser(fields.email);
     await grantCallCenterAccess(uid);
 

@@ -24,6 +24,12 @@ const createDeliveryGuy = async (req, res) => {
     const { fields, files } = await parseForm(req);
 
     console.log(fields);
+    if (!fields) {
+      return res.status(400).json({
+        message: "Invalid request data",
+        type: "error",
+      });
+    }
     // Step 2: Generate a unique identifier (UUID)
     let uuid = UUID();
 
