@@ -1,7 +1,9 @@
 const admin = require("../../config/firebase-admin");
+const UpdateMainData = require("../../service/branches/dashBoard/dashboardNamechange");
 
 const fetchAndUpdateBranchData = require("../../service/branches/dashBoard/fetchAndUpdateBranchData");
 const fetchAndUpdateMainData = require("../../service/branches/dashBoard/fetchAndUpdateMainData");
+const UpdateBranchData = require("../../service/branches/dashBoard/nameChange");
 const updateDashboard = require("../../service/credit/dashboard/updateDashboard");
 const updateDashboardBranchInfo = require("../../service/credit/dashboard/updateDashboardBranchInfo");
 const editDocument = require("../../service/mainCRUD/editDoc");
@@ -13,8 +15,7 @@ const updateOrCreateFieldsInDocument = require("../../service/utils/updateOrCrea
 const editBranch = async (req, res) => {
   try {
     // Step 1: Get the updated data and document ID from the request body
-    // console.log("from the edit branch");
-    // console.log(req.body);
+
     const { difference, budgetChange, nameChange, ...updatedData } = req.body;
     const { id } = req.params;
 
@@ -51,7 +52,6 @@ const editBranch = async (req, res) => {
         updatedData.active
       );
 
-      console.log("the status data is", statusData);
       // Step 6: Calculate and update status data with new branch data
       const updatedStatusData = updateStatusAndTotalExpense(
         statusData,
@@ -104,8 +104,10 @@ const editBranch = async (req, res) => {
       budget: updatedData.budget,
     });
     // Commit the batch
-    await batch.commit();
 
+    await UpdateMainData(updatedData, id, difference);
+    await UpdateBranchData(id, updatedData);
+    await batch.commit();
     // Step 7: Respond with a success message
     res.status(200).json({ message: "Branch document edited successfully." });
   } catch (error) {
