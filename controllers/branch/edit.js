@@ -45,10 +45,17 @@ const editBranch = async (req, res) => {
     // Step 3: Fetch and update branch-related data
 
     if (!updatedData.active) {
-      if (nameChange && !budgetChange) {
+      if (nameChange) {
         await fetchAndUpdateBranchData(db, batch, id, updatedData);
         await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
-      } else {
+      }
+      if (budgetChange) {
+        await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
+        await editDocument(db, batch, "Budget", id, {
+          budget: updatedData.budget,
+        });
+      }
+      if (nameChange && budgetChange) {
         await fetchAndUpdateBranchData(db, batch, id, updatedData);
         await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
         await editDocument(db, batch, "Budget", id, {
