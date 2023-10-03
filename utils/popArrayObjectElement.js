@@ -1,0 +1,37 @@
+const admin = require("../config/firebase-admin");
+
+const popArrayElement = async (
+  fieldName,
+  elementToRemove,
+  id,
+  collectionName
+) => {
+  const db = admin.firestore();
+  const docRef = db.collection(collectionName).doc(id);
+  try {
+    const snapshot = await docRef.get();
+    console.log(elementToRemove);
+    if (snapshot.exists) {
+      const data = snapshot.data();
+      if (data[fieldName] && Array.isArray(data[fieldName])) {
+        const newArray = data[fieldName].filter(
+          (item) => item.id !== elementToRemove.id
+        );
+        console.log(data[fieldName]);
+        console.log(newArray);
+        await docRef.update({ [fieldName]: newArray });
+        console.log(
+          `Element with id "${elementToRemove.id}" removed from array.`
+        );
+      } else {
+        console.log(`Field "${fieldName}" is not an array.`);
+      }
+    } else {
+      console.log("Document does not exist.");
+    }
+  } catch (error) {
+    console.error("Error removing element:", error);
+  }
+};
+
+module.exports = popArrayElement;
