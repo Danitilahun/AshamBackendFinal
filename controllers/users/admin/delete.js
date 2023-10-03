@@ -31,9 +31,9 @@ const deleteAdmin = async (req, res) => {
     const batch = db.batch();
 
     // Step 5: Delete the user associated with the admin
-    // if (adminData && adminData.email) {
-    //   await deleteUser(id);
-    // }
+    if (adminData && adminData.email) {
+      await deleteUser(id);
+    }
 
     await updateOrCreateFieldsInDocument(db, batch, "admin", id, {
       disable: true,
@@ -84,8 +84,6 @@ const deleteAdmin = async (req, res) => {
       }
     }
     // Step 4: Update or create the "disable" field in the specified Firestore collection document
-
-    await deleteUser(id);
 
     await batch.commit();
     // Step 7: Respond with a success message

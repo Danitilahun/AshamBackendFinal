@@ -76,6 +76,7 @@ const createAdmin = async (req, res) => {
       name: fields.fullName,
       role: "BranchAdmin",
     });
+
     await pushToFieldArray(db, batch, "ashamStaff", "ashamStaff", "member", {
       id: uid,
       name: fields.fullName,
@@ -161,10 +162,6 @@ const createAdmin = async (req, res) => {
     res.status(500).json({
       message: error.message,
     });
-
-    if (uid) {
-      await deleteUser(uid);
-    }
   }
 };
 
