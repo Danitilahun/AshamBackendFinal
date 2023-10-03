@@ -7,7 +7,7 @@ const admin = require("../../../config/firebase-admin");
  */
 const UpdateMainData = async (data, branchId, newBudget) => {
   try {
-    if (!data || !branchId || !newBudget) {
+    if (!data || !branchId) {
       return null;
     }
     const dashboardQuerySnapshot = await admin
