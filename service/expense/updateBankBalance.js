@@ -19,13 +19,8 @@ const updateBankBalance = async (bankId, amount, db, batch) => {
       return;
     }
 
-    const currentBalance = docSnapshot.data().balance || 0; // Default to 0 if the field doesn't exist
-
-    // Calculate the new balance by adding the new amount
-    const updatedBalance = currentBalance + parseInt(amount);
-
     // Update the document with the new balance using the batch
-    batch.update(docRef, { balance: updatedBalance });
+    batch.update(docRef, { balance: parseInt(amount) });
   } catch (error) {
     // Handle any errors that occur during the operation
     console.error(error);
