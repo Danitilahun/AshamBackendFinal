@@ -62,7 +62,7 @@ const editFinanceCredit = async (req, res) => {
     }
 
     // Commit the batch to apply all the changes
-    // await batch.commit();
+    await batch.commit();
 
     // Respond with a success message
     res.status(200).json({ message: "Finance Credit edited successfully." });
