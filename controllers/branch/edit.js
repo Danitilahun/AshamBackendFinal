@@ -44,26 +44,6 @@ const editBranch = async (req, res) => {
 
     // Step 3: Fetch and update branch-related data
 
-    if (!updatedData.active) {
-      if (nameChange) {
-        await fetchAndUpdateBranchData(db, batch, id, updatedData);
-        await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
-      }
-      if (budgetChange) {
-        await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
-        await editDocument(db, batch, "Budget", id, {
-          budget: updatedData.budget,
-        });
-      }
-      if (nameChange && budgetChange) {
-        await fetchAndUpdateBranchData(db, batch, id, updatedData);
-        await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
-        await editDocument(db, batch, "Budget", id, {
-          budget: updatedData.budget,
-        });
-      }
-    }
-
     // Step 5: If the branch is active, update status data and total expense
     if (updatedData.active) {
       const statusData = await getDocumentDataById(
@@ -120,6 +100,9 @@ const editBranch = async (req, res) => {
 
     await fetchAndUpdateBranchData(db, batch, id, updatedData);
     await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
+    await editDocument(db, batch, "Budget", id, {
+      budget: updatedData.budget,
+    });
     // Commit the batch
     await batch.commit();
 
