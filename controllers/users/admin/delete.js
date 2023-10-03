@@ -16,9 +16,10 @@ const deleteId1FieldAndReduceTotal = require("../../../service/utils/deleteId1Fi
  * @throws {Error} Throws an error if the operation fails.
  */
 const deleteAdmin = async (req, res) => {
+  const { id } = req.params;
+
   try {
     // Step 1: Get document ID from the request parameters
-    const { id } = req.params;
 
     // Step 2: Retrieve admin data by ID
     const adminData = await getDocumentDataById("admin", id);
@@ -76,6 +77,8 @@ const deleteAdmin = async (req, res) => {
       }
     }
     // Step 4: Update or create the "disable" field in the specified Firestore collection document
+
+    await deleteUser(id);
 
     await batch.commit();
     // Step 7: Respond with a success message
