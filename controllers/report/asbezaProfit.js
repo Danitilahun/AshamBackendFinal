@@ -31,13 +31,21 @@ const AsbezaProfitReport = async (req, res) => {
     // Logging the received data
     console.log(data);
 
+    // Check if 'data' object or 'data.id' is null
+    if (!data || !data.id) {
+      return res
+        .status(400)
+        .json({ message: "Invalid request data", type: "error" });
+    }
+
     const Asbeza = await getDocumentDataById("Asbeza", data.id);
-    await updateDocumentStatus(db, batch, "Asbeza", data.id, "Completed");
     if (!Asbeza) {
       return res
         .status(404)
         .json({ message: "Asbeza not found", type: "info" });
     }
+    await updateDocumentStatus(db, batch, "Asbeza", data.id, "Completed");
+
     if (Asbeza.status === "Completed") {
       return res.status(404).json({
         message: "Asbeza is already completed",
@@ -46,6 +54,12 @@ const AsbezaProfitReport = async (req, res) => {
     }
 
     const companyGain = await getSingleDocFromCollection("companyGain");
+    if (!companyGain) {
+      return res.status(404).json({
+        message: "Company gain not found",
+        type: "info",
+      });
+    }
     // First update: Change the daily table
     await updateTable(
       db,
@@ -87,6 +101,14 @@ const AsbezaProfitReport = async (req, res) => {
       },
       batch
     );
+
+    // Check if 'newIncome' is null
+    if (!newIncome) {
+      return res.status(500).json({
+        message: "Failed to update income",
+        type: "error",
+      });
+    }
     console.log(newIncome);
     // Getting cardFee information from the prices collection
 
@@ -99,12 +121,14 @@ const AsbezaProfitReport = async (req, res) => {
       newIncome.total.total + companyGain.asbeza_profit
     );
 
-    // await updateDashboardAndBranchInfo(
-    //   data.branchId,
-    //   newStatus.totalExpense,
-    //   db,
-    //   batch
-    // );
+    // Check if 'newStatus' is null
+    if (!newStatus) {
+      return res.status(500).json({
+        message: "Failed to update sheet status",
+        type: "error",
+      });
+    }
+
     // Update the dashboard with the new status
     // Updating dashboard with newIncome and newSalaryExpense details
     await updateDashboard(
