@@ -7,11 +7,13 @@ const createBranch = require("../../controllers/branch/create");
 const editBranch = require("../../controllers/branch/edit");
 const deleteBranch = require("../../controllers/branch/delete");
 const ChangeSheetStatus = require("../../controllers/branch/compeleteSheet");
+const updateBranchName = require("../../controllers/branch/updateBranchName");
 
 // Define the route for creating data for an admin
 router.post("/", BranchAuth, createBranch);
 router.post("/changeSheetStatus", SheetStatusAuth, ChangeSheetStatus);
 router.put("/:id", BranchAuth, editBranch);
+router.put("/name/:id", BranchAuth, updateBranchName);
 router.delete("/:id", BranchAuth, deleteBranch);
 
 module.exports = router;

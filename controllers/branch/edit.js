@@ -105,8 +105,8 @@ const editBranch = async (req, res) => {
     });
     // Commit the batch
 
-    await UpdateMainData(updatedData, id, difference);
-    await UpdateBranchData(id, updatedData);
+    // await UpdateMainData(updatedData, id, difference);
+    // await UpdateBranchData(id, updatedData);
     await batch.commit();
     // Step 7: Respond with a success message
     res.status(200).json({ message: "Branch document edited successfully." });
