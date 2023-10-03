@@ -22,6 +22,13 @@ const HandleStaffSalaryPayment = async (req, res) => {
     const { id } = req.params;
     const updatedData = req.body;
     console.log(updatedData);
+    const branch = await getDocumentDataById("branches", updatedData.branchId);
+    if (!branch.active) {
+      return res.status(400).json({
+        message:
+          "You can't pay or unpay salary to a staff member. Since you do not have salaray table.",
+      });
+    }
     // Step 3: Edit the delivery guy document in the "deliveryguy" collection
     await editDocument(db, batch, "staff", id, updatedData);
     let salaryUpdate = {};
