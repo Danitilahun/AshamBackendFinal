@@ -1,6 +1,7 @@
 const admin = require("../../../config/firebase-admin");
 const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
 const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
+const updateBankCredit = require("../../../service/expense/updateBankCredit");
 
 /**
  * Edit a finance credit document and perform related operations.
@@ -46,6 +47,13 @@ const editFinanceCredit = async (req, res) => {
 
     if (totalCredit) {
       await updateCalculator(
+        updatedData.branchId,
+        parseFloat(totalCredit.total),
+        db,
+        batch
+      );
+
+      await updateBankCredit(
         updatedData.branchId,
         parseFloat(totalCredit.total),
         db,

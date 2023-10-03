@@ -1,6 +1,7 @@
 const admin = require("../../../config/firebase-admin");
 const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
 const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
+const updateBankCredit = require("../../../service/expense/updateBankCredit");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 
 /**
@@ -42,6 +43,12 @@ const deleteFinanceCredit = async (req, res) => {
     // Update the calculator with the new total credit within the batch
     if (updatedTotalCredit) {
       await updateCalculator(
+        credit.branchId,
+        parseFloat(updatedTotalCredit.total),
+        db,
+        batch
+      );
+      await updateBankCredit(
         credit.branchId,
         parseFloat(updatedTotalCredit.total),
         db,

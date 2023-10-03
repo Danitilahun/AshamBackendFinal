@@ -19,13 +19,8 @@ const updateBankCredit = async (bankId, amount, db, batch) => {
       return;
     }
 
-    const currentCredit = docSnapshot.data().credit || 0; // Default to 0 if the field doesn't exist
-
-    // Calculate the new credit by adding the new amount
-    const updatedCredit = currentCredit + parseInt(amount);
-
     // Update the document with the new credit using the batch
-    batch.update(docRef, { credit: updatedCredit });
+    batch.update(docRef, { credit: parseInt(amount) });
   } catch (error) {
     // Handle any errors that occur during the operation
     console.error(error);

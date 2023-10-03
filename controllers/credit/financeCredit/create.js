@@ -36,8 +36,6 @@ const createFinanceCredit = async (req, res) => {
       db,
       batch
     );
-
-    console.log();
     // Update the calculator with the new total credit within the batch
 
     if (totalCredit) {
