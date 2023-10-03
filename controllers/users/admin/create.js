@@ -162,6 +162,11 @@ const createAdmin = async (req, res) => {
     res.status(500).json({
       message: error.message,
     });
+
+    // Delete the user from Firebase Auth
+    if (uid) {
+      await deleteUser(uid);
+    }
   }
 };
 

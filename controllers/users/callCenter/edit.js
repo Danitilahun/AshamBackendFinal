@@ -21,6 +21,11 @@ const editCallCenter = async (req, res) => {
       branch: "Asham",
     });
 
+    await editDocument(db, batch, "Essentials", id, {
+      name: updatedData.fullName,
+      address: updatedData.fullAddress,
+      phone: updatedData.phone,
+    });
     // Commit the batch updates
     await batch.commit();
     res.status(200).json({ message: "Call Center updated successfully." });

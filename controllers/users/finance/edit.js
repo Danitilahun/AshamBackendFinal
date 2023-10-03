@@ -23,6 +23,12 @@ const editFinance = async (req, res) => {
       role: "Finance",
       branch: "Asham",
     });
+
+    await editDocument(db, batch, "Essentials", id, {
+      name: updatedData.fullName,
+      address: updatedData.fullAddress,
+      phone: updatedData.phone,
+    });
     // Commit the batch updates
     // console.log(man);
     await batch.commit();
