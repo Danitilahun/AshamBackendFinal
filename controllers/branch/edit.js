@@ -117,6 +117,9 @@ const editBranch = async (req, res) => {
     }
 
     // console.log(man);
+
+    await fetchAndUpdateBranchData(db, batch, id, updatedData);
+    await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
     // Commit the batch
     await batch.commit();
 
