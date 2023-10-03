@@ -31,9 +31,9 @@ const deleteAdmin = async (req, res) => {
     const batch = db.batch();
 
     // Step 5: Delete the user associated with the admin
-    if (adminData && adminData.email) {
-      await deleteUser(id);
-    }
+    // if (adminData && adminData.email) {
+    //   await deleteUser(id);
+    // }
 
     await updateOrCreateFieldsInDocument(db, batch, "admin", id, {
       disable: true,
