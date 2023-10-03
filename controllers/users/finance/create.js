@@ -10,6 +10,7 @@ const pushToFieldArray = require("../../../service/utils/pushToFieldArray");
 const createTotalCreditCollection = require("../../../service/branches/createTotalCreditCollection");
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const deleteUser = require("../../../service/users/firebaseAuth/deleteUser");
+const createDocumentWithCustomId = require("../../../service/mainCRUD/createDocumentWithCustomId");
 const createFinance = async (req, res) => {
   // Create Firestore database and batch
   const db = admin.firestore();
@@ -50,6 +51,19 @@ const createFinance = async (req, res) => {
       branch: "Asham",
     });
 
+    await createDocumentWithCustomId(
+      "Essentials",
+      uid,
+      {
+        name: fields.fullName,
+        address: fields.fullAddress,
+        phone: fields.phone,
+        company: "Asham",
+        sector: "Branch",
+      },
+      db,
+      batch
+    );
     // Commit the batch updates
     await batch.commit();
 

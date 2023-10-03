@@ -8,6 +8,7 @@ const grantCallCenterAccess = require("../../../service/users/customClaims/callC
 // Main function to create admin data
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const deleteUser = require("../../../service/users/firebaseAuth/deleteUser");
+const createDocumentWithCustomId = require("../../../service/mainCRUD/createDocumentWithCustomId");
 const createCallCenterData = async (req, res) => {
   // Create Firestore database and batch
   const db = admin.firestore();
@@ -44,6 +45,19 @@ const createCallCenterData = async (req, res) => {
       branch: "Asham",
     });
 
+    await createDocumentWithCustomId(
+      "Essentials",
+      uid,
+      {
+        name: fields.fullName,
+        address: fields.fullAddress,
+        phone: fields.phone,
+        company: "Asham",
+        sector: "Branch",
+      },
+      db,
+      batch
+    );
     // Commit the batch updates
     // console.log(man);
     await batch.commit();
