@@ -16,6 +16,7 @@ const editFinance = async (req, res) => {
       await editUserEmail(id, updatedData.email);
     }
 
+    updatedData.salary = parseInt(updatedData.salary);
     await editDocument(db, batch, "finance", id, updatedData);
     await pushToFieldArray(db, batch, "ashamStaff", "ashamStaff", "member", {
       id: id,
