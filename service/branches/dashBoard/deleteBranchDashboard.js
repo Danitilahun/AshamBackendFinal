@@ -98,7 +98,7 @@ const deleteBranchAndUpdateDashboard = async (db, batch, id, branchData) => {
       parseInt(branchData.numberofworker);
     const newTotalBudget =
       parseInt(dashboardData.totalBudget) - parseInt(branchData.budget);
-    const newTotalDeliveryGuy = parseInt(dashboardData.activeEmployees);
+    let newTotalDeliveryGuy = parseInt(dashboardData.activeEmployees);
     // const newtotalExpense =
     //   dashboardData.totalExpense - branchToMatch.BranchExpense;
     // const newtotalIncome =
@@ -125,8 +125,6 @@ const deleteBranchAndUpdateDashboard = async (db, batch, id, branchData) => {
       totalBudget: newTotalBudget,
       totalEmployees: newEmployeeCount,
       activeEmployees: newTotalDeliveryGuy,
-      // totalIncome: newtotalIncome,
-      // totalExpense: newtotalExpense,
     });
   } catch (error) {
     console.error(error);
