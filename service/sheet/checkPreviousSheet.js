@@ -13,8 +13,6 @@ const checkPreviousSheet = async (id) => {
       sheetStatus: prevSheet.sheetStatus,
     };
   }
-
   return null;
 };
-
 module.exports = checkPreviousSheet;

@@ -88,8 +88,8 @@ const HotelProfit = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        hotelProfit: parseInt(data.amount),
-        total: parseInt(data.amount),
+        hotelProfit: parseFloat(data.amount),
+        total: parseFloat(data.amount),
       },
       batch
     );
@@ -102,8 +102,8 @@ const HotelProfit = async (data, db, batch) => {
       data.date,
       "total",
       {
-        hotelProfit: parseInt(data.amount),
-        total: parseInt(data.amount),
+        hotelProfit: parseFloat(data.amount),
+        total: parseFloat(data.amount),
       },
       batch
     );
@@ -116,8 +116,8 @@ const HotelProfit = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        hotelProfit: parseInt(data.amount),
-        total: parseInt(data.amount),
+        hotelProfit: parseFloat(data.amount),
+        total: parseFloat(data.amount),
       },
       batch
     );

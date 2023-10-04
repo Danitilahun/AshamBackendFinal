@@ -2,9 +2,11 @@ const admin = require("../../../config/firebase-admin");
 const payDailySalary = require("../../../service/users/handleDeliveryGuySalaryPay/payDailySalary");
 const swapCredit = require("../../../service/users/handleDeliveryGuySalaryPay/swapCredit");
 const updateDashboardActiveDeliveryGuy = require("../../../service/users/updateDashboard/updateActiveDeliveryGuy");
+const updateOrCreateFieldsInDocument = require("../../../service/utils/updateOrCreateFieldsInDocument");
 
 const handlePayController = async (req, res) => {
   const { id, active } = req.params;
+  const data = req.body;
 
   // Create Firestore database and batch
   const db = admin.firestore();
@@ -29,12 +31,27 @@ const handlePayController = async (req, res) => {
       if (deliveryGuySnapshot.data().activeness) {
         await updateDashboardActiveDeliveryGuy(-1, db, batch);
       }
+
       batch.update(deliveryGuyRef, {
         activeness: false,
         paid: true,
         waiting: false,
       });
     }
+    if (!data.paid) {
+      await updateOrCreateFieldsInDocument(
+        db,
+        batch,
+        "branches",
+        data.branchId,
+        {
+          activeTable: "",
+          paid: true,
+          cardPaid: false,
+        }
+      );
+    }
+
     await payDailySalary(
       active,
       id,

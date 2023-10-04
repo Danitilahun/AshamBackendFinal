@@ -83,7 +83,7 @@ const createWaterOrder = async (req, res) => {
     // Get data from the request body
     const data = req.body;
 
-    const branch = await getDocumentDataById("branches", data.branchId);
+    const branch = await getDocumentDataById("branches", data.cardBranch);
     if (!branch.active || !branch.activeSheet || !branch.activeTable) {
       return res.status(400).json({
         message:

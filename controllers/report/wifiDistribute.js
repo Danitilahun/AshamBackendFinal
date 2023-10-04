@@ -85,7 +85,7 @@ const WifiDistributeReport = async (req, res) => {
       data.branchId,
       newStatus.totalExpense
     );
-    // // Updating dashboard branch information
+    // Updating dashboard branch information
     await batch.commit();
     // Responding with a success message
     res

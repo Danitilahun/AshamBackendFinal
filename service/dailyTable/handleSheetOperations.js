@@ -53,8 +53,11 @@ const handleSheetOperations = async (db, batch, sheetId, date, branchId) => {
     customId1
   );
   await ChangeSheetTableCount(db, batch, "sheets", sheetId, 1);
+
   await updateOrCreateFieldsInDocument(db, batch, "branches", branchId, {
     activeTable: customId1,
+    paid: false,
+    cardPaid: true,
   });
 };
 

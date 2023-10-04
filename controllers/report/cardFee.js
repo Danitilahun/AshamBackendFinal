@@ -70,6 +70,7 @@ const CardFeeReport = async (req, res) => {
       await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
 
       // Update dashboard branch info with the new status
+
       await updateDashboardBranchInfo(
         db,
         batch,

@@ -73,6 +73,7 @@ const handleDeliveryOperations = require("../../service/dailyTable/handleDeliver
 const handleSheetOperations = require("../../service/dailyTable/handleSheetOperations");
 const checkDocumentExistsInTable = require("../../service/utils/checkDocumentExistsInTable");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
+const updateCardCollection = require("../../service/utils/updateCardCollection");
 const generateCustomID = require("../../util/generateCustomID");
 
 /**
@@ -121,7 +122,10 @@ const createTable = async (req, res) => {
       // Step 7: Add the day to the daily 15-day summary sheet
       await addDayToDaily15DaySummerySheet(db, batch, sheetId, branchId, date);
 
-      // print(manye);
+      const branch = await getDocumentDataById("branches", branchId);
+      if (!branch.cardPaid) {
+        await updateCardCollection(db, batch, branchId);
+      }
       // Commit the batch
       await batch.commit();
     }

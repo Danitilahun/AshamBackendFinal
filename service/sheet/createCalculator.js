@@ -65,6 +65,7 @@ const createCalculator = async (
     balance: -totalCredit.total,
     totalCredit: totalCredit.total,
     active: customId1,
+    dailyCredit: 0,
     income: 0,
     bank: 0,
     sheetId: sheetId,
