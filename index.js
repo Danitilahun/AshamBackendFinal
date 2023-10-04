@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
-const admin = require("./config/firebase-admin");
 require("dotenv").config();
 
 // configration
@@ -20,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 // routes
-
 const adminRoute = require("./routes/admin");
 const branchRoute = require("./routes/branch");
 const callCenterRoute = require("./routes/callcenter");
