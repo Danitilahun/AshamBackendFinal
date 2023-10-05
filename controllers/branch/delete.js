@@ -12,12 +12,10 @@ const deleteBranch = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Branch information is missing.Please refresh your browser and try again.",
-        });
+      return res.status(400).json({
+        message:
+          "Branch information is missing.Please refresh your browser and try again.",
+      });
     }
     const branchData = await getDocumentDataById("branches", id);
     if (!branchData) {
@@ -47,7 +45,6 @@ const deleteBranch = async (req, res) => {
         }
       );
     }
-    // console.log(mane);
     // Commit the batch
     await batch.commit();
 

@@ -26,7 +26,6 @@ const editCredit = async (req, res) => {
           "Request body is missing.Please refresh your browser and try again.",
       });
     }
-    console.log(updatedData);
     const prev = await getDocumentDataById("DailyCredit", creditId);
     if (prev.source === "Report") {
       return res.status(400).json({
