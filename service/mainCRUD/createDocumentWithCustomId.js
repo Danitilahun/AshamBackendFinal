@@ -52,6 +52,11 @@ const createDocumentWithCustomId = async (
   db,
   batch
 ) => {
+  if (!customId) {
+    throw new Error(
+      "Something go wrong.Please refresh your browser and try again."
+    );
+  }
   const collection = db.collection(collectionName);
 
   try {

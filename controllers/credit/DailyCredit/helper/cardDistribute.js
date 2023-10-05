@@ -8,12 +8,12 @@ const getDocumentDataById = require("../../../../service/utils/getDocumentDataBy
 
 const CardDistribute = async (data, db, batch) => {
   try {
-    if (!data) {
-      console.error("CardDistribute: Data is missing or null.");
-      return;
-    }
-
     const companyGain = await getSingleDocFromCollection("companyGain");
+    if (!companyGain) {
+      throw new Error(
+        "Company gain information is missing.Please refresh your browser and try again."
+      );
+    }
     // First update: Change the daily table
     await updateTable(
       db,
@@ -22,7 +22,7 @@ const CardDistribute = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        cardDistribute: data.numberOfCard,
+        cardDistribute: data.numberOfCard ? data.numberOfCard : 0,
         total: data.numberOfCard * companyGain.card_distribute_gain,
       },
       batch
@@ -36,7 +36,7 @@ const CardDistribute = async (data, db, batch) => {
       data.date,
       "total",
       {
-        cardDistribute: data.numberOfCard,
+        cardDistribute: data.numberOfCard ? data.numberOfCard : 0,
         total: data.numberOfCard * companyGain.card_distribute_gain,
       },
       batch
@@ -50,13 +50,21 @@ const CardDistribute = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        cardDistribute: data.numberOfCard,
-        total: data.numberOfCard * companyGain.card_distribute_gain,
+        cardDistribute: data.numberOfCard ? data.numberOfCard : 0,
+        total:
+          data.numberOfCard * companyGain.card_distribute_gain
+            ? data.numberOfCard * companyGain.card_distribute_gain
+            : 0,
       },
       batch
     );
 
     // Fourth update: Salary of the delivery guy table
+    if (!newIncome) {
+      throw new Error(
+        "Branch summery table information is missing.Please refresh your browser and try again."
+      );
+    }
 
     const newStatus = await updateSheetStatus(
       db,
@@ -65,16 +73,23 @@ const CardDistribute = async (data, db, batch) => {
       "totalIncome",
       newIncome.total.total +
         data.numberOfCard * companyGain.card_distribute_gain
+        ? data.numberOfCard * companyGain.card_distribute_gain
+        : 0
     );
 
-    console.log(newStatus);
+    if (!newStatus) {
+      throw new Error(
+        "Branch sheet status information is missing.Please refresh your browser and try again."
+      );
+    }
     // Updating dashboard with newIncome and newSalaryExpense details
+
     await updateDashboard(
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
       data.numberOfCard * companyGain.card_distribute_gain
     );
 
@@ -83,12 +98,17 @@ const CardDistribute = async (data, db, batch) => {
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
       newIncome.total.cardDistribute + data.numberOfCard
     );
 
-    await updateCalculatorAmount(db, batch, data.active, newStatus.totalIncome);
+    await updateCalculatorAmount(
+      db,
+      batch,
+      data.active,
+      newStatus.totalIncome ? newStatus.totalIncome : 0
+    );
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in CardFee:", error);

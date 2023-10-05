@@ -67,8 +67,10 @@ const updateOrCreateFieldsInDocument = async (
   newData
 ) => {
   try {
-    if (!documentId || !collectionName || !newData || !batch || !db) {
-      return null;
+    if (!documentId) {
+      throw new Error(
+        `unable to update ${collectionName}, something is missing.Please refresh your browser and try again.`
+      );
     }
     // Get the document reference
     const documentRef = db.collection(collectionName).doc(documentId);

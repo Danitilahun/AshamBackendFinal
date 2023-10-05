@@ -54,7 +54,9 @@ const updateBankTransaction = async (
   valueToAddToTransaction
 ) => {
   if (!customId) {
-    return null;
+    throw new Error(
+      "Unable to update bank transaction for the branch because branch information is missing.Please refresh your browser and try again."
+    );
   }
 
   try {

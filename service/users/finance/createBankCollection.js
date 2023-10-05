@@ -34,7 +34,9 @@ const admin = require("../../../config/firebase-admin");
 
 const createBankCollection = async (db, batch, branchId) => {
   if (!branchId) {
-    return;
+    throw new Error(
+      "Unable to create bank because branch information is missing.Please refresh your browser and try again."
+    );
   }
   try {
     const bankCollectionRef = db.collection("Bank").doc(branchId);

@@ -11,7 +11,7 @@ const updateCalculatorValue = async (formData, docId) => {
     const calculatorSnapshot = await calculatorRef.get();
 
     if (!calculatorSnapshot.exists) {
-      return { error: "Calculator document not found." };
+      throw new Error(`Calculator does not exist.`);
     }
 
     const existingData = calculatorSnapshot.data();

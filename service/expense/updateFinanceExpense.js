@@ -8,6 +8,11 @@
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
 const updateFinanceExpense = async (branchId, amount, db, batch) => {
+  if (!branchId) {
+    throw new Error(
+      "Unable to get finance information to update.Please refresh your browser and try again."
+    );
+  }
   const docRef = db.collection("finance").doc(branchId);
 
   try {

@@ -19,6 +19,12 @@ const deletePenality = async (req, res) => {
   try {
     const penalityId = req.params.penalityId;
 
+    if (!penalityId) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Create Firestore database instance
     const db = admin.firestore();
     const batch = db.batch();

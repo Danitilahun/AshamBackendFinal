@@ -17,7 +17,7 @@ const CreateBank = async (req, res) => {
   try {
     // Extract data from the request body
     const data = req.body;
-    console.log(data);
+    // console.log(data);
 
     // Check if data is null or undefined
     if (!data) {

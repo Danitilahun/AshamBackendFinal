@@ -21,6 +21,11 @@ const BonusToIndividualStaff = async (req, res) => {
     const data = req.body;
     console.log(data);
 
+    if (!data) {
+      throw new Error(
+        "Request body is missing or empty.Please refresh your browser and try again."
+      );
+    }
     const salaryUpdate = {
       holidayBonus: parseInt(data.holidayBonus),
       total: parseInt(data.holidayBonus),

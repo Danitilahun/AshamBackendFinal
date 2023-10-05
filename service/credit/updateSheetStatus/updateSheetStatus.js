@@ -54,17 +54,13 @@
  */
 const updateSheetStatus = async (customId, expenseType, value, db, batch) => {
   try {
-    if (!db) {
-      throw new Error("Firestore database instance is required.");
+    if (!customId) {
+      throw new Error(
+        "Unable to get sheet status to update.Please refresh your browser and try again."
+      );
     }
-
     // Get the document reference from the "Status" collection
     const creditRef = db.collection("Status").doc(customId);
-
-    // Initialize batch to perform atomic updates
-    if (!batch) {
-      batch = db.batch();
-    }
 
     // Check if the document exists
     const creditDoc = await creditRef.get();

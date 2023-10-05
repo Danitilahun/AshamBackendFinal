@@ -51,7 +51,9 @@
 
 const updateBranchData = async (db, batch, data, branchId) => {
   if (!branchId) {
-    return;
+    throw new Error(
+      "Unable to update branch information in dashboard because branch information is missing.Please refresh your browser and try again."
+    );
   }
   try {
     const dashboardDocRefBranch = await db

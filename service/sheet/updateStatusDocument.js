@@ -42,7 +42,9 @@
  */
 const setStatusDocument = async (db, batch, id, updatedStatusData) => {
   if (!id) {
-    return null;
+    throw new Error(
+      "Branch sheet infromation is missing.Please refresh your browser and try again."
+    );
   }
 
   console.log(updatedStatusData);

@@ -1,35 +1,8 @@
-// // createTotalCreditCollection.js
-
-// const admin = require("../../config/firebase-admin");
-
-// /**
-//  * Create a TotalCredit collection if it doesn't exist.
-//  * @param {string} documentId - The document ID.
-//  * @returns {Promise<void>} A Promise that resolves when the operation is complete.
-//  */
-// const createTotalCreditCollection = async (documentId) => {
-//   if (!documentId) {
-//     return null;
-//   }
-//   const db = admin.firestore();
-//   const totalCreditCollectionRef = db.collection("totalCredit").doc(documentId);
-//   const totalCreditDocumentSnapshot = await totalCreditCollectionRef.get();
-
-//   if (!totalCreditDocumentSnapshot.exists) {
-//     return totalCreditCollectionRef.set({
-//       CustomerCredit: 0,
-//       StaffCredit: 0,
-//       DailyCredit: 0,
-//       total: 0,
-//     });
-//   }
-// };
-
-// module.exports = createTotalCreditCollection;
-
 const createTotalCreditCollection = async (db, batch, branchId) => {
   if (!branchId) {
-    return;
+    throw new Error(
+      "Unable to create total credit store because branch information is missing.Please refresh your browser and try again."
+    );
   }
   try {
     const totalCreditCollectionRef = db.collection("totalCredit").doc(branchId);

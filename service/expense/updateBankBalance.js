@@ -18,7 +18,6 @@ const updateBankBalance = async (bankId, amount, db, batch) => {
       console.log("Bank document does not exist.");
       return;
     }
-
     // Update the document with the new balance using the batch
     batch.update(docRef, { balance: parseInt(amount) });
   } catch (error) {

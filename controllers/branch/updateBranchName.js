@@ -13,6 +13,17 @@ const updateBranchName = async (req, res) => {
     // Get document ID and updated data from the request body
     const updatedData = req.body;
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Branch information is missing.Please refresh your browser and try again.",
+      });
+    }
+    if (!updatedData) {
+      return res
+        .status(400)
+        .json({ message: "Updated data is missing or empty." });
+    }
     await UpdateMainData(updatedData, id, 0);
     await UpdateBranchData(id, updatedData);
     // Respond with a success message

@@ -9,6 +9,15 @@ const setReminder = async (req, res) => {
   const reminder = req.body;
   console.log(reminder);
 
+  if (!reminder) {
+    return res
+      .status(400)
+      .json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+  }
+
   try {
     await updateOrAddReminder(reminder);
 

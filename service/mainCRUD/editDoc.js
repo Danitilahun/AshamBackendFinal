@@ -67,12 +67,12 @@ const editDocument = async (
   documentId,
   updatedData
 ) => {
-  if (!documentId || !updatedData || !collectionName) {
+  if (!documentId) {
     return null;
   }
 
   try {
-    if (documentId === null) {
+    if (!documentId) {
       console.log("documentId is null, no document updated.");
       return; // Exit the function without performing any update.
     }

@@ -93,6 +93,11 @@ const updateDashboard = async (
   newCardIncome
 ) => {
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to update dashboard because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const dashboardQuerySnapshot = await db
       .collection("dashboard")
       .limit(1)

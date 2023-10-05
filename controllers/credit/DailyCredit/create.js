@@ -17,7 +17,10 @@ const createCredit = async (req, res) => {
     if (!data) {
       return res
         .status(400)
-        .json({ message: "Request body is missing or empty." });
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
     }
     console.log(data);
     data.source = "Credit";
@@ -33,7 +36,7 @@ const createCredit = async (req, res) => {
         batch,
         data.deliveryguyId,
         "dailyCredit",
-        parseInt(data.amount)
+        parseInt(data.amount ? data.amount : 0)
       );
     }
 

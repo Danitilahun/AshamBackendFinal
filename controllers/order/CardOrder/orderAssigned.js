@@ -22,6 +22,12 @@ const CardAssigned = async (req, res) => {
   try {
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Logging the received data
     console.log(data);
     await updateOrCreateFieldsInDocument(db, batch, "Card", data.id, {
@@ -70,7 +76,15 @@ const CardAssigned = async (req, res) => {
       );
 
       // Getting cardFee information from the prices collection
+
       const DeliveryGuyGain = await getSingleDocFromCollection("prices"); // Updated function call
+
+      if (!DeliveryGuyGain) {
+        return res.status(400).json({
+          message:
+            "Prices information is missing.Please refresh your browser and try again.",
+        });
+      }
 
       // Fourth update: Salary of the delivery guy table
       const newSalaryExpense = await updateTable(

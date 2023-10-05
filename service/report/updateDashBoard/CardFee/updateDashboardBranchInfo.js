@@ -17,6 +17,11 @@ const updateDashboardBranchInfo = async (
   const db = admin.firestore();
 
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to update dashboard because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     // Retrieve the dashboard data for the branch
     const dashboardQuerySnapshotBranch = await db
       .collection("branchInfo")

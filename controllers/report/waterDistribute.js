@@ -25,6 +25,12 @@ const WaterDistributeReport = async (req, res) => {
 
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Logging the received data
     console.log(data);
     data.reason = "waterDistribute";
@@ -32,6 +38,14 @@ const WaterDistributeReport = async (req, res) => {
     data.source = "Report";
     // Logging the received data
     const companyGain = await getSingleDocFromCollection("companyGain");
+
+    if (!companyGain) {
+      return res.status(404).json({
+        message: "Company gain not found",
+        type: "info",
+      });
+    }
+
     data.amount = parseInt(
       data.numberOfCard * companyGain.water_distribute_gain
     );
@@ -52,6 +66,13 @@ const WaterDistributeReport = async (req, res) => {
 
     const DeliveryGuyGain = await getSingleDocFromCollection("prices");
 
+    if (!DeliveryGuyGain) {
+      return res.status(400).json({
+        message:
+          "Prices information is missing.Please refresh your browser and try again.",
+      });
+    }
+
     // Fourth update: Salary of the delivery guy table
     const newSalaryExpense = await updateTable(
       db,
@@ -67,6 +88,13 @@ const WaterDistributeReport = async (req, res) => {
       batch
     );
 
+    if (!newSalaryExpense) {
+      return res.status(500).json({
+        message: "Failed to update sheet salary table.",
+        type: "error",
+      });
+    }
+
     const newStatus = await updateSheetStatus(
       db,
       batch,
@@ -76,15 +104,17 @@ const WaterDistributeReport = async (req, res) => {
         data.numberOfCard * DeliveryGuyGain.water_distribute_price
     );
 
-    await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
+    if (newStatus) {
+      await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
 
-    // Update dashboard branch info with the new status
-    await updateDashboardBranchInfo(
-      db,
-      batch,
-      data.branchId,
-      newStatus.totalExpense
-    );
+      // Update dashboard branch info with the new status
+      await updateDashboardBranchInfo(
+        db,
+        batch,
+        data.branchId,
+        newStatus.totalExpense
+      );
+    }
     // await updateSheetStatus(data.active, "totalIncome", newIncome.total.total);
 
     await batch.commit();

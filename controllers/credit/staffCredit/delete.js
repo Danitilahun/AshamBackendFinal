@@ -17,11 +17,19 @@ const getDocumentDataById = require("../../../service/utils/getDocumentDataById"
 const deleteCredit = async (req, res) => {
   try {
     const creditId = req.params.creditId;
+    if (!creditId) {
+      return res.status(400).json({
+        message:
+          "Required req body is missing.Please refresh your browser and try again.",
+      });
+    }
     const db = admin.firestore();
     const batch = db.batch();
     // Retrieve the credit data before deleting for updating total credit
     const creditData = await getDocumentDataById("StaffCredit", creditId);
-
+    if (!creditData) {
+      return res.status(404).json({ message: "Credit document not found." });
+    }
     // Delete the credit document in the "CustomerCredit" collection
     await deleteDocument(db, batch, "StaffCredit", creditId);
 
@@ -56,21 +64,23 @@ const deleteCredit = async (req, res) => {
       batch
     );
 
-    // Update the dashboard with the new status
-    await updateDashboard(
-      db,
-      batch,
-      creditData.branchId,
-      newStatus.totalExpense
-    );
+    if (newStatus) {
+      // Update the dashboard with the new status
+      await updateDashboard(
+        db,
+        batch,
+        creditData.branchId,
+        newStatus.totalExpense ? newStatus.totalExpense : 0
+      );
 
-    // Update dashboard branch info with the new status
-    await updateDashboardBranchInfo(
-      db,
-      batch,
-      creditData.branchId,
-      newStatus.totalExpense
-    );
+      // Update dashboard branch info with the new status
+      await updateDashboardBranchInfo(
+        db,
+        batch,
+        creditData.branchId,
+        newStatus.totalExpense ? newStatus.totalExpense : 0
+      );
+    }
 
     await batch.commit();
     // Respond with a success message

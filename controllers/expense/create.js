@@ -14,6 +14,14 @@ const createExpense = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
+    if (!data) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
 
     // Get Firestore database reference and create a batch
     const db = admin.firestore();

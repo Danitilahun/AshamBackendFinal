@@ -18,7 +18,14 @@ const deleteFinanceCredit = async (req, res) => {
   try {
     // Get document ID from the request parameters
     const { id } = req.params;
-
+    if (!id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request parameters are missing or empty.Please refresh your browser and try again.",
+        });
+    }
     // Get credit data before deleting for updating total credit
     const credit = await getDocumentDataById("FinanceCredit", id);
 

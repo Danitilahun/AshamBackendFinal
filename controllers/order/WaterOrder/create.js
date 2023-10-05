@@ -1,62 +1,3 @@
-// const createDocument = require("../../../service/mainCRUD/createDoc");
-// const createOrUpdateDocument = require("../../../service/order/createOrUpdateDocument");
-// const sendFCMNotification = require("../../../service/order/sendFCMNotification");
-// const generateCustomID = require("../../../util/generateCustomID");
-// const admin = require("../../../config/firebase-admin");
-// const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/removeFromDeliveryQueue");
-// const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
-
-// /**
-//  * Create a Water Order document in the "Water Order" Firestore collection.
-//  *
-//  * @param {Object} req - The Express request object.
-//  * @param {Object} res - The Express response object.
-//  * @returns {void}
-//  */
-// const createWaterOrder = async (req, res) => {
-//   try {
-//     // Get data from the request body
-//     const data = req.body;
-//     await removeFromDeliveryQueue(data.branchId, data.deliveryguyId);
-//     await addToDeliveryQueue(
-//       data.branchId,
-//       data.deliveryguyId,
-//       data.deliveryguyName
-//     );
-//     // Create a Water Order document in the "Water Order" collection
-
-//     const customerData = {
-//       name: data.name,
-//       phone: data.phone,
-//       createdAt: admin.firestore.FieldValue.serverTimestamp(),
-//       blockHouse: data.blockHouse,
-//       branchId: data.branchId,
-//       branchName: data.branchName,
-//       createdDate: data.createdDate,
-//       type: "Water",
-//     };
-//     console.log(customerData);
-//     if (data.from === "branch") {
-//       data.branchId = data.branchId + " normal";
-//     }
-//     await createDocument("Water", data);
-//     const Id = generateCustomID(`${data.blockHouse}`);
-//     await createOrUpdateDocument("customer", Id, customerData);
-//     data.type = "Water";
-//     await sendFCMNotification(data);
-//     // Respond with a success message
-//     res
-//       .status(200)
-//       .json({ message: "Water Order document created successfully." });
-//   } catch (error) {
-//     // Handle any errors that occur during the operation
-//     console.error(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// module.exports = createWaterOrder;
-
 const createDocument = require("../../../service/mainCRUD/createDoc");
 const createOrUpdateDocument = require("../../../service/order/createOrUpdateDocument");
 const sendFCMNotification = require("../../../service/order/sendFCMNotification");
@@ -82,6 +23,12 @@ const createWaterOrder = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
 
     const branch = await getDocumentDataById("branches", data.cardBranch);
     if (!branch.active || !branch.activeSheet || !branch.activeTable) {
@@ -91,6 +38,12 @@ const createWaterOrder = async (req, res) => {
       });
     }
 
+    if (!data.active || !data.activeDailySummery || !data.activeTable) {
+      return res.status(400).json({
+        message:
+          "You can't create order since there is no daily table or sheet.",
+      });
+    }
     if (!data.branchId || !data.deliveryguyId) {
       return res
         .status(400)

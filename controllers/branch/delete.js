@@ -11,7 +11,14 @@ const admin = require("../../config/firebase-admin");
 const deleteBranch = async (req, res) => {
   try {
     const { id } = req.params;
-
+    if (!id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Branch information is missing.Please refresh your browser and try again.",
+        });
+    }
     const branchData = await getDocumentDataById("branches", id);
     if (!branchData) {
       return res.status(404).json({ message: "Branch not found." });

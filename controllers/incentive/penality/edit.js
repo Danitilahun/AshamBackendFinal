@@ -19,7 +19,14 @@ const editPenality = async (req, res) => {
     const { difference, employeeChange, ...updatedData } = req.body;
     const newValue = difference;
     console.log(updatedData);
-
+    if (!updatedData || !penalityId) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     // Create Firestore database instance
     const db = admin.firestore();
     // Create Firestore batch

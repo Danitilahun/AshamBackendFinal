@@ -44,7 +44,9 @@ const deleteField = async (db, batch, collectionName, id, fieldName) => {
   const docRef = db.collection(collectionName).doc(id);
 
   if (!id) {
-    return null;
+    throw new Error(
+      "Unable to delete from Deliveryturn queue because branch information is missing.Please refresh your browser and try again."
+    );
   }
 
   try {

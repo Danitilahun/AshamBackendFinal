@@ -1,7 +1,9 @@
 const updateCalculatorBank = async (db, batch, id, valueToAdd) => {
   try {
     if (!id) {
-      return null;
+      throw new Error(
+        "Unable to update calculator information is not provided.Please refresh your browser and try again."
+      );
     }
 
     const docRef = db.collection("Calculator").doc(id);

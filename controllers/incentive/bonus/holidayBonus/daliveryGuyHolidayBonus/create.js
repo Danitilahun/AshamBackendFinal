@@ -18,6 +18,11 @@ const DeliveryGuyHolidayBonus = async (req, res) => {
     const data = req.body;
     console.log(data);
 
+    if (!data) {
+      throw new Error(
+        "Request body is missing or empty.Please refresh your browser and try again."
+      );
+    }
     // Create Firestore database instance and batch
     const db = admin.firestore();
     const batch = db.batch();

@@ -20,6 +20,14 @@ const editCredit = async (req, res) => {
     const updatedData = req.body;
     const newValue = updatedData.difference;
     delete updatedData.difference;
+    if (!creditId || !updatedData) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing.Please refresh your browser and try again.",
+        });
+    }
     console.log(updatedData);
     const prev = await getDocumentDataById("DailyCredit", creditId);
     if (prev.source === "Report") {

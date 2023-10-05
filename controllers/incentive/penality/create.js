@@ -18,6 +18,15 @@ const createPenality = async (req, res) => {
     const data = req.body;
     console.log(data);
 
+    if (!data) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
+
     // Create Firestore database instance
     const db = admin.firestore();
     // Create Firestore batch

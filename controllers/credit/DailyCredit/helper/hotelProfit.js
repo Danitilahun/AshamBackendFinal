@@ -1,69 +1,3 @@
-// const updateDashboard = require("../../../../service/report/updateDashBoard/HotelProfit/updateDashboard");
-// const updateDashboardBranchInfo = require("../../../../service/report/updateDashBoard/HotelProfit/updateDashboardBranchInfo");
-// const updateCalculatorAmount = require("../../../../service/utils/updateCalculatorAmount");
-// const updateSheetStatus = require("../../../../service/utils/updateSheetStatus");
-// const updateTable = require("../../../../service/utils/updateTable");
-
-// const HotelProfit = async (data) => {
-//   try {
-//     // Creating a new credit document in the "CardFee" collection
-//     // First update: Change the daily table
-//     await updateTable("tables", data.activeTable, data.deliveryguyId, "total", {
-//       hotelProfit: parseInt(data.amount),
-//       total: parseInt(data.amount),
-//     });
-
-//     // Second update: Change the 15 days summary and daily summary tables
-//     await updateTable("tables", data.activeDailySummery, data.date, "total", {
-//       hotelProfit: parseInt(data.amount),
-//       total: parseInt(data.amount),
-//     });
-
-//     // Third update: Individual person's daily work summary
-//     const newIncome = await updateTable(
-//       "tables",
-//       data.active,
-//       data.deliveryguyId,
-//       "total",
-//       {
-//         hotelProfit: parseInt(data.amount),
-//         total: parseInt(data.amount),
-//       }
-//     );
-
-//     // Updating sheet status with totalIncome
-//     const newStatus = await updateSheetStatus(
-//       data.active,
-//       "totalIncome",
-//       newIncome.total.total
-//     );
-
-//     // Updating dashboard with newIncome and hotelProfit details
-//     await updateDashboard(
-//       data.branchId,
-//       newIncome.total.total,
-//       newStatus.totalExpense,
-//       parseInt(data.amount)
-//     );
-
-//     // Updating dashboard branch information
-//     await updateDashboardBranchInfo(
-//       data.branchId,
-//       newIncome.total.total,
-//       newStatus.totalExpense,
-//       newIncome.total.hotelProfit
-//     );
-
-//     await updateCalculatorAmount(data.active, newIncome.total.total);
-
-//     console.log("Updates completed successfully.");
-//   } catch (error) {
-//     console.error("Error in HotelProfit:", error);
-//   }
-// };
-
-// module.exports = HotelProfit;
-
 const updateDashboard = require("../../../../service/report/updateDashBoard/HotelProfit/updateDashboard");
 const updateDashboardBranchInfo = require("../../../../service/report/updateDashBoard/HotelProfit/updateDashboardBranchInfo");
 const updateCalculatorAmount = require("../../../../service/utils/updateCalculatorAmount");
@@ -88,8 +22,8 @@ const HotelProfit = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        hotelProfit: parseFloat(data.amount),
-        total: parseFloat(data.amount),
+        hotelProfit: data.amount ? parseFloat(data.amount) : 0,
+        total: data.amount ? parseFloat(data.amount) : 0,
       },
       batch
     );
@@ -102,8 +36,8 @@ const HotelProfit = async (data, db, batch) => {
       data.date,
       "total",
       {
-        hotelProfit: parseFloat(data.amount),
-        total: parseFloat(data.amount),
+        hotelProfit: data.amount ? parseFloat(data.amount) : 0,
+        total: data.amount ? parseFloat(data.amount) : 0,
       },
       batch
     );
@@ -116,29 +50,42 @@ const HotelProfit = async (data, db, batch) => {
       data.deliveryguyId,
       "total",
       {
-        hotelProfit: parseFloat(data.amount),
-        total: parseFloat(data.amount),
+        hotelProfit: data.amount ? parseFloat(data.amount) : 0,
+        total: data.amount ? parseFloat(data.amount) : 0,
       },
       batch
     );
 
+    // Fourth update: Salary of the delivery guy table
+    if (!newIncome) {
+      throw new Error(
+        "Branch summery table information is missing.Please refresh your browser and try again."
+      );
+    }
     // Updating sheet status with totalIncome
     const newStatus = await updateSheetStatus(
       db,
       batch,
       data.active,
       "totalIncome",
-      newIncome.total.total + parseFloat(data.amount)
+      (newIncome.total.total ? newIncome.total.total : 0) +
+        (data.amount ? parseFloat(data.amount) : 0)
     );
+
+    if (!newStatus) {
+      throw new Error(
+        "Branch sheet status information is missing.Please refresh your browser and try again."
+      );
+    }
 
     // Updating dashboard with newIncome and hotelProfit details
     await updateDashboard(
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
-      parseFloat(data.amount)
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
+      data.amount ? parseFloat(data.amount) : 0
     );
 
     // Updating dashboard branch information
@@ -146,12 +93,18 @@ const HotelProfit = async (data, db, batch) => {
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
-      newIncome.total.hotelProfit + parseFloat(data.amount)
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
+      (newIncome.total.hotelProfit ? newIncome.total.hotelProfit : 0) +
+        (data.amount ? parseFloat(data.amount) : 0)
     );
 
-    await updateCalculatorAmount(db, batch, data.active, newStatus.totalIncome);
+    await updateCalculatorAmount(
+      db,
+      batch,
+      data.active,
+      newStatus.totalIncome ? newStatus.totalIncome : 0
+    );
 
     console.log("Updates completed successfully.");
   } catch (error) {

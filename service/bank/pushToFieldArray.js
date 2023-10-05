@@ -65,7 +65,9 @@ const pushToFieldArray = async (
 ) => {
   try {
     if (!docId) {
-      return null;
+      throw new Error(
+        "Unable to update bank transaction for the branch because branch information is missing.Please refresh your browser and try again."
+      );
     }
 
     // Get the document reference
@@ -76,7 +78,7 @@ const pushToFieldArray = async (
 
     if (!documentSnapshot.exists) {
       // No document found
-      throw new Error("Document not found");
+      return null;
     }
 
     // Get the existing array from the 'field' or an empty array if the field does not exist

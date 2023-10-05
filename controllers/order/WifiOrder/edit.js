@@ -22,6 +22,12 @@ const editWifiOrder = async (req, res) => {
     const updatedData = req.body;
     const { id } = req.params;
 
+    if (!updatedData || !id) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Edit the Wifi Order document in the "Wifi Order" collection
     await editDocument(db, batch, "Wifi", id, updatedData); // Updated function call
 

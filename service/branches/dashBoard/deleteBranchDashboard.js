@@ -3,7 +3,9 @@ const getAllDeliveryGuysByBranchId = require("../../utils/getAllDeliveryGuysByBr
 const deleteBranchAndUpdateDashboard = async (db, batch, id, branchData) => {
   try {
     if (!id) {
-      return null;
+      throw new Error(
+        "Unable to delete branch because branch information is missing.Please refresh your browser and try again."
+      );
     }
 
     // Fetch the main dashboard document

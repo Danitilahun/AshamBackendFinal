@@ -5,75 +5,17 @@ const updateCalculatorAmount = require("../../../../service/utils/updateCalculat
 const updateSheetStatus = require("../../../../service/utils/updateSheetStatus");
 const updateTable = require("../../../../service/utils/updateTable");
 
-// const wifiDistribute = async (data) => {
-//   try {
-//     // Updating various tables with wifiDistribute information
-//     const DeliveryGuyGain = await getSingleDocFromCollection("prices");
-//     const companyGain = await getSingleDocFromCollection("companyGain");
-
-//     // First update: Change the daily table
-//     await updateTable("tables", data.activeTable, data.deliveryguyId, "total", {
-//       wifiDistribute: data.numberOfCard,
-//       total: data.numberOfCard * companyGain.wifi_distribute_gain,
-//     });
-
-//     // Second update: Change the 15 days summary and daily summary tables
-//     await updateTable("tables", data.activeDailySummery, data.date, "total", {
-//       wifiDistribute: data.numberOfCard,
-//       total: data.numberOfCard * companyGain.wifi_distribute_gain,
-//     });
-
-//     // Third update: Individual person's daily work summary
-//     const newIncome = await updateTable(
-//       "tables",
-//       data.active,
-//       data.deliveryguyId,
-//       "total",
-//       {
-//         wifiDistribute: data.numberOfCard,
-//         total: data.numberOfCard * companyGain.wifi_distribute_gain,
-//       }
-//     );
-
-//     const newStatus = await updateSheetStatus(
-//       db,
-//       batch,
-//       data.active,
-//       "totalIncome",
-//       newIncome.total.total
-//     );
-//     // Updating dashboard with newIncome and newSalaryExpense details
-//     await updateDashboard(
-//       data.branchId,
-//       newIncome.total.total,
-//       newStatus.totalExpense,
-//       data.numberOfCard * companyGain.wifi_distribute_gain
-//     );
-
-//     // Updating dashboard branch information
-//     await updateDashboardBranchInfo(
-//       data.branchId,
-//       newIncome.total.total,
-//       newStatus.totalExpense,
-//       newIncome.total.wifiDistribute
-//     );
-
-//     await updateCalculatorAmount(data.active, newIncome.total.total);
-
-//     console.log("Updates completed successfully.");
-//   } catch (error) {
-//     console.error("Error in wifiDistribute:", error);
-//   }
-// };
-
-// module.exports = wifiDistribute;
-
 const wifiDistribute = async (data, db, batch) => {
   try {
     // Updating various tables with wifiDistribute information
 
     const companyGain = await getSingleDocFromCollection("companyGain");
 
+    if (!companyGain) {
+      throw new Error(
+        "Company gain information is missing.Please refresh your browser and try again."
+      );
+    }
     // First update: Change the daily table
     await updateTable(
       db,
@@ -116,6 +58,13 @@ const wifiDistribute = async (data, db, batch) => {
       batch
     );
 
+    // Fourth update: Salary of the delivery guy table
+    if (!newIncome) {
+      throw new Error(
+        "Branch summery table information is missing.Please refresh your browser and try again."
+      );
+    }
+
     const newStatus = await updateSheetStatus(
       db,
       batch,
@@ -124,13 +73,19 @@ const wifiDistribute = async (data, db, batch) => {
       newIncome.total.total +
         data.numberOfCard * companyGain.wifi_distribute_gain
     );
+
+    if (!newStatus) {
+      throw new Error(
+        "Branch sheet status information is missing.Please refresh your browser and try again."
+      );
+    }
     // Updating dashboard with newIncome and newSalaryExpense details
     await updateDashboard(
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
       data.numberOfCard * companyGain.wifi_distribute_gain
     );
 
@@ -139,12 +94,17 @@ const wifiDistribute = async (data, db, batch) => {
       db,
       batch,
       data.branchId,
-      newStatus.totalIncome,
-      newStatus.totalExpense,
+      newStatus.totalIncome ? newStatus.totalIncome : 0,
+      newStatus.totalExpense ? newStatus.totalExpense : 0,
       newIncome.total.wifiDistribute + data.numberOfCard
     );
 
-    await updateCalculatorAmount(db, batch, data.active, newStatus.totalIncome);
+    await updateCalculatorAmount(
+      db,
+      batch,
+      data.active,
+      newStatus.totalIncome ? newStatus.totalIncome : 0
+    );
 
     console.log("Updates completed successfully.");
   } catch (error) {

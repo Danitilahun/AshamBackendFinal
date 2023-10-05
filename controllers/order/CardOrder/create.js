@@ -25,9 +25,22 @@ const createCardOrder = async (req, res) => {
     // Get data from the request body
     const data = req.body;
     console.log(data);
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // console.log(manye);
     const branch = await getDocumentDataById("branches", data.cardBranch);
     if (!branch.active || !branch.activeSheet || !branch.activeTable) {
+      return res.status(400).json({
+        message:
+          "You can't create order since there is no daily table or sheet.",
+      });
+    }
+
+    if (!data.active || !data.activeDailySummery || !data.activeTable) {
       return res.status(400).json({
         message:
           "You can't create order since there is no daily table or sheet.",
@@ -63,7 +76,13 @@ const createCardOrder = async (req, res) => {
       data.branchId = data.branchId + " normal";
     }
     const companyGain = await getSingleDocFromCollection("companyGain");
-    console.log(companyGain);
+
+    if (!companyGain) {
+      return res.status(400).json({
+        message:
+          "You can't create order since there is no company gain information.",
+      });
+    }
     data.dayRemain = parseInt(
       data.amountBirr / parseInt(companyGain.card_price)
     );

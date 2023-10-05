@@ -39,7 +39,9 @@
 
 const deleteBranchRelatedDoc = async (db, batch, id) => {
   if (!id) {
-    return null;
+    throw new Error(
+      "Unable to delete branch related documents because branch information is missing.Please refresh your browser and try again."
+    );
   }
   try {
     // Step 1: Delete the "Bank" collection of the branch

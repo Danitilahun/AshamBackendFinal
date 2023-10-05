@@ -19,6 +19,12 @@ const editBranch = async (req, res) => {
     const { difference, budgetChange, nameChange, ...updatedData } = req.body;
     const { id } = req.params;
 
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Branch information is missing.Please refresh your browser and try again.",
+      });
+    }
     if (!updatedData) {
       return res
         .status(400)
@@ -53,10 +59,24 @@ const editBranch = async (req, res) => {
       );
 
       // Step 6: Calculate and update status data with new branch data
+      if (!statusData) {
+        return res.status(400).json({
+          message:
+            "Branch sheet information is missing.Please refresh your browser and try again.",
+        });
+      }
+
       const updatedStatusData = updateStatusAndTotalExpense(
         statusData,
         updatedData
       );
+      if (!updatedStatusData) {
+        return res.status(400).json({
+          message:
+            "Branch sheet information is missing.Please refresh your browser and try again.",
+        });
+      }
+
       const newStatus = await updateStatusDocument(
         db,
         batch,
@@ -64,21 +84,27 @@ const editBranch = async (req, res) => {
         updatedStatusData
       );
 
+      if (!newStatus) {
+        return res.status(400).json({
+          message:
+            "Branch sheet status information is missing.Please refresh your browser and try again.",
+        });
+      }
       // Update the dashboard with the new status
       await updateDashboard(
         db,
         batch,
         id,
-        newStatus.totalExpense,
+        newStatus.totalExpense ? newStatus.totalExpense : 0,
         updatedData,
-        difference
+        difference ? difference : 0
       );
       // Update dashboard branch info with the new status
       await updateDashboardBranchInfo(
         db,
         batch,
         id,
-        newStatus.totalExpense,
+        newStatus.totalExpense ? newStatus.totalExpense : 0,
         updatedData
       );
       // console.log(man);
@@ -99,7 +125,13 @@ const editBranch = async (req, res) => {
     // console.log(man);
 
     await fetchAndUpdateBranchData(db, batch, id, updatedData);
-    await fetchAndUpdateMainData(db, batch, updatedData, id, difference);
+    await fetchAndUpdateMainData(
+      db,
+      batch,
+      updatedData,
+      id,
+      difference ? difference : 0
+    );
     await editDocument(db, batch, "Budget", id, {
       budget: updatedData.budget,
     });

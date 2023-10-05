@@ -46,8 +46,8 @@ const updateDeliveryGuy = async (db, batch, docId, field, value) => {
   const docRef = db.collection("deliveryguy").doc(docId);
 
   try {
-    if (!docId || !field || !value) {
-      return null;
+    if (!docId) {
+      throw new Error("Delivery guy with this information do not exist.");
     }
     // Retrieve the delivery guy's document within the batch
     const docSnapshotBeforeUpdate = await docRef.get();
@@ -55,13 +55,13 @@ const updateDeliveryGuy = async (db, batch, docId, field, value) => {
     if (docSnapshotBeforeUpdate.exists) {
       // Document exists, increment the specified field within the batch
       batch.update(docRef, {
-        [field]: admin.firestore.FieldValue.increment(value),
+        [field]: admin.firestore.FieldValue.increment(value ? value : 0),
       });
 
       // Fetch the updated data without committing the batch
       const updatedData = {
         ...docSnapshotBeforeUpdate.data(),
-        [field]: docSnapshotBeforeUpdate.get(field) + value,
+        [field]: docSnapshotBeforeUpdate.get(field) + (value ? value : 0),
       };
       return updatedData;
     }

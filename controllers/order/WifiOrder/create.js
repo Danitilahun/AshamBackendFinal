@@ -24,6 +24,12 @@ const createWifiOrder = async (req, res) => {
     // Get data from the request body
     const data = req.body;
 
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const branch = await getDocumentDataById("branches", data.cardBranch);
     if (!branch.active || !branch.activeSheet || !branch.activeTable) {
       return res.status(400).json({
@@ -32,6 +38,12 @@ const createWifiOrder = async (req, res) => {
       });
     }
 
+    if (!data.active || !data.activeDailySummery || !data.activeTable) {
+      return res.status(400).json({
+        message:
+          "You can't create order since there is no daily table or sheet.",
+      });
+    }
     if (!data.branchId || !data.deliveryguyId) {
       return res
         .status(400)

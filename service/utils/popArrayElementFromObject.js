@@ -21,8 +21,10 @@ const popArrayElement = async (
   const docRef = db.collection(collectionName).doc(id);
 
   try {
-    if (!id || !fieldName) {
-      return null;
+    if (!id) {
+      throw new Error(
+        "Some error occurs.Please refresh your browser and try again."
+      );
     }
     const snapshot = await docRef.get();
 

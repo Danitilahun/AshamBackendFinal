@@ -22,8 +22,10 @@ const pushToFieldArrayAndUpdateFields = async (
 ) => {
   try {
     console.log(docId, field, itemToPush, collectionName);
-    if (!docId || !field || !itemToPush || !collectionName) {
-      return null;
+    if (!docId) {
+      throw new Error(
+        "Branch information is missing.Please refresh your browser and try again."
+      );
     }
     // Get the document reference
     const documentRef = db.collection(collectionName).doc(docId);

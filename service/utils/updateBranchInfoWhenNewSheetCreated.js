@@ -74,7 +74,9 @@ const updateDashboardBranchInfoWhenNewSheetCreated = async (
 ) => {
   try {
     if (!branchId) {
-      return;
+      throw new Error(
+        "unable to update dashboard because branch information is missing.Please refresh your browser and try again."
+      );
     }
     // Retrieve the dashboard data for the branch
     const dashboardQuerySnapshotBranch = await db

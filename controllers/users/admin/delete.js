@@ -5,6 +5,7 @@ const popArrayElement = require("../../../service/utils/popArrayElementFromObjec
 const updateOrCreateFieldsInDocument = require("../../../service/utils/updateOrCreateFieldsInDocument");
 const deleteId1FieldAndReduceTotal = require("../../../service/utils/deleteId1FieldAndReduceTotal");
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
+const editUserEmail = require("../../../service/users/firebaseAuth/editUserEmail");
 
 /**
  * Delete an admin document from the "admin" Firestore collection.
@@ -31,9 +32,6 @@ const deleteAdmin = async (req, res) => {
     const batch = db.batch();
 
     // Step 5: Delete the user associated with the admin
-    if (adminData && adminData.email) {
-      await deleteUser(id);
-    }
 
     await updateOrCreateFieldsInDocument(db, batch, "admin", id, {
       disable: true,
@@ -84,6 +82,9 @@ const deleteAdmin = async (req, res) => {
       }
     }
     // Step 4: Update or create the "disable" field in the specified Firestore collection document
+    if (adminData && adminData.email) {
+      await deleteUser(id);
+    }
 
     await batch.commit();
     // Step 7: Respond with a success message
@@ -92,6 +93,8 @@ const deleteAdmin = async (req, res) => {
     // Step 8: Handle any errors that occur during the operation
     console.error(error);
     res.status(500).json({ message: error.message });
+    const user = await getDocumentDataById("admin", id);
+    await editUserEmail(id, user.email);
   }
 };
 

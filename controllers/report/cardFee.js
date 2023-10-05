@@ -26,6 +26,14 @@ const CardFeeReport = async (req, res) => {
 
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
+
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
+
     // Logging the received data
     console.log(data);
     data.amount = data.price;
@@ -46,6 +54,12 @@ const CardFeeReport = async (req, res) => {
 
     const DeliveryGuyGain = await getSingleDocFromCollection("prices");
 
+    if (!DeliveryGuyGain) {
+      return res.status(400).json({
+        message:
+          "Prices information is missing.Please refresh your browser and try again.",
+      });
+    }
     const newSalaryExpense = await updateTable(
       db,
       "salary",
@@ -59,6 +73,13 @@ const CardFeeReport = async (req, res) => {
       batch
     );
 
+    if (!newSalaryExpense) {
+      return res.status(500).json({
+        message: "Failed to update sheet salary table.",
+        type: "error",
+      });
+    }
+
     const newStatus = await updateSheetStatus(
       db,
       batch,
@@ -66,6 +87,7 @@ const CardFeeReport = async (req, res) => {
       "totalDeliveryGuySalary",
       newSalaryExpense.total.total + DeliveryGuyGain.card_fee_price
     );
+
     if (newStatus) {
       await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
 

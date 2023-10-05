@@ -89,7 +89,9 @@ const updateSalaryTable = async (
 ) => {
   try {
     if (!docId) {
-      throw new Error("Document ID cannot be empty.");
+      throw new Error(
+        "Unable to update salary for delivery guy.Please refresh your browser and try again."
+      );
     }
 
     // Get the document reference from the collection

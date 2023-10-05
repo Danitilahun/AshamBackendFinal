@@ -18,6 +18,24 @@ const editCredit = async (req, res) => {
     const updatedData = req.body;
     const newValue = updatedData.difference;
     delete updatedData.difference;
+    if (!creditId) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
+
+    if (!updatedData) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Updated data is missing or empty.Please refresh your browser and try again.",
+        });
+    }
+
     console.log(updatedData);
 
     // Edit the existing credit document in the "CustomerCredit" collection within the batch
@@ -28,7 +46,7 @@ const editCredit = async (req, res) => {
     const newTotalCredit = await updateCreditDocument(
       updatedData.branchId,
       "CustomerCredit",
-      parseInt(newValue),
+      parseFloat(newValue ? newValue : 0),
       db,
       batch
     );
@@ -37,7 +55,7 @@ const editCredit = async (req, res) => {
       // Update the calculator with the new total credit within the batch
       await updateCalculator(
         updatedData.active,
-        parseInt(newTotalCredit.total),
+        parseFloat(newTotalCredit.total ? newTotalCredit.total : 0),
         db,
         batch
       );

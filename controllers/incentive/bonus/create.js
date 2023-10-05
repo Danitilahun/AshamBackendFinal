@@ -22,6 +22,12 @@ const createBonus = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
 
     // Determine the collection name based on the placement
     const collectionName =
@@ -46,6 +52,11 @@ const createBonus = async (req, res) => {
       batch
     );
 
+    if (!newSalaryTable) {
+      throw new Error(
+        "unable to update salary table.Please refresh your browser and try again."
+      );
+    }
     // Determine the SalaryType based on placement
     const SalaryType =
       data.placement === "DeliveryGuy"
@@ -60,18 +71,18 @@ const createBonus = async (req, res) => {
       db,
       batch
     );
+    if (newStatus) {
+      // Update the dashboard with the new status
+      await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
 
-    // Update the dashboard with the new status
-    await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
-
-    // Update dashboard branch info with the new status
-    await updateDashboardBranchInfo(
-      data.branchId,
-      newStatus.totalExpense,
-      db,
-      batch
-    );
-
+      // Update dashboard branch info with the new status
+      await updateDashboardBranchInfo(
+        data.branchId,
+        newStatus.totalExpense,
+        db,
+        batch
+      );
+    }
     // Commit the batch to perform all operations atomically
     await batch.commit();
 

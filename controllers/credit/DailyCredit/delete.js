@@ -18,7 +18,14 @@ const wifiDistribute = require("./helper/wifiDistribute");
 const deleteCredit = async (req, res) => {
   try {
     const creditId = req.params.creditId;
-
+    if (!creditId) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Credit ID is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     // Create a Firestore batch
     const db = admin.firestore(); // Initialize Firestore database
     const batch = db.batch();
@@ -35,10 +42,26 @@ const deleteCredit = async (req, res) => {
     const deliveryGuyRef = db
       .collection("deliveryguy")
       .doc(creditData.deliveryguyId);
-    const newCreditAmount = -parseInt(creditData.amount);
-    batch.update(deliveryGuyRef, {
-      dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),
-    });
+    // const newCreditAmount = -parseInt(creditData.amount);
+    // batch.update(deliveryGuyRef, {
+    //   dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),
+    // });
+    const docSnapshot = await deliveryGuyRef.get();
+    if (docSnapshot.exists) {
+      // The delivery guy document exists, proceed with the update
+      const newCreditAmount = -parseInt(
+        creditData.amount ? creditData.amount : 0
+      );
+      batch.update(deliveryGuyRef, {
+        dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),
+      });
+      // Success handling here, after the batch update is committed
+      console.log("Credit update successful");
+      // Send a response or perform any other actions as needed
+    } else {
+      // The delivery guy document does not exist, handle the error here
+      throw new Error("Delivery guy does not exist");
+    }
 
     console.log(creditData);
 
@@ -57,9 +80,7 @@ const deleteCredit = async (req, res) => {
     // Pass db and batch to the functions
 
     if (creditData.source !== "Credit") {
-      console.log(" i am here");
       if (creditData.CHECK_SOURCE === CardFeeCheck) {
-        console.log("In fee");
         await CardFee(creditData, db, batch);
       } else if (creditData.CHECK_SOURCE === CardDistributeCheck) {
         await CardDistribute(creditData, db, batch);

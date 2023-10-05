@@ -7,8 +7,10 @@ const admin = require("../../../config/firebase-admin");
  */
 const UpdateMainData = async (data, branchId, newBudget) => {
   try {
-    if (!data || !branchId) {
-      return null;
+    if (!branchId) {
+      throw new Error(
+        "Unable to update dashboard: branch information is missing.Please refresh your browser and try again."
+      );
     }
     const dashboardQuerySnapshot = await admin
       .firestore()
@@ -24,7 +26,7 @@ const UpdateMainData = async (data, branchId, newBudget) => {
     const dashboardData = dashboardQuerySnapshot.docs[0].data();
 
     const existingBranches = dashboardData.data || [];
-    const newTotalBudget = dashboardData.totalBudget + parseInt(newBudget);
+    const newTotalBudget = dashboardData.totalBudget + parseFloat(newBudget);
     const updatedBranches = existingBranches.map((branch) => {
       if (branch.ID === branchId) {
         return {

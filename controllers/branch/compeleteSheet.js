@@ -52,9 +52,6 @@ const ChangeSheetStatus = async (req, res) => {
       PrevactiveSheet: data.previousActive,
     });
 
-    const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
-    const currentStatus = await getDocumentDataById("Status", data.active);
-
     // Step 12: Update dashboard branch info within the batch
     await updateDashboardBranchInfoWhenNewSheetCreated(
       data.branchId,
@@ -62,7 +59,23 @@ const ChangeSheetStatus = async (req, res) => {
       batch
     );
 
+    const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
+    const currentStatus = await getDocumentDataById("Status", data.active);
     // Step 13: Execute createSheetSummary function within the batch
+    if (!totalCredit) {
+      return res.status(400).json({
+        message:
+          "Branch information is missing.Please refresh your browser and try again.",
+      });
+    }
+
+    if (!currentStatus) {
+      return res.status(400).json({
+        message:
+          "Sheet information is missing.Please refresh your browser and try again.",
+      });
+    }
+
     await createSheetSummary(currentStatus, totalCredit, db, batch);
 
     // Step 14: Commit the batch

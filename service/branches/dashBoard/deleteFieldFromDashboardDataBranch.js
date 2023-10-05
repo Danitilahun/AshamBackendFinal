@@ -48,7 +48,9 @@ const deleteFieldFromDashboardDataBranch = async (
 ) => {
   try {
     if (!branchIdToDelete) {
-      return null;
+      throw new Error(
+        "Unable to delete branch information from dashboard because branch information is missing.Please refresh your browser and try again."
+      );
     }
 
     const dashboardQuerySnapshotBranch = await db

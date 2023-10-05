@@ -19,8 +19,18 @@ const deleteWifiOrder = async (req, res) => {
 
     // Get document ID from the request parameters
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const WifiData = await getDocumentDataById("Wifi", id); // Updated function call
-
+    if (!WifiData) {
+      return res.status(400).json({
+        message: "Wifi order does not eist",
+      });
+    }
     // Delete the Wifi Order document from the "Wifi Order" collection
     await deleteDocument(db, batch, "Wifi", id); // Updated function call
     const Id = generateCustomID(`${WifiData.blockHouse}`);

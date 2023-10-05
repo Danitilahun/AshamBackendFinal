@@ -19,7 +19,18 @@ const deleteCardOrder = async (req, res) => {
   try {
     // Get document ID from the request parameters
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Request parameters missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const CardData = await getDocumentDataById("Card", id); // Updated function call
+    if (!CardData) {
+      return res.status(400).json({
+        message: "Card Order document does not exist or is empty.",
+      });
+    }
     // Delete the Card Order document from the "Card Order" collection
     await deleteDocument(db, batch, "Card", id); // Updated function call
     const Id = generateCustomID(`${CardData.blockHouse}`);

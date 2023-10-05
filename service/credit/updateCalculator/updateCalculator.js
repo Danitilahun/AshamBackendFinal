@@ -34,8 +34,10 @@
 
 const updateCalculator = async (id, valueToAdd, db, batch) => {
   try {
-    if (!id || !valueToAdd) {
-      return;
+    if (!id) {
+      throw new Error(
+        "Unable to update calculator information is not provided.Please refresh your browser and try again."
+      );
     }
     const docRef = db.collection("Calculator").doc(id);
 

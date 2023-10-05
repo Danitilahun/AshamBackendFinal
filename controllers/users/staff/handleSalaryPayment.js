@@ -54,6 +54,13 @@ const HandleStaffSalaryPayment = async (req, res) => {
       batch
     );
 
+    if (!newSalaryTable) {
+      return res.status(500).json({
+        message: "Failed to update sheet salary",
+        type: "error",
+      });
+    }
+
     // Determine the SalaryType based on placement
 
     // Update sheet status with new SalaryType value
@@ -65,6 +72,12 @@ const HandleStaffSalaryPayment = async (req, res) => {
       batch
     );
 
+    if (!newStatus) {
+      return res.status(500).json({
+        message: "Failed to update sheet status",
+        type: "error",
+      });
+    }
     // Update the dashboard with the new status
     await updateDashboard(
       db,

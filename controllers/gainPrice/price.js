@@ -4,7 +4,13 @@ const updateDocumentFields = require("../../utils/singleDocUpdate");
 const CreatePrice = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
+
     const db = admin.firestore();
     const pricesCollection = db.collection("prices");
     await pricesCollection.add(data);
@@ -18,6 +24,12 @@ const CreatePrice = async (req, res) => {
 const CreateCompanyGainPrice = async (req, res) => {
   try {
     const data = req.body;
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     console.log(data);
     const db = admin.firestore();
     const pricesCollection = db.collection("companyGain");
@@ -30,6 +42,13 @@ const CreateCompanyGainPrice = async (req, res) => {
 };
 
 const updatePrice = async (req, res) => {
+  if (!req.body)
+    return res
+      .status(400)
+      .json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
   try {
     const data = req.body;
     await updateDocumentFields("prices", data);
@@ -40,6 +59,13 @@ const updatePrice = async (req, res) => {
   }
 };
 const updateCompanyGainPrice = async (req, res) => {
+  if (!req.body)
+    return res
+      .status(400)
+      .json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
   try {
     const data = req.body;
     await updateDocumentFields("companyGain", data);

@@ -3,7 +3,9 @@ const admin = require("../../config/firebase-admin");
 
 const createBudgetCollection = async (db, batch, branchId, budget) => {
   if (!branchId) {
-    return;
+    throw new Error(
+      "Unable to create budget store because branch information is missing.Please refresh your browser and try again."
+    );
   }
   try {
     const budgetCollectionRef = db.collection("Budget").doc(branchId);

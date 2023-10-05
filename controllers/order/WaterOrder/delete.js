@@ -20,7 +20,18 @@ const deleteWaterOrder = async (req, res) => {
   try {
     // Get document ID from the request parameters
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const WaterData = await getDocumentDataById("Water", id); // Updated function call
+    if (!WaterData) {
+      return res.status(404).json({
+        message: `Water Order document does not exist.`,
+      });
+    }
     // Delete the Water Order document from the "Water Order" collection
     await deleteDocument(db, batch, "Water", id); // Updated function call
     const Id = generateCustomID(`${WaterData.blockHouse}`);

@@ -22,6 +22,11 @@ const updateDocumentWithPushAndIncrement = async (
   amount
 ) => {
   try {
+    if (!docId) {
+      throw new Error(
+        "Some required parameters for sheet Summary are missing. Please refresh your browser and try again."
+      );
+    }
     // Get the document reference
     const documentRef = db.collection(collectionName).doc(docId);
 

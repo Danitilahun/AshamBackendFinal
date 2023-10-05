@@ -22,7 +22,10 @@ const createFinanceCredit = async (req, res) => {
     if (!data) {
       return res
         .status(400)
-        .json({ message: "Request body is missing or empty." });
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
     }
 
     // Create an essential document in the "essential" collection within the batch

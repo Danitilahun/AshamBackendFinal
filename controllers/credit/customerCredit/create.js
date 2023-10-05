@@ -12,11 +12,14 @@ const createDocument = require("../../../service/mainCRUD/createDoc");
 const createCredit = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+    // console.log(data);
     if (!data) {
       return res
         .status(400)
-        .json({ message: "Request body is missing or empty." });
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
     }
 
     // Get the Firestore instance and create a batch
@@ -32,11 +35,11 @@ const createCredit = async (req, res) => {
     const newTotalCredit = await updateCreditDocument(
       data.branchId,
       "CustomerCredit",
-      parseFloat(data.amount),
+      parseFloat(data.amount ? data.amount : 0),
       db,
       batch
     );
-    console.log("new total ", newTotalCredit.total);
+    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {

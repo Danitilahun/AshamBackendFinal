@@ -18,6 +18,14 @@ const deleteExpense = async (req, res) => {
     const batch = db.batch();
     // Get document ID from the request parameters
     const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request parameter is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     const ExpenseData = await getDocumentDataById("Expense", id);
 
     // Delete the expense document from the "expense" collection using the batch

@@ -22,7 +22,7 @@ const editCredit = async (req, res) => {
     delete updatedData.difference;
     console.log(updatedData);
 
-    if (!updatedData) {
+    if (!updatedData || !creditId) {
       return res
         .status(400)
         .json({ message: "Request body is missing or empty." });
@@ -38,7 +38,6 @@ const editCredit = async (req, res) => {
         db,
         batch
       );
-      console.log(result);
       if (!result) {
         return res.status(400).json({
           type: "info",
@@ -91,26 +90,28 @@ const editCredit = async (req, res) => {
     const newStatus = await updateSheetStatus(
       updatedData.active,
       SalaryType,
-      newSalaryTable.total.total - parseInt(newValue),
+      newSalaryTable.total.total - parseFloat(newValue),
       db,
       batch
     );
 
-    // Update the dashboard with the new status
-    await updateDashboard(
-      db,
-      batch,
-      updatedData.branchId,
-      newStatus.totalExpense
-    );
+    if (newStatus) {
+      // Update the dashboard with the new status
+      await updateDashboard(
+        db,
+        batch,
+        updatedData.branchId,
+        newStatus.totalExpense ? newStatus.totalExpense : 0
+      );
 
-    // Update dashboard branch info with the new status
-    await updateDashboardBranchInfo(
-      db,
-      batch,
-      updatedData.branchId,
-      newStatus.totalExpense
-    );
+      // Update dashboard branch info with the new status
+      await updateDashboardBranchInfo(
+        db,
+        batch,
+        updatedData.branchId,
+        newStatus.totalExpense ? newStatus.totalExpense : 0
+      );
+    }
 
     await batch.commit();
     // Respond with a success message

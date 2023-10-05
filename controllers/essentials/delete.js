@@ -11,7 +11,14 @@ const deleteEssentials = async (req, res) => {
   try {
     // Get document ID from the request parameters
     const { id } = req.params;
-
+    if (!id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Essential Id is missing.Please refresh your browser and try again.",
+        });
+    }
     // Get a reference to the Firestore collection
     const essentialsCollection = admin.firestore().collection("Essentials");
 

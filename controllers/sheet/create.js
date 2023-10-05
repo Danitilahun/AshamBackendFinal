@@ -13,107 +13,6 @@ const updateDashboardBranchInfoWhenNewSheetCreated = require("../../service/util
 const updateOrCreateFieldsInDocument = require("../../service/utils/updateOrCreateFieldsInDocument");
 const generateCustomID = require("../../util/generateCustomID");
 
-// /**
-//  * Creates a new sheet with multiple steps.
-//  *
-//  * @param {Object} req - The request object.
-//  * @param {Object} res - The response object.
-//  * @returns {Promise<void>} A promise that resolves when the sheet is successfully created.
-//  */
-// const createSheet = async (req, res) => {
-//   try {
-//     const data = req.body;
-//     console.log(data);
-//     // Step 1: Check if there is a previous sheet
-
-//     const prevSheetCheckResult = await checkPreviousSheet(data.previousActive);
-//     console.log("prevSheetCheckResult", prevSheetCheckResult);
-//     if (prevSheetCheckResult) {
-//       return res.status(400).json(prevSheetCheckResult);
-//     }
-
-//     const prevSheet = await getDocumentDataById("branches", data.branchId);
-//     if (prevSheet && prevSheet.sheetStatus === "Pending") {
-//       return res.status(400).json({
-//         message:
-//           "Unable to create a new sheet. Please complete the pending sheet before creating a new one. If you've already completed it, please notify the finance department for further assistance.",
-//         type: "info",
-//       });
-//     }
-
-//     // Step 2: Get current status and total credit data
-//     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
-//     // Step 4: Create a new sheet document
-//     data.tablecount = 0;
-//     data.tableDate = [];
-//     const newDocId = await createDocument("sheets", data);
-//     const customId1 = generateCustomID(`${newDocId}-${data.branchId}`);
-//     const customId2 = generateCustomID(
-//       `${newDocId}-${data.branchId}-${"16day"}`
-//     );
-//     // Step 5: Create status collection
-
-//     // Step 6: Update or create fields in the new sheet document
-//     await updateOrCreateFieldsInDocument("sheets", newDocId, {
-//       active: customId1,
-//       activeDailySummery: customId2,
-//       sheetStatus: "Pending",
-//     });
-
-//     // Step 7: Push data to the "salaryTable" field array
-//     await pushToFieldArray("branches", data.branchId, "salaryTable", {
-//       name: data.name,
-//       id: customId1,
-//     });
-
-//     // Step 8: Update or create fields in the branches document
-//     await updateOrCreateFieldsInDocument("branches", data.branchId, {
-//       active: customId1,
-//       activeSheet: newDocId,
-//       activeDailySummery: customId2,
-//       activeTable: "",
-//       sheetStatus: "Pending",
-//     });
-
-//     // Step 9: Create individual delivery guy 15-day work summary
-//     await createIndividualDeliveryGuy15DayWorkSummery(
-//       newDocId,
-//       data.branchId,
-//       customId1
-//     );
-
-//     // Step 10: Create daily summary sheet
-//     await createDailySummerySheet(newDocId, data.branchId, customId2);
-
-//     // Step 11: Create calculator
-//     await createCalculator(customId1, newDocId, data.branchId, totalCredit);
-
-//     // Step 12: Create delivery guy salary table
-//     await createDeliveryGuySalaryTable(customId1, newDocId, data.branchId);
-
-//     // Step 13: Create staff salary table
-//     const totalStaffSalary = await createStaffSalaryTable(
-//       customId1,
-//       newDocId,
-//       data.branchId
-//     );
-
-//     const branch = await getDocumentDataById("branches", data.branchId);
-
-//     branch.totalStaffSalary = totalStaffSalary;
-//     await createStatusCollection(customId1, data.date, branch, data.branchId);
-//     // Step 14: Respond with success message
-//     res.status(200).json({
-//       message: `Sheet successfully created.`,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// module.exports = createSheet;
-
 const admin = require("../../config/firebase-admin");
 const pushToFieldArrayAndUpdateFields = require("../../service/utils/pushToFieldArrayAndUpdateFields");
 
@@ -127,7 +26,13 @@ const pushToFieldArrayAndUpdateFields = require("../../service/utils/pushToField
 const createSheet = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Step 1: Check if there is a previous sheet
 
     const prevSheetCheckResult = await checkPreviousSheet(data.previousActive);
@@ -152,6 +57,12 @@ const createSheet = async (req, res) => {
 
     // Step 2: Get current status and total credit data
     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
+    if (!totalCredit) {
+      return res.status(500).json({
+        message: "Branch total credit is missing.",
+        type: "error",
+      });
+    }
     // Step 4: Create a new sheet document
     data.tablecount = 0;
     data.tableDate = [];
@@ -162,7 +73,13 @@ const createSheet = async (req, res) => {
     );
     // Step 5: Create status collection
 
-    console.log(newDocId, customId1, customId2);
+    if (!newDocId || !data.date || !data.branchId) {
+      return res.status(500).json({
+        message:
+          "Fail to create sheet.Something is missing.Please refresh your browser and try again.",
+        type: "error",
+      });
+    }
     // Step 6: Update or create fields in the new sheet document
     await updateOrCreateFieldsInDocument(db, batch, "sheets", newDocId, {
       active: customId1,

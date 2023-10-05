@@ -11,6 +11,14 @@ const createEssentials = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
+    if (!data) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     // Get a reference to the Firestore collection
     const essentialsCollection = admin.firestore().collection("Essentials");

@@ -20,6 +20,12 @@ const editWaterOrder = async (req, res) => {
     // Get document ID and updated data from the request body
     const updatedData = req.body;
     const { id } = req.params;
+    if (!updatedData || !id) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Edit the Water Order document in the "Water Order" collection
     await editDocument(db, batch, "Water", id, updatedData); // Updated function call
 

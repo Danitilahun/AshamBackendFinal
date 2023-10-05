@@ -3,6 +3,11 @@ const updateSheetStatus = require("../../credit/updateSheetStatus/updateSheetSta
 const getDocumentDataById = require("../../utils/getDocumentDataById");
 
 const handleEmployeeBonusChange = async (updatedData, bonusId, db, batch) => {
+  if (!bonusId) {
+    throw new Error(
+      "Unable to update bonus because staff employee information is missing.Please refresh your browser and try again."
+    );
+  }
   const oldData = await getDocumentDataById("Bonus", bonusId);
 
   if (updatedData.employeeId !== oldData.employeeId) {

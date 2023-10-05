@@ -23,10 +23,20 @@ const deleteSheet = async (req, res) => {
     const batch = db.batch();
 
     const { id } = req.params;
-    console.log(id);
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Request parameter is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Step 1: Get the sheet data by ID
     const sheetData = await getDocumentDataById("sheets", id);
-    console.log("sheetData", sheetData);
+    if (!sheetData) {
+      return res.status(500).json({
+        message: "Sheet does not exists.",
+        type: "error",
+      });
+    }
     // Step 2: Delete the sheet document using the batch
     await deleteDocument(db, batch, "sheets", id);
 
@@ -73,7 +83,6 @@ const deleteSheet = async (req, res) => {
     // console.log(manye);
     // Commit the batch to execute all delete operations
     await batch.commit();
-
     res.status(200).json({ message: "Sheet deleted successfully." });
   } catch (error) {
     console.error(error);

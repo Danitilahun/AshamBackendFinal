@@ -65,8 +65,10 @@ const updateDashboardBranchInfo = async (
   data = {}
 ) => {
   try {
-    if (!branchId || !newExpense) {
-      return null;
+    if (!branchId) {
+      throw new Error(
+        "Unable to update dashboard because branch information is missing.Please refresh your browser and try again."
+      );
     }
     const dashboardQuerySnapshotBranch = await db
       .collection("branchInfo")
@@ -82,8 +84,10 @@ const updateDashboardBranchInfo = async (
         Object.keys(data).length !== 0
           ? data.name
           : dashboardDataBranch[branchId].BranchName,
-      TotalExpense: newExpense,
-      Status: dashboardDataBranch[branchId]["TotalProfit"] - newExpense,
+      TotalExpense: newExpense ? newExpense : 0,
+      Status:
+        dashboardDataBranch[branchId]["TotalProfit"] -
+        (newExpense ? newExpense : 0),
     };
 
     const updatedData = {

@@ -3,7 +3,12 @@ const updateCalculatorValue = require("../../service/updateCalculator/updateCalc
 const updateCalculator = async (req, res) => {
   try {
     const { id } = req.params;
-
+    if (!id) {
+      return res.status(400).json({
+        message:
+          "Calculator information is missing.Please refresh your browser and try again.",
+      });
+    }
     const data = req.body;
     if (!data) {
       return res

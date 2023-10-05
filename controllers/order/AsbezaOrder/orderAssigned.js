@@ -77,6 +77,12 @@ const AsbezaAssigned = async (req, res) => {
       // Getting cardFee information from the prices collection
       const DeliveryGuyGain = await getSingleDocFromCollection("prices");
 
+      if (!DeliveryGuyGain) {
+        return res.status(400).json({
+          message:
+            "Prices information is missing.Please refresh your browser and try again.",
+        });
+      }
       // Fourth update: Salary of the delivery guy table
       const newSalaryExpense = await updateTable(
         db,
@@ -91,25 +97,34 @@ const AsbezaAssigned = async (req, res) => {
         batch
       );
 
-      // Updating sheet status with totalDeliveryGuySalary
-      const newStatus = await updateSheetStatus(
-        db,
-        batch,
-        data.active,
-        "totalDeliveryGuySalary",
-        newSalaryExpense.total.total + DeliveryGuyGain.asbezaPrice
-      );
+      if (newSalaryExpense) {
+        // Updating sheet status with totalDeliveryGuySalary
+        const newStatus = await updateSheetStatus(
+          db,
+          batch,
+          data.active,
+          "totalDeliveryGuySalary",
+          newSalaryExpense.total.total + DeliveryGuyGain.asbezaPrice
+        );
 
-      // Update the dashboard with the new status
-      await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
+        if (newStatus) {
+          // Update the dashboard with the new status
+          await updateDashboard(
+            db,
+            batch,
+            data.branchId,
+            newStatus.totalExpense ? newStatus.totalExpense : 0
+          );
 
-      // Update dashboard branch info with the new status
-      await updateDashboardBranchInfo(
-        db,
-        batch,
-        data.branchId,
-        newStatus.totalExpense
-      );
+          // Update dashboard branch info with the new status
+          await updateDashboardBranchInfo(
+            db,
+            batch,
+            data.branchId,
+            newStatus.totalExpense ? newStatus.totalExpense : 0
+          );
+        }
+      }
 
       // Commit the batch to execute all operations together
       await batch.commit();

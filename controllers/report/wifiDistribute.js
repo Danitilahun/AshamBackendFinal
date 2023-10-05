@@ -28,7 +28,19 @@ const WifiDistributeReport = async (req, res) => {
     const data = req.body;
     // Logging the received data
     console.log(data);
+    if (!data) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const companyGain = await getSingleDocFromCollection("companyGain");
+    if (!companyGain) {
+      return res.status(404).json({
+        message: "Company gain not found",
+        type: "info",
+      });
+    }
     data.amount = data.numberOfCard * companyGain.wifi_distribute_gain;
     data.reason = "wifiDistribute";
     data.CHECK_SOURCE = generateCustomID("wifiDistribute_Report_Reason");
@@ -50,6 +62,12 @@ const WifiDistributeReport = async (req, res) => {
 
     const DeliveryGuyGain = await getSingleDocFromCollection("prices");
 
+    if (!DeliveryGuyGain) {
+      return res.status(400).json({
+        message:
+          "Prices information is missing.Please refresh your browser and try again.",
+      });
+    }
     // Fourth update: Salary of the delivery guy table
     const newSalaryExpense = await updateTable(
       db,
@@ -65,6 +83,12 @@ const WifiDistributeReport = async (req, res) => {
       batch
     );
 
+    if (!newSalaryExpense) {
+      return res.status(500).json({
+        message: "Failed to update sheet salary table.",
+        type: "error",
+      });
+    }
     // Updating sheet status with totalDeliveryGuySalary
 
     const newStatus = await updateSheetStatus(
@@ -76,15 +100,17 @@ const WifiDistributeReport = async (req, res) => {
         data.numberOfCard * DeliveryGuyGain.wifi_distribute_price
     );
 
-    await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
+    if (newStatus) {
+      await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
 
-    // Update dashboard branch info with the new status
-    await updateDashboardBranchInfo(
-      db,
-      batch,
-      data.branchId,
-      newStatus.totalExpense
-    );
+      // Update dashboard branch info with the new status
+      await updateDashboardBranchInfo(
+        db,
+        batch,
+        data.branchId,
+        newStatus.totalExpense
+      );
+    }
     // Updating dashboard branch information
     await batch.commit();
     // Responding with a success message

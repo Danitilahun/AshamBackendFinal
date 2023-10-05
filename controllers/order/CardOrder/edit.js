@@ -22,8 +22,19 @@ const editCardOrder = async (req, res) => {
     const updatedData = req.body;
     const { id } = req.params;
 
+    if (!updatedData || !id) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     const companyGain = await getSingleDocFromCollection("companyGain"); // Updated function call
     console.log(companyGain);
+    if (!companyGain) {
+      return res.status(400).json({
+        message: "Company Gain document is missing or empty",
+      });
+    }
     updatedData.dayRemain = parseInt(
       updatedData.amountBirr / parseInt(companyGain.card_price)
     );

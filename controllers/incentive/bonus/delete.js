@@ -17,6 +17,12 @@ const deleteBonus = async (req, res) => {
   try {
     const bonusId = req.params.bonusId;
 
+    if (!bonusId) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
+    }
     // Create Firestore database instance
     const db = admin.firestore();
     // Create Firestore batch
@@ -24,7 +30,11 @@ const deleteBonus = async (req, res) => {
 
     // Retrieve the credit data before deleting for updating total credit
     const bonusData = await getDocumentDataById("Bonus", bonusId);
-
+    if (!bonusData) {
+      return res.status(400).json({
+        message: "This bonus does not exist.",
+      });
+    }
     // Delete the credit document in the "CustomerCredit" collection
     const bonusDocRef = db.collection("Bonus").doc(bonusId);
     batch.delete(bonusDocRef);

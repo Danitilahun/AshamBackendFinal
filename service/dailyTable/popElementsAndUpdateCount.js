@@ -22,6 +22,11 @@ const popElementsAndUpdateCount = async (
   element2ToRemove,
   countChange
 ) => {
+  if (!documentId) {
+    throw new Error(
+      "Some required parameters for sheet is missing. Please refresh your browser and try again."
+    );
+  }
   const docRef = db.collection(collectionName).doc(documentId);
 
   try {

@@ -61,6 +61,9 @@ const updateFieldInDocument = async (
   fieldName,
   newValue
 ) => {
+  if (!documentId) {
+    return;
+  }
   const documentRef = db.collection(collectionName).doc(documentId);
 
   try {

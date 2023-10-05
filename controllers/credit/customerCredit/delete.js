@@ -17,6 +17,14 @@ const deleteCredit = async (req, res) => {
 
   try {
     const creditId = req.params.creditId;
+    if (!creditId) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     // Retrieve the credit data before deleting for updating total credit
     const creditData = await getDocumentDataById("CustomerCredit", creditId);
 
@@ -24,11 +32,14 @@ const deleteCredit = async (req, res) => {
     const creditRef = db.collection("CustomerCredit").doc(creditId);
     batch.delete(creditRef);
 
+    if (!creditData) {
+      return res.status(400).json({ message: "Credit data not found." });
+    }
     // Update the total credit by subtracting the deleted credit amount
     const updatedTotalCredit = await updateCreditDocument(
       creditData.branchId,
       "CustomerCredit",
-      -parseInt(creditData.amount), // Subtract the deleted credit amount
+      -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
       db,
       batch
     );
@@ -37,7 +48,7 @@ const deleteCredit = async (req, res) => {
     if (updatedTotalCredit) {
       await updateCalculator(
         creditData.active,
-        parseInt(updatedTotalCredit.total),
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
         db,
         batch
       );

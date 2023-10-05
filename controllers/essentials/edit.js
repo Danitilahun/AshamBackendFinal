@@ -12,6 +12,14 @@ const editEssentials = async (req, res) => {
     const updatedData = req.body;
     const { id } = req.params;
 
+    if (!updatedData || !id) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Request body is missing or empty.Please refresh your browser and try again.",
+        });
+    }
     // Get a reference to the Firestore collection
     const essentialsCollection = admin.firestore().collection("Essentials");
 
