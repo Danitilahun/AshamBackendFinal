@@ -25,7 +25,7 @@ const WaterDistributeReport = async (req, res) => {
 
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
-    if (!data) {
+    if (!data || !data.branchId || !data.active || !data.deliveryguyId) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",

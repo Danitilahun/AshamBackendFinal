@@ -30,8 +30,17 @@ const createWaterOrder = async (req, res) => {
       });
     }
 
-    const branch = await getDocumentDataById("branches", data.cardBranch);
-    if (!branch.active || !branch.activeSheet || !branch.activeTable) {
+    // console.log(manye);
+    const branch = await getDocumentDataById(
+      "branches",
+      data.cardBranch ? data.cardBranch : data.branchId
+    );
+    if (
+      !branch ||
+      !branch.active ||
+      !branch.activeSheet ||
+      !branch.activeTable
+    ) {
       return res.status(400).json({
         message:
           "You can't create order since there is no daily table or sheet.",

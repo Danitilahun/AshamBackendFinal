@@ -19,13 +19,11 @@ const editFinanceCredit = async (req, res) => {
     const updatedData = req.body;
     const { id } = req.params;
 
-    if (!updatedData || !id) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty. Please refresh your browser and try again.",
-        });
+    if (!updatedData || !id || !updatedData.branchId) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty. Please refresh your browser and try again.",
+      });
     }
     // Fetch the finance credit document before editing for validation
     const financeCreditRef = db.collection("FinanceCredit").doc(id);

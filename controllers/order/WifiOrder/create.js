@@ -30,8 +30,17 @@ const createWifiOrder = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
-    const branch = await getDocumentDataById("branches", data.cardBranch);
-    if (!branch.active || !branch.activeSheet || !branch.activeTable) {
+    // console.log(manye);
+    const branch = await getDocumentDataById(
+      "branches",
+      data.cardBranch ? data.cardBranch : data.branchId
+    );
+    if (
+      !branch ||
+      !branch.active ||
+      !branch.activeSheet ||
+      !branch.activeTable
+    ) {
       return res.status(400).json({
         message:
           "You can't create order since there is no daily table or sheet.",

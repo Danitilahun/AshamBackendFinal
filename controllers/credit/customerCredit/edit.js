@@ -18,22 +18,18 @@ const editCredit = async (req, res) => {
     const updatedData = req.body;
     const newValue = updatedData.difference;
     delete updatedData.difference;
-    if (!creditId) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty.Please refresh your browser and try again.",
-        });
+    if (!creditId || !updatedData.branchId || !updatedData.active) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     if (!updatedData) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Updated data is missing or empty.Please refresh your browser and try again.",
-        });
+      return res.status(400).json({
+        message:
+          "Updated data is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     console.log(updatedData);

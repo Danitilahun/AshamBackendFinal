@@ -13,13 +13,11 @@ const createCredit = async (req, res) => {
   try {
     const data = req.body;
     // console.log(data);
-    if (!data) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty.Please refresh your browser and try again.",
-        });
+    if (!data || !data.branchId || !data.active) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     // Get the Firestore instance and create a batch

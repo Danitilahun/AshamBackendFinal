@@ -11,13 +11,11 @@ const createCredit = async (req, res) => {
     const data = req.body;
     console.log(data);
 
-    if (!data) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty.Please refresh your browser and try again.",
-        });
+    if (!data || !data.active || !data.branchId || !data.employeeId) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     const db = admin.firestore();

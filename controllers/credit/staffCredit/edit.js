@@ -17,12 +17,15 @@ const editCredit = async (req, res) => {
   try {
     const creditId = req.params.creditId;
     const { employessChange, ...updatedData } = req.body;
-    console.log(updatedData);
     const newValue = updatedData.difference;
     delete updatedData.difference;
-    console.log(updatedData);
 
-    if (!updatedData || !creditId) {
+    if (
+      !updatedData ||
+      !creditId ||
+      !updatedData.branchId ||
+      !updatedData.active
+    ) {
       return res
         .status(400)
         .json({ message: "Request body is missing or empty." });

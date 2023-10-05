@@ -28,7 +28,7 @@ const WifiDistributeReport = async (req, res) => {
     const data = req.body;
     // Logging the received data
     console.log(data);
-    if (!data) {
+    if (!data || !data.branchId || !data.active || !data.deliveryguyId) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",

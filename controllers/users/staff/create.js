@@ -29,9 +29,10 @@ const createStaff = async (req, res) => {
     // Step 1: Parse form data from the request
     const { fields, files } = await parseForm(req);
 
-    if (!fields) {
+    if (!fields || !fields.branchId) {
       return res.status(400).json({
-        message: "Invalid request data",
+        message:
+          "Invalid request data.Please refresh your browser and try again.",
         type: "error",
       });
     }

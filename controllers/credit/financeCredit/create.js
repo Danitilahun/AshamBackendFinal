@@ -19,13 +19,11 @@ const createFinanceCredit = async (req, res) => {
     // Get data from the request body
     const data = req.body;
     console.log(data);
-    if (!data) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty.Please refresh your browser and try again.",
-        });
+    if (!data || !data.branchId) {
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     // Create an essential document in the "essential" collection within the batch
