@@ -64,7 +64,6 @@ const updateDocumentWithPushAndIncrement = require("./updateDocumentWithPushAndI
  * @returns {Promise<void>} A Promise that resolves when the summary sheet is created.
  */
 const createSheetSummary = async (currentStatus, totalCredit, db, batch) => {
-  console.log(currentStatus);
   const date = formatDateRange(currentStatus.createdDate);
   let status =
     currentStatus.totalIncome > currentStatus.totalExpense ? "profit" : "loss";
@@ -86,25 +85,6 @@ const createSheetSummary = async (currentStatus, totalCredit, db, batch) => {
     amount: amount, // Add amount
     totalCredit: totalCredit ? totalCredit.total : 0, // Add totalCredit or set to 0 if not available
   };
-
-  // Add the summary sheet to the "Budget" collection
-  // await pushToFieldArray(
-  //   db,
-  //   batch,
-  //   "Budget",
-  //   currentStatus.branchId,
-  //   "sheetSummary",
-  //   summarySheet
-  // );
-
-  // await incrementFieldValue(
-  //   db,
-  //   batch,
-  //   "Budget",
-  //   currentStatus.branchId,
-  //   "total",
-  //   amount
-  // );
 
   await updateDocumentWithPushAndIncrement(
     db,

@@ -16,7 +16,7 @@ const getDocumentDataById = require("../../service/utils/getDocumentDataById");
 const ChangeSheetStatus = async (req, res) => {
   try {
     const data = req.body;
-    console.log(req.body);
+
     // Check if data is null or undefined
     if (!data) {
       return res
@@ -54,7 +54,6 @@ const ChangeSheetStatus = async (req, res) => {
 
     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
     const currentStatus = await getDocumentDataById("Status", data.active);
-    console.log(currentStatus);
 
     // Step 12: Update dashboard branch info within the batch
     await updateDashboardBranchInfoWhenNewSheetCreated(

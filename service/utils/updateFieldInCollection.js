@@ -42,7 +42,7 @@ const updateCalculatorAmount = require("./updateCalculatorAmount");
 
 /**
  * Update a field in a collection within a batch.
- *
+
  * @param {Object} db - The Firestore database instance.
  * @param {Object} batch - The Firestore batch object.
  * @param {string} collectionName - Name of the Firestore collection.
@@ -67,12 +67,16 @@ const updateFieldInCollection = async (
     // Update the specified field in each document within the batch
     snapshot.forEach((doc) => {
       const docRef = collectionRef.doc(doc.id);
+      const previousValue = doc.data()[fieldToUpdate]; // Get the previous value
+      const updatedValue = previousValue + incrementBy; // Calculate the updated value
+      // Perform the update within the batch
+
       batch.update(docRef, {
         [fieldToUpdate]: admin.firestore.FieldValue.increment(incrementBy),
       });
 
       // Push the doc.id into the array
-      docIds.push(doc.id);
+      docIds.push([doc.id, updatedValue]);
 
       console.log(`Updated ${fieldToUpdate} in ${collectionName}/${doc.id}`);
     });
@@ -82,9 +86,14 @@ const updateFieldInCollection = async (
       `Updated ${fieldToUpdate} in these documents: ${docIds.join(", ")}`
     );
 
+    console.log("Updating Calculator amount...", docIds);
     // Loop over the docIds array and call updateCalculatorAmount for each doc.id
-    for (const docId of docIds) {
-      await updateCalculatorAmount(db, batch, docId, parseFloat(incrementBy));
+    // for (const docId of docIds) {
+    //   await updateCalculatorAmount(db, batch, docId, parseFloat(incrementBy));
+    // }
+
+    for (const [docId, updatedValue] of docIds) {
+      await updateCalculatorAmount(db, batch, docId, parseFloat(updatedValue));
     }
 
     console.log(

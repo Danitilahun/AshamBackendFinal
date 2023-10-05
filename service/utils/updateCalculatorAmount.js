@@ -44,6 +44,7 @@ const admin = require("../../config/firebase-admin");
  * @returns {Promise<void>} A Promise that resolves when the batch operation is complete.
  */
 const updateCalculatorAmount = async (db, batch, id, newIncome) => {
+  console.log("the new function", id, newIncome);
   try {
     if (!id) {
       throw new Error("Document ID cannot be empty.");
@@ -62,6 +63,7 @@ const updateCalculatorAmount = async (db, batch, id, newIncome) => {
     const newAmount = data.actual + incomeDifference;
     const newBalance = data.sum - newAmount;
 
+    console.log(newAmount, newIncome, newBalance);
     batch.update(docRef, {
       actual: newAmount,
       income: newIncome,
