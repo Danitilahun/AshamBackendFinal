@@ -93,8 +93,6 @@ const deleteAdmin = async (req, res) => {
     // Step 8: Handle any errors that occur during the operation
     console.error(error);
     res.status(500).json({ message: error.message });
-    const user = await getDocumentDataById("admin", id);
-    await editUserEmail(id, user.email);
   }
 };
 

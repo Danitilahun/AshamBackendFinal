@@ -21,6 +21,12 @@ const disableUser = async (req, res) => {
     const { id } = req.params;
     const { disable, collectionName } = req.body;
 
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "User information is missing or invalid." });
+    }
+
     // Step 2: Disable or enable the user account in Firebase Authentication
     await disableUserAccount(id, disable);
 

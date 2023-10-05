@@ -12,9 +12,6 @@ const editFinance = async (req, res) => {
   const { id } = req.params;
   try {
     const { emailChange, ...updatedData } = req.body;
-    if (emailChange) {
-      await editUserEmail(id, updatedData.email);
-    }
 
     updatedData.salary = parseInt(updatedData.salary);
     await editDocument(db, batch, "finance", id, updatedData);
@@ -32,6 +29,9 @@ const editFinance = async (req, res) => {
     });
     // Commit the batch updates
     // console.log(man);
+    if (emailChange) {
+      await editUserEmail(id, updatedData.email);
+    }
     await batch.commit();
     res.status(200).json({ message: "Finance updated successfully." });
   } catch (error) {

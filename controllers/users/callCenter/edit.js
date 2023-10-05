@@ -10,9 +10,7 @@ const editCallCenter = async (req, res) => {
   const batch = db.batch();
   try {
     const { emailChange, ...updatedData } = req.body;
-    if (emailChange) {
-      await editUserEmail(id, updatedData.email);
-    }
+
     await editDocument(db, batch, "callcenter", id, updatedData);
     await pushToFieldArray(db, batch, "ashamStaff", "ashamStaff", "member", {
       id: id,
@@ -26,6 +24,10 @@ const editCallCenter = async (req, res) => {
       address: updatedData.fullAddress,
       phone: updatedData.phone,
     });
+
+    if (emailChange) {
+      await editUserEmail(id, updatedData.email);
+    }
     // Commit the batch updates
     await batch.commit();
     res.status(200).json({ message: "Call Center updated successfully." });

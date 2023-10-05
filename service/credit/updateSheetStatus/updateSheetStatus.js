@@ -67,9 +67,11 @@ const updateSheetStatus = async (customId, expenseType, value, db, batch) => {
 
     if (creditDoc.exists) {
       const updateData = {};
-      updateData[expenseType] = value;
+      updateData[expenseType] = value ? value : 0;
       updateData["totalExpense"] =
-        creditDoc.get("totalExpense") - creditDoc.get(expenseType) + value;
+        creditDoc.get("totalExpense") -
+        creditDoc.get(expenseType) +
+        (value ? value : 0);
 
       // Update the document data without committing the batch
       batch.update(creditRef, updateData);

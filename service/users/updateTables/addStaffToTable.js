@@ -48,6 +48,11 @@ const addStaffToTable = async (
   salary
 ) => {
   try {
+    if (!documentId) {
+      throw new Error(
+        "Unable to add staff to the table because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     // Get the document reference
     const documentRef = db.collection(collectionName).doc(documentId);
     // Get the current data of the document

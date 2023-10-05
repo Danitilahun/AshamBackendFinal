@@ -18,6 +18,11 @@ const updateProfilePicture = async (req, res) => {
   try {
     // Step 1: Get admin user ID from the request parameters
     const { id } = req.params;
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "User information is missing or invalid." });
+    }
 
     // Step 2: Parse form data to retrieve updated fields and files
     const { fields, files } = await parseForm(req);

@@ -19,6 +19,9 @@ const incrementFieldByOne = async (
   batch
 ) => {
   try {
+    if (!documentId) {
+      return null;
+    }
     // Step 1: Get a reference to the document
     const docRef = db.collection(collectionName).doc(documentId);
 
@@ -28,7 +31,7 @@ const incrementFieldByOne = async (
     // Step 3: If the document exists, calculate the new value
     if (docSnapshot.exists) {
       const currentValue = docSnapshot.get(fieldToIncrement) || 0;
-      const newValue = currentValue + value;
+      const newValue = currentValue + (value || 1);
 
       // Step 4: Update the document with the new value using the batch
       batch.update(docRef, {
