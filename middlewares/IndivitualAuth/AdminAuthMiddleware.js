@@ -18,7 +18,12 @@ const AdminMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "An error occurred." });
+    res
+      .status(500)
+      .json({
+        message:
+          "There is no user record corresponding to the provided identifier.",
+      });
   }
 };
 

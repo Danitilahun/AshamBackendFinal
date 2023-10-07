@@ -1,4 +1,5 @@
 const admin = require("../../config/firebase-admin");
+const addBank = require("../../service/bank/addBank");
 const pushToFieldArray = require("../../service/bank/pushToFieldArray");
 const updateBankTransaction = require("../../service/bank/updateBankTransaction");
 const updateCalculatorBank = require("../../service/bank/updateCalculatorBank");
@@ -26,11 +27,11 @@ const CreateBank = async (req, res) => {
         .json({ message: "Request body is missing or empty." });
     }
 
+    console.log(data);
     // Initialize Firestore database
     const branchesCollection = db.collection("Bank");
 
     // Adjust the transaction amount based on the type of transaction
-    data.amount = data.transaction === "Withdraw" ? -data.amount : data.amount;
 
     // Set the transaction creation timestamp
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
@@ -61,8 +62,19 @@ const CreateBank = async (req, res) => {
       data.bankName
     );
 
-    // Update the calculator with bank data within the batch
+    if (data.source !== "finance") {
+      console.log("add bank");
+      console.log(data.transaction, data.transaction !== "Withdraw");
+      await addBank(
+        db,
+        batch,
+        data.branchId,
+        data.bankName,
+        data.transactionType !== "Withdraw" ? data.amount : -data.amount
+      );
+    }
     if (bank) {
+      // Update the calculator with bank data within the batch
       await updateCalculatorBank(db, batch, data.calculatorId, bank.total);
       await updateBankBalance(data.calculatorId, bank.total, db, batch);
     }

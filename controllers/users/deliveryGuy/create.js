@@ -20,9 +20,11 @@ const admin = require("../../../config/firebase-admin"); // Import Firebase Admi
 
 const createDeliveryGuy = async (req, res) => {
   try {
+    console.log("createDeliveryGuy");
     // Step 1: Parse form data from the request
     const { fields, files } = await parseForm(req);
 
+    console.log(fields);
     if (!fields || !fields.branchId) {
       return res.status(400).json({
         message:
@@ -30,6 +32,7 @@ const createDeliveryGuy = async (req, res) => {
         type: "error",
       });
     }
+
     // Step 2: Generate a unique identifier (UUID)
     let uuid = UUID();
 
