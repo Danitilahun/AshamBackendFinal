@@ -67,6 +67,9 @@ const updateOrCreateFieldsInDocument = async (
   newData
 ) => {
   try {
+    if (collectionName === "branches" && !documentId) {
+      return;
+    }
     if (!documentId) {
       throw new Error(
         `unable to update ${collectionName}, something is missing.Please refresh your browser and try again.`
