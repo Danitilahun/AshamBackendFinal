@@ -1,3 +1,5 @@
+const updateCalculatorActual = require("../../../../service/utils/updateCalculatorActual");
+const updateCalculatorAmount = require("../../../../service/utils/updateCalculatorAmount");
 const updateTable = require("../../../../service/utils/updateTable");
 
 const CardFee = async (data, db, batch) => {
@@ -42,6 +44,12 @@ const CardFee = async (data, db, batch) => {
       batch
     );
 
+    await updateCalculatorActual(
+      db,
+      batch,
+      data.active,
+      parseFloat(data.price) ? parseFloat(data.price) : 0
+    );
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in updateDeliveryAndDashboard:", error);

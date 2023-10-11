@@ -46,9 +46,9 @@ const WaterDistributeReport = async (req, res) => {
       });
     }
 
-    data.amount = parseInt(
-      data.numberOfCard * companyGain.water_distribute_gain
-    );
+    data.total =
+      parseFloat(data.amount) +
+      parseFloat(data.numberOfCard * companyGain.water_distribute_gain);
     // Creating a new credit document in the "CardFee" collection
     const id = await createDocument("waterDistribute", data, db, batch);
     await createDocumentWithCustomId("DailyCredit", id, data, db, batch);
@@ -58,7 +58,8 @@ const WaterDistributeReport = async (req, res) => {
       batch,
       data.deliveryguyId,
       "dailyCredit",
-      parseInt(data.numberOfCard * companyGain.water_distribute_gain)
+      parseFloat(data.numberOfCard * companyGain.water_distribute_gain) +
+        parseFloat(data.amount)
     );
     // Commit the batch updates
 

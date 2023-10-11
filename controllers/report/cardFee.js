@@ -10,6 +10,8 @@ const updateDashboard = require("../../service/credit/dashboard/updateDashboard"
 const updateDashboardBranchInfo = require("../../service/credit/dashboard/updateDashboardBranchInfo");
 const generateCustomID = require("../../utils/generateCustomID");
 const admin = require("../../config/firebase-admin"); // Import admin here
+const updateCalculatorAmount = require("../../service/utils/updateCalculatorAmount");
+const updateCalculatorActual = require("../../service/utils/updateCalculatorActual");
 
 /**
  * Handles the creation of a CardFee report and related operations.
@@ -37,6 +39,7 @@ const CardFeeReport = async (req, res) => {
     // Logging the received data
     console.log(data);
     data.amount = data.price;
+    data.total = data.price;
     data.reason = "cardFee";
     data.CHECK_SOURCE = generateCustomID("cardFee_Report_Reason");
     data.source = "Report";
@@ -49,7 +52,7 @@ const CardFeeReport = async (req, res) => {
       batch,
       data.deliveryguyId,
       "dailyCredit",
-      parseInt(data.price)
+      parseFloat(data.price)
     );
 
     const DeliveryGuyGain = await getSingleDocFromCollection("prices");
@@ -101,6 +104,12 @@ const CardFeeReport = async (req, res) => {
       );
     }
 
+    await updateCalculatorActual(
+      db,
+      batch,
+      data.active,
+      -parseFloat(data.price) ? -parseFloat(data.price) : 0
+    );
     // Commit the batch updates
     await batch.commit();
 

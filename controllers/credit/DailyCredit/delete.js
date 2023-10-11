@@ -19,12 +19,10 @@ const deleteCredit = async (req, res) => {
   try {
     const creditId = req.params.creditId;
     if (!creditId) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Credit ID is missing or empty.Please refresh your browser and try again.",
-        });
+      return res.status(400).json({
+        message:
+          "Credit ID is missing or empty.Please refresh your browser and try again.",
+      });
     }
     // Create a Firestore batch
     const db = admin.firestore(); // Initialize Firestore database
@@ -50,7 +48,7 @@ const deleteCredit = async (req, res) => {
     if (docSnapshot.exists) {
       // The delivery guy document exists, proceed with the update
       const newCreditAmount = -parseInt(
-        creditData.amount ? creditData.amount : 0
+        creditData.amount ? creditData.total : 0
       );
       batch.update(deliveryGuyRef, {
         dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),

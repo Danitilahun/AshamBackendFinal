@@ -43,9 +43,9 @@ const CardDistrubuteReport = async (req, res) => {
       });
     }
 
-    data.amount = parseInt(
-      data.numberOfCard * companyGain.card_distribute_gain
-    );
+    data.total =
+      parseFloat(data.amount) +
+      parseFloat(data.numberOfCard * companyGain.card_distribute_gain);
     data.reason = "cardDistribute";
     data.CHECK_SOURCE = generateCustomID("cardDistribute_Report_Reason");
     data.source = "Report";
@@ -58,7 +58,8 @@ const CardDistrubuteReport = async (req, res) => {
       batch,
       data.deliveryguyId,
       "dailyCredit",
-      parseInt(data.numberOfCard * companyGain.card_distribute_gain)
+      parseFloat(data.numberOfCard * companyGain.card_distribute_gain) +
+        parseFloat(data.amount)
     );
     // Updating various tables with cardFee information
 

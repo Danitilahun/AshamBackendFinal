@@ -22,6 +22,7 @@ const createCredit = async (req, res) => {
     }
     console.log(data);
     data.source = "Credit";
+    data.total = parseFloat(data.amount);
 
     // Create a new credit document in the "DailyCredit" collection within the batch
 

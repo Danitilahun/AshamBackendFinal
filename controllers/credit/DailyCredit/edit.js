@@ -18,6 +18,7 @@ const editCredit = async (req, res) => {
   try {
     const creditId = req.params.creditId;
     const updatedData = req.body;
+    updatedData.total = updatedData.amount;
     const newValue = updatedData.difference;
     delete updatedData.difference;
     if (!creditId || !updatedData || !updatedData.deliveryguyId) {

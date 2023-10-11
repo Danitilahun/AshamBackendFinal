@@ -34,6 +34,7 @@ const HotelProfitReport = async (req, res) => {
     // Logging the received data
     console.log(data);
     data.reason = "hotelProfit";
+    data.total = data.amount;
     data.CHECK_SOURCE = generateCustomID("hotelProfit_Report_Reason");
     data.source = "Report";
     // Creating a new credit document in the "CardFee" collection

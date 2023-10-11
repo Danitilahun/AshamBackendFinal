@@ -41,7 +41,9 @@ const WifiDistributeReport = async (req, res) => {
         type: "info",
       });
     }
-    data.amount = data.numberOfCard * companyGain.wifi_distribute_gain;
+    data.total =
+      parseFloat(data.amount) +
+      parseFloat(data.numberOfCard * companyGain.wifi_distribute_gain);
     data.reason = "wifiDistribute";
     data.CHECK_SOURCE = generateCustomID("wifiDistribute_Report_Reason");
     data.source = "Report";
@@ -54,7 +56,8 @@ const WifiDistributeReport = async (req, res) => {
       batch,
       data.deliveryguyId,
       "dailyCredit",
-      parseInt(data.numberOfCard * companyGain.wifi_distribute_gain)
+      parseFloat(data.numberOfCard * companyGain.wifi_distribute_gain) +
+        parseFloat(data.amount)
     );
     // Commit the batch updates
 
