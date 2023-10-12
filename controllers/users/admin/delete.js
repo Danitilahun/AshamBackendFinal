@@ -27,7 +27,7 @@ const deleteAdmin = async (req, res) => {
     }
 
     // Step 2: Retrieve admin data by ID
-    await disableUserAccount(id);
+    // await disableUserAccount(id);
     const adminData = await getDocumentDataById("admin", id);
     // Create Firestore database and batch
     const db = admin.firestore();
@@ -85,7 +85,7 @@ const deleteAdmin = async (req, res) => {
     }
     // Step 4: Update or create the "disable" field in the specified Firestore collection document
     if (adminData && adminData.email) {
-      await revokeRefreshTokens(id);
+      // await revokeRefreshTokens(id);
       await deleteUser(id);
     }
 
