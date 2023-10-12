@@ -1,4 +1,6 @@
 const admin = require("../../../config/firebase-admin");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 const payDailySalary = require("../../../service/users/handleDeliveryGuySalaryPay/payDailySalary");
 const swapCredit = require("../../../service/users/handleDeliveryGuySalaryPay/swapCredit");
 const updateDashboardActiveDeliveryGuy = require("../../../service/users/updateDashboard/updateActiveDeliveryGuy");
@@ -61,6 +63,18 @@ const handlePayController = async (req, res) => {
       credit
     );
 
+    const newTotalCredit = await updateCreditDocument(
+      deliveryGuySnapshot.data().branchId,
+      "StaffCredit",
+      parseFloat(credit ? credit : 0),
+      db,
+      batch
+    );
+
+    // Update the calculator with the new total credit
+    if (newTotalCredit && newTotalCredit?.total) {
+      await updateCalculator(active, newTotalCredit?.total, db, batch);
+    }
     // Commit the batch updates
     await batch.commit();
     return res.status(200).json({ message: "Data successfully updated." });

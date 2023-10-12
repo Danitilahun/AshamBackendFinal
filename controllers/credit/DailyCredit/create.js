@@ -1,4 +1,6 @@
 const admin = require("../../../config/firebase-admin");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 const updateDeliveryGuy = require("../../../service/credit/updateDeliveryGuy/updateDeliveryGuy");
 const createDocument = require("../../../service/mainCRUD/createDoc");
 /**
@@ -39,6 +41,19 @@ const createCredit = async (req, res) => {
       );
     }
 
+    const newTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      parseFloat(data.amount ? data.amount : 0),
+      db,
+      batch
+    );
+    // console.log("new total ", newTotalCredit.total);
+
+    // Update the calculator with the new total credit
+    if (newTotalCredit && newTotalCredit?.total) {
+      await updateCalculator(data.active, newTotalCredit?.total, db, batch);
+    }
     // Commit the batch to apply all changes atomically
     await batch.commit();
 

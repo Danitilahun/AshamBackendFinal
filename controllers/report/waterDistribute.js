@@ -32,10 +32,15 @@ const WaterDistributeReport = async (req, res) => {
       });
     }
     // Logging the received data
-    console.log(data);
-    data.reason = "waterDistribute";
-    data.CHECK_SOURCE = generateCustomID("waterDistribute_Report_Reason");
     data.source = "Report";
+    data.reason = "waterDistributeExpense";
+    const oneData = Object.assign({}, data);
+    oneData.gain = data.amount;
+    await createDocument("DailyCredit", oneData, db, batch);
+
+    data.reason = "waterDistributeGain";
+    data.CHECK_SOURCE = generateCustomID("waterDistribute_Report_Reason");
+
     // Logging the received data
     const companyGain = await getSingleDocFromCollection("companyGain");
 
@@ -49,6 +54,9 @@ const WaterDistributeReport = async (req, res) => {
     data.total =
       parseFloat(data.amount) +
       parseFloat(data.numberOfCard * companyGain.water_distribute_gain);
+    data.gain = parseFloat(
+      data.numberOfCard * companyGain.water_distribute_gain
+    );
     // Creating a new credit document in the "CardFee" collection
     const id = await createDocument("waterDistribute", data, db, batch);
     await createDocumentWithCustomId("DailyCredit", id, data, db, batch);

@@ -3,6 +3,8 @@ const updateDeliveryGuy = require("../../../service/credit/updateDeliveryGuy/upd
 const editDocument = require("../../../service/mainCRUD/editDoc");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const admin = require("../../../config/firebase-admin");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 
 /**
  * Edit a credit document and perform related operations.
@@ -46,6 +48,23 @@ const editCredit = async (req, res) => {
       parseInt(newValue)
     );
 
+    const newTotalCredit = await updateCreditDocument(
+      updatedData.branchId,
+      "DailyCredit",
+      parseFloat(newValue ? newValue : 0),
+      db,
+      batch
+    );
+
+    if (newTotalCredit) {
+      // Update the calculator with the new total credit within the batch
+      await updateCalculator(
+        updatedData.active,
+        parseFloat(newTotalCredit.total ? newTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
     // Commit the batch update
     await batch.commit();
 

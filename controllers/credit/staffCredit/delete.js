@@ -1,6 +1,8 @@
 const admin = require("../../../config/firebase-admin");
 const updateDashboard = require("../../../service/credit/dashboard/updateDashboard");
 const updateDashboardBranchInfo = require("../../../service/credit/dashboard/updateDashboardBranchInfo");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 const updateSalaryTable = require("../../../service/credit/updateSalaryTable/updateSalaryTable");
 const updateSheetStatus = require("../../../service/credit/updateSheetStatus/updateSheetStatus");
 const deleteDocument = require("../../../service/mainCRUD/deleteDoc");
@@ -79,6 +81,25 @@ const deleteCredit = async (req, res) => {
         batch,
         creditData.branchId,
         newStatus.totalExpense ? newStatus.totalExpense : 0
+      );
+    }
+
+    // Update the total credit by subtracting the deleted credit amount
+    const updatedTotalCredit = await updateCreditDocument(
+      creditData.branchId,
+      "StaffCredit",
+      -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
+      db,
+      batch
+    );
+
+    // Update the calculator with the new total credit
+    if (updatedTotalCredit) {
+      await updateCalculator(
+        creditData.active,
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+        db,
+        batch
       );
     }
 

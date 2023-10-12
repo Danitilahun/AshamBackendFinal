@@ -6,6 +6,8 @@ const updateSheetStatus = require("../../../service/credit/updateSheetStatus/upd
 const editDocument = require("../../../service/mainCRUD/editDoc");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const admin = require("../../../config/firebase-admin");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
 /**
  * Edit a credit document and perform related operations.
  *
@@ -53,8 +55,9 @@ const editCredit = async (req, res) => {
       updatedData.placement === "DeliveryGuy" ? "salary" : "staffSalary",
       updatedData.active
     );
+
     const employeeBalance = SalaryData[updatedData.employeeId]["total"];
-    if (parseInt(employeeBalance) < parseInt(updatedData.amount)) {
+    if (parseInt(employeeBalance) < parseInt(newValue)) {
       // Return an informational response if the balance is insufficient
       return res.status(400).json({
         type: "info",
@@ -116,6 +119,23 @@ const editCredit = async (req, res) => {
       );
     }
 
+    const newTotalCredit = await updateCreditDocument(
+      updatedData.branchId,
+      "StaffCredit",
+      parseFloat(newValue ? newValue : 0),
+      db,
+      batch
+    );
+
+    if (newTotalCredit) {
+      // Update the calculator with the new total credit within the batch
+      await updateCalculator(
+        updatedData.active,
+        parseFloat(newTotalCredit.total ? newTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
     await batch.commit();
     // Respond with a success message
     res.status(200).json({ message: `StaffCredit Edited successfully.` });

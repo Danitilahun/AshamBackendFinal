@@ -43,13 +43,21 @@ const CardDistrubuteReport = async (req, res) => {
       });
     }
 
+    data.source = "Report";
+    data.reason = "cardDistributeExpense";
+    const oneData = Object.assign({}, data);
+    oneData.gain = data.amount;
+    await createDocument("DailyCredit", oneData, db, batch);
     data.total =
       parseFloat(data.amount) +
       parseFloat(data.numberOfCard * companyGain.card_distribute_gain);
-    data.reason = "cardDistribute";
+    data.gain = parseFloat(
+      data.numberOfCard * companyGain.card_distribute_gain
+    );
+    data.reason = "cardDistributeGain";
     data.CHECK_SOURCE = generateCustomID("cardDistribute_Report_Reason");
-    data.source = "Report";
     // Creating a new credit document in the "CardFee" collection
+    console.log(data);
     const id = await createDocument("cardDistribute", data, db, batch);
     await createDocumentWithCustomId("DailyCredit", id, data, db, batch);
     // Update the total credit and retrieve the updated total

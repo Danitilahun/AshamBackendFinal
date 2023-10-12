@@ -1,4 +1,6 @@
 const admin = require("../../../config/firebase-admin");
+const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const generateCustomID = require("../../../utils/generateCustomID");
@@ -61,7 +63,25 @@ const deleteCredit = async (req, res) => {
       throw new Error("Delivery guy does not exist");
     }
 
-    console.log(creditData);
+    // Update the total credit by subtracting the deleted credit amount
+    const updatedTotalCredit = await updateCreditDocument(
+      creditData.branchId,
+      "DailyCredit",
+      -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
+      db,
+      batch
+    );
+
+    // Update the calculator with the new total credit
+    if (updatedTotalCredit) {
+      await updateCalculator(
+        creditData.active,
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
+    // console.log(creditData);
 
     const CardFeeCheck = generateCustomID("cardFee_Report_Reason");
     const CardDistributeCheck = generateCustomID(
