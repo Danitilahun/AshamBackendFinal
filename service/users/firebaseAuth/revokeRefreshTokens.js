@@ -5,6 +5,9 @@ const admin = require("../../../config/firebase-admin");
  * @returns {Promise<void>} A Promise that resolves when the refresh tokens are revoked.
  */
 const revokeRefreshTokens = async (userId) => {
+  if (!userId) {
+    return null;
+  }
   try {
     await admin.auth().revokeRefreshTokens(userId);
   } catch (error) {

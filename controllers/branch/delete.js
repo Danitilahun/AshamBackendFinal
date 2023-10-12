@@ -7,6 +7,7 @@ const deleteField = require("../../service/utils/deleteField");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
 const updateOrCreateFieldsInDocument = require("../../service/utils/updateOrCreateFieldsInDocument");
 const admin = require("../../config/firebase-admin");
+const revokeRefreshTokens = require("../../service/users/firebaseAuth/revokeRefreshTokens");
 
 const deleteBranch = async (req, res) => {
   try {
@@ -32,6 +33,7 @@ const deleteBranch = async (req, res) => {
     await deleteField(db, batch, "Deliveryturn", "turnQueue", id);
     await deleteDocument(db, batch, "branches", id);
     await editUserDisplayName(branchData.managerId, "");
+    await revokeRefreshTokens(branchData.managerId);
 
     if (branchData.managerId !== "not assigned") {
       await updateOrCreateFieldsInDocument(
