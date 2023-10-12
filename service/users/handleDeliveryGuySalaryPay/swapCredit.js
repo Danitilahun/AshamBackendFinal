@@ -10,13 +10,20 @@ const deleteDocumentsAndGetSum = require("../../utils/deleteDocuments");
 
 const swapCredit = async (id, data, active, db, batch) => {
   try {
+    const Credit_from_amount_normal = await deleteDocumentsAndGetSum(
+      "DailyCredit",
+      id,
+      db,
+      batch
+    );
+
     const creditCollection = db.collection("StaffCredit");
 
     const newData = {
       employeeId: id,
       placement: "DeliveryGuy",
       employeeName: data.fullName,
-      amount: parseInt(data.dailyCredit),
+      amount: parseInt(Credit_from_amount_normal),
       branchId: data.branchId,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       date: new Date(),
@@ -27,13 +34,6 @@ const swapCredit = async (id, data, active, db, batch) => {
 
     const newCreditRef = creditCollection.doc();
     batch.set(newCreditRef, newData);
-
-    const Credit_from_amount_normal = await deleteDocumentsAndGetSum(
-      "DailyCredit",
-      id,
-      db,
-      batch
-    );
 
     // console.log();
     await updateDeliveryGuy(
