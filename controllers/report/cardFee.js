@@ -40,6 +40,7 @@ const CardFeeReport = async (req, res) => {
     console.log(data);
     data.amount = data.price;
     data.total = data.price;
+    data.gain = data.price;
     data.reason = "cardFee";
     data.CHECK_SOURCE = generateCustomID("cardFee_Report_Reason");
     data.source = "Report";
