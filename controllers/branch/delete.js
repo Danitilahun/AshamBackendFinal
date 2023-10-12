@@ -34,8 +34,8 @@ const deleteBranch = async (req, res) => {
     await deleteField(db, batch, "Deliveryturn", "turnQueue", id);
     await deleteDocument(db, batch, "branches", id);
     await editUserDisplayName(branchData.managerId, "");
-    await revokeRefreshTokens(branchData.managerId);
-    await disableUserAccount(branchData.managerId);
+    // await revokeRefreshTokens(branchData.managerId);
+    // await disableUserAccount(branchData.managerId);
 
     if (branchData.managerId !== "not assigned") {
       await updateOrCreateFieldsInDocument(
