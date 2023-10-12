@@ -7,6 +7,7 @@ const deleteId1FieldAndReduceTotal = require("../../../service/utils/deleteId1Fi
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const editUserEmail = require("../../../service/users/firebaseAuth/editUserEmail");
 const revokeRefreshTokens = require("../../../service/users/firebaseAuth/revokeRefreshTokens");
+const disableUserAccount = require("../../../service/users/firebaseAuth/disableUser");
 
 /**
  * Delete an admin document from the "admin" Firestore collection.
@@ -26,8 +27,8 @@ const deleteAdmin = async (req, res) => {
     }
 
     // Step 2: Retrieve admin data by ID
+    await disableUserAccount(id);
     const adminData = await getDocumentDataById("admin", id);
-
     // Create Firestore database and batch
     const db = admin.firestore();
     const batch = db.batch();

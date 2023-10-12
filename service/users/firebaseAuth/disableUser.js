@@ -8,6 +8,9 @@ const admin = require("../../../config/firebase-admin");
  * @returns {Promise<void>} A Promise that resolves when the user is disabled or enabled.
  */
 const disableUserAccount = async (userId, disable) => {
+  if (!userId) {
+    return;
+  }
   try {
     await admin.auth().updateUser(userId, { disabled: disable });
   } catch (error) {
