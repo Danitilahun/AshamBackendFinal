@@ -50,7 +50,7 @@ const deleteCredit = async (req, res) => {
     if (docSnapshot.exists) {
       // The delivery guy document exists, proceed with the update
       const newCreditAmount = -parseInt(
-        creditData.amount ? creditData.total : 0
+        creditData.amount ? creditData.gain : 0
       );
       batch.update(deliveryGuyRef, {
         dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),
@@ -63,24 +63,6 @@ const deleteCredit = async (req, res) => {
       throw new Error("Delivery guy does not exist");
     }
 
-    // Update the total credit by subtracting the deleted credit amount
-    const updatedTotalCredit = await updateCreditDocument(
-      creditData.branchId,
-      "DailyCredit",
-      -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
-      db,
-      batch
-    );
-
-    // Update the calculator with the new total credit
-    if (updatedTotalCredit) {
-      await updateCalculator(
-        creditData.active,
-        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
-        db,
-        batch
-      );
-    }
     // console.log(creditData);
 
     const CardFeeCheck = generateCustomID("cardFee_Report_Reason");
@@ -108,6 +90,25 @@ const deleteCredit = async (req, res) => {
         await waterDistribute(creditData, db, batch);
       } else if (creditData.CHECK_SOURCE === HotelProfitCheck) {
         await HotelProfit(creditData, db, batch);
+      }
+    } else {
+      // Update the total credit by subtracting the deleted credit amount
+      const updatedTotalCredit = await updateCreditDocument(
+        creditData.branchId,
+        "DailyCredit",
+        -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
+        db,
+        batch
+      );
+
+      // Update the calculator with the new total credit
+      if (updatedTotalCredit) {
+        await updateCalculator(
+          creditData.active,
+          parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+          db,
+          batch
+        );
       }
     }
 
