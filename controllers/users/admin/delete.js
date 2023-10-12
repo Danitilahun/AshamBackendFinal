@@ -6,6 +6,7 @@ const updateOrCreateFieldsInDocument = require("../../../service/utils/updateOrC
 const deleteId1FieldAndReduceTotal = require("../../../service/utils/deleteId1FieldAndReduceTotal");
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const editUserEmail = require("../../../service/users/firebaseAuth/editUserEmail");
+const revokeRefreshTokens = require("../../../service/users/firebaseAuth/revokeRefreshTokens");
 
 /**
  * Delete an admin document from the "admin" Firestore collection.
@@ -84,6 +85,7 @@ const deleteAdmin = async (req, res) => {
     // Step 4: Update or create the "disable" field in the specified Firestore collection document
     if (adminData && adminData.email) {
       await deleteUser(id);
+      await revokeRefreshTokens(id);
     }
 
     await batch.commit();
