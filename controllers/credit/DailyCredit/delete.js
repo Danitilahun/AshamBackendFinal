@@ -90,6 +90,25 @@ const deleteCredit = async (req, res) => {
         await waterDistribute(creditData, db, batch);
       } else if (creditData.CHECK_SOURCE === HotelProfitCheck) {
         await HotelProfit(creditData, db, batch);
+      } else {
+        // Update the total credit by subtracting the deleted credit amount
+        const updatedTotalCredit = await updateCreditDocument(
+          creditData.branchId,
+          "DailyCredit",
+          -parseFloat(creditData ? creditData.amount : 0), // Subtract the deleted credit amount
+          db,
+          batch
+        );
+
+        // Update the calculator with the new total credit
+        if (updatedTotalCredit) {
+          await updateCalculator(
+            creditData.active,
+            parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+            db,
+            batch
+          );
+        }
       }
     } else {
       // Update the total credit by subtracting the deleted credit amount
