@@ -123,6 +123,20 @@ const WifiDistributeReport = async (req, res) => {
         newStatus.totalExpense
       );
     }
+
+    const newTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      parseFloat(oneData ? oneData.gain : 0),
+      db,
+      batch
+    );
+    // console.log("new total ", newTotalCredit.total);
+
+    // Update the calculator with the new total credit
+    if (newTotalCredit && newTotalCredit?.total) {
+      await updateCalculator(data.active, newTotalCredit?.total, db, batch);
+    }
     // Updating dashboard branch information
     await batch.commit();
     // Responding with a success message

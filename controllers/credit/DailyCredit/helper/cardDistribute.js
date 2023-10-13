@@ -116,7 +116,7 @@ const CardDistribute = async (data, db, batch) => {
     const updatedTotalCredit = await updateCreditDocument(
       data.branchId,
       "DailyCredit",
-      -parseFloat(data ? data.gain : 0), // Subtract the deleted credit amount
+      -parseFloat(data ? data.amount : 0), // Subtract the deleted credit amount
       db,
       batch
     );

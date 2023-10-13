@@ -1,3 +1,5 @@
+const updateCreditDocument = require("../../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../../service/credit/updateCalculator/updateCalculator");
 const updateDashboard = require("../../../../service/report/updateDashBoard/WifiDistribute/updateDashboard");
 const updateDashboardBranchInfo = require("../../../../service/report/updateDashBoard/WifiDistribute/updateDashboardBranchInfo");
 const getSingleDocFromCollection = require("../../../../service/utils/getSingleDocFromCollection");
@@ -105,6 +107,25 @@ const wifiDistribute = async (data, db, batch) => {
       data.active,
       newStatus.totalIncome ? newStatus.totalIncome : 0
     );
+
+    // Update the total credit by subtracting the deleted credit amount
+    const updatedTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      -parseFloat(data ? data.amount : 0), // Subtract the deleted credit amount
+      db,
+      batch
+    );
+
+    // Update the calculator with the new total credit
+    if (updatedTotalCredit) {
+      await updateCalculator(
+        data.active,
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
 
     console.log("Updates completed successfully.");
   } catch (error) {

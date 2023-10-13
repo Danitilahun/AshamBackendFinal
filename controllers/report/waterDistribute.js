@@ -124,6 +124,20 @@ const WaterDistributeReport = async (req, res) => {
         newStatus.totalExpense
       );
     }
+
+    const newTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      parseFloat(oneData ? oneData.gain : 0),
+      db,
+      batch
+    );
+    // console.log("new total ", newTotalCredit.total);
+
+    // Update the calculator with the new total credit
+    if (newTotalCredit && newTotalCredit?.total) {
+      await updateCalculator(data.active, newTotalCredit?.total, db, batch);
+    }
     // await updateSheetStatus(data.active, "totalIncome", newIncome.total.total);
 
     await batch.commit();
