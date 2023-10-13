@@ -5,6 +5,8 @@ const updateDashboardBranchInfo = require("../../../../service/report/updateDash
 const updateSheetStatus = require("../../../../service/utils/updateSheetStatus");
 const updateCalculatorAmount = require("../../../../service/utils/updateCalculatorAmount");
 const getDocumentDataById = require("../../../../service/utils/getDocumentDataById");
+const updateCreditDocument = require("../../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../../service/credit/updateCalculator/updateCalculator");
 
 const CardDistribute = async (data, db, batch) => {
   try {
@@ -109,6 +111,25 @@ const CardDistribute = async (data, db, batch) => {
       data.active,
       newStatus.totalIncome ? newStatus.totalIncome : 0
     );
+
+    // Update the total credit by subtracting the deleted credit amount
+    const updatedTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      -parseFloat(data ? creditData.gain : 0), // Subtract the deleted credit amount
+      db,
+      batch
+    );
+
+    // Update the calculator with the new total credit
+    if (updatedTotalCredit) {
+      await updateCalculator(
+        data.active,
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in CardFee:", error);
