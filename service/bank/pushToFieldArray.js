@@ -99,7 +99,8 @@ const pushToFieldArray = async (
       );
     }
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    console.error(error);
+    throw error;
   }
 };
 

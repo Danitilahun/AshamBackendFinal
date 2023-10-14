@@ -29,6 +29,7 @@ const updatePaidStatus = async (collectionName, fieldValue) => {
     );
   } catch (error) {
     console.error("Error updating documents:", error);
+    throw error; // Re-throw the error to handle it at the caller's level
   }
 };
 

@@ -34,7 +34,7 @@ const updateFinanceExpense = async (branchId, amount, db, batch) => {
   } catch (error) {
     // Handle any errors that occur during the operation
     console.error(error);
-    throw new Error("Failed to update finance expense.");
+    throw error;
   }
 };
 

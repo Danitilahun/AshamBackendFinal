@@ -53,10 +53,7 @@ const CardDistribute = async (data, db, batch) => {
       "total",
       {
         cardDistribute: data.numberOfCard ? data.numberOfCard : 0,
-        total:
-          data.numberOfCard * companyGain.card_distribute_gain
-            ? data.numberOfCard * companyGain.card_distribute_gain
-            : 0,
+        total: data.numberOfCard * companyGain.card_distribute_gain,
       },
       batch
     );
@@ -75,8 +72,6 @@ const CardDistribute = async (data, db, batch) => {
       "totalIncome",
       newIncome.total.total +
         data.numberOfCard * companyGain.card_distribute_gain
-        ? data.numberOfCard * companyGain.card_distribute_gain
-        : 0
     );
 
     if (!newStatus) {
@@ -113,26 +108,27 @@ const CardDistribute = async (data, db, batch) => {
     );
 
     // Update the total credit by subtracting the deleted credit amount
-    const updatedTotalCredit = await updateCreditDocument(
-      data.branchId,
-      "DailyCredit",
-      -parseFloat(data ? data.amount : 0), // Subtract the deleted credit amount
-      db,
-      batch
-    );
+    // const updatedTotalCredit = await updateCreditDocument(
+    //   data.branchId,
+    //   "DailyCredit",
+    //   -parseFloat(data ? data.amount : 0), // Subtract the deleted credit amount
+    //   db,
+    //   batch
+    // );
 
-    // Update the calculator with the new total credit
-    if (updatedTotalCredit) {
-      await updateCalculator(
-        data.active,
-        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
-        db,
-        batch
-      );
-    }
+    // // Update the calculator with the new total credit
+    // if (updatedTotalCredit) {
+    //   await updateCalculator(
+    //     data.active,
+    //     parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+    //     db,
+    //     batch
+    //   );
+    // }
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in CardFee:", error);
+    throw error;
   }
 };
 

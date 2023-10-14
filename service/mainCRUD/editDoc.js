@@ -67,11 +67,10 @@ const editDocument = async (
   documentId,
   updatedData
 ) => {
-  if (!documentId) {
-    return null;
-  }
-
   try {
+    if (!documentId) {
+      return null;
+    }
     if (!documentId) {
       console.log("documentId is null, no document updated.");
       return; // Exit the function without performing any update.
@@ -101,9 +100,7 @@ const editDocument = async (
     );
   } catch (error) {
     console.error(error);
-    throw new Error(
-      `Failed to edit document with ID ${documentId} in collection: ${collectionName}`
-    );
+    throw error;
   }
 };
 

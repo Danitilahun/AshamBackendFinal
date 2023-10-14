@@ -20,7 +20,7 @@ const getSingleDocFromCollection = async (collectionName) => {
     return doc.exists ? doc.data() : null;
   } catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    throw error;
   }
 };
 

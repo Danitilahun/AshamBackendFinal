@@ -48,7 +48,7 @@ const updateDashboardTotalCustomer = async (db, batch, value) => {
       batch.update(dashboardDocRef, { totalCustomer: newTotalCustomer });
     }
   } catch (error) {
-    console.error("Error updating dashboard totalCustomer:", error);
+    throw error;
   }
 };
 

@@ -38,12 +38,12 @@
 // module.exports = deleteBranchRelatedDoc;
 
 const deleteBranchRelatedDoc = async (db, batch, id) => {
-  if (!id) {
-    throw new Error(
-      "Unable to delete branch related documents because branch information is missing.Please refresh your browser and try again."
-    );
-  }
   try {
+    if (!id) {
+      throw new Error(
+        "Unable to delete branch related documents because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     // Step 1: Delete the "Bank" collection of the branch
     batch.delete(db.collection("Bank").doc(id));
 

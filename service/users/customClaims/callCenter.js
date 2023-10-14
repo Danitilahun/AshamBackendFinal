@@ -11,6 +11,7 @@ const grantCallCenterAccess = async (uid) => {
     console.log("Call Center access granted successfully!");
   } catch (error) {
     console.error("Error granting Call Center access:", error);
+    throw error;
   }
 };
 

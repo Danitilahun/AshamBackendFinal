@@ -27,7 +27,7 @@ const getAllStaffByBranchId = async (collectionName, branchId) => {
     return deliveryGuys;
   } catch (error) {
     console.error(error);
-    throw new Error("An error occurred while retrieving delivery guys.");
+    throw error;
   }
 };
 

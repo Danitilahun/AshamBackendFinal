@@ -52,12 +52,12 @@
 // module.exports = updateDashboardData;
 
 const updateDashboardData = async (db, batch, data, branchId) => {
-  if (!branchId) {
-    throw new Error(
-      "Unable to update branch information in dashboard because branch information is missing.Please refresh your browser and try again."
-    );
-  }
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to update branch information in dashboard because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const dashboardDocRef = await db.collection("dashboard").limit(1).get();
 
     if (dashboardDocRef.empty) {

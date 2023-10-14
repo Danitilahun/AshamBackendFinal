@@ -1,11 +1,10 @@
 const addBank = async (db, batch, documentId, fieldName, valueToAdd) => {
-  if (!documentId) {
-    throw new Error("You don't have sheet.Please create before.");
-  }
-
-  const docRef = db.collection("Bank").doc(documentId);
-
   try {
+    if (!documentId) {
+      throw new Error("You don't have sheet.Please create before.");
+    }
+
+    const docRef = db.collection("Bank").doc(documentId);
     const doc = await docRef.get();
 
     if (doc.exists) {

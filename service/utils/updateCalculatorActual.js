@@ -39,6 +39,7 @@ const updateCalculatorActual = async (db, batch, id, newActual) => {
     console.log("Calculator actual updated successfully");
   } catch (error) {
     console.log("Error updating Calculator actual:", error);
+    throw error;
   }
 };
 

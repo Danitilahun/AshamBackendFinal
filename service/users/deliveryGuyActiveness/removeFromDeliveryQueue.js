@@ -17,7 +17,7 @@ const removeFromDeliveryQueue = async (db, batch, branchId, deliveryManId) => {
       batch.update(docRef, { [branchId]: updatedQueue });
     }
   } catch (error) {
-    throw new Error(`Error removing from delivery queue: ${error.message}`);
+    throw error;
   }
 };
 

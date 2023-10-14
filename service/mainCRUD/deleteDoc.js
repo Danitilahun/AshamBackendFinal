@@ -47,9 +47,7 @@ const deleteDocument = async (db, batch, collectionName, documentId) => {
     console.log(`Document with ID ${documentId} scheduled for deletion.`);
   } catch (error) {
     console.error(error);
-    throw new Error(
-      `Failed to schedule deletion of document with ID ${documentId}.`
-    );
+    throw error;
   }
 };
 

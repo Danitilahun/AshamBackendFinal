@@ -52,7 +52,7 @@ const updateFieldsInNestedObject = async (
     // Return the updated document data
     return { ...documentData, [objectId]: targetObject };
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

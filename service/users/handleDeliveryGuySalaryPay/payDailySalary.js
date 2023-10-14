@@ -39,7 +39,7 @@ const payDailySalary = async (active, id, branchId, db, batch, credit) => {
       newStatus.totalExpense
     );
   } catch (error) {
-    throw new Error(`Error updating salary data: ${error.message}`);
+    throw error;
   }
 };
 

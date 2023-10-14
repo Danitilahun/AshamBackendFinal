@@ -25,6 +25,7 @@ const updateCalculatorBank = async (id, valueToAdd) => {
     console.log("Calculator updated successfully");
   } catch (error) {
     console.log("Error updating Calculator bank:", error);
+    throw error;
   }
 };
 

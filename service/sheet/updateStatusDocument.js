@@ -41,17 +41,16 @@
  * @returns {Promise<Object>} A Promise that resolves with the updated status data when the document is set successfully.
  */
 const setStatusDocument = async (db, batch, id, updatedStatusData) => {
-  if (!id) {
-    throw new Error(
-      "Branch sheet infromation is missing.Please refresh your browser and try again."
-    );
-  }
-
-  console.log(updatedStatusData);
-  const statusCollectionRef = db.collection("Status");
-  const statusDocumentRef = statusCollectionRef.doc(id);
-
   try {
+    if (!id) {
+      throw new Error(
+        "Branch sheet infromation is missing.Please refresh your browser and try again."
+      );
+    }
+
+    console.log(updatedStatusData);
+    const statusCollectionRef = db.collection("Status");
+    const statusDocumentRef = statusCollectionRef.doc(id);
     // Add the set operation to the batch (write operation)
     batch.set(statusDocumentRef, updatedStatusData);
     // You can optionally return the updatedStatusData here if needed

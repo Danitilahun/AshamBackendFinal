@@ -35,7 +35,7 @@ const pushToFieldArray = async (collectionName, docId, field, itemToPush) => {
     }
     return documentSnapshot.data();
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

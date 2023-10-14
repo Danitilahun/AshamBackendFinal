@@ -42,7 +42,7 @@ const addToDeliveryQueue = async (
       batch.update(docRef, { [branchId]: existingQueue });
     }
   } catch (error) {
-    throw new Error(`Error adding to delivery queue: ${error.message}`);
+    throw error;
   }
 };
 

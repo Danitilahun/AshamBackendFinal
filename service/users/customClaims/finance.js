@@ -10,6 +10,7 @@ const grantFinanceAccess = async (uid) => {
     console.log("Finance access granted successfully!");
   } catch (error) {
     console.error("Error granting Finance access:", error);
+    throw error;
   }
 };
 

@@ -71,9 +71,7 @@ const createDocumentWithCustomId = async (
     );
   } catch (error) {
     console.error(error);
-    throw new Error(
-      `Failed to create document in collection: ${collectionName} with custom ID: ${customId}`
-    );
+    throw error;
   }
 };
 

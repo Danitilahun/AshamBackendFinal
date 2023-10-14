@@ -1,10 +1,10 @@
 const createTotalCreditCollection = async (db, batch, branchId) => {
-  if (!branchId) {
-    throw new Error(
-      "Unable to create total credit store because branch information is missing.Please refresh your browser and try again."
-    );
-  }
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to create total credit store because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const totalCreditCollectionRef = db.collection("totalCredit").doc(branchId);
     const totalCreditDocumentSnapshot = await totalCreditCollectionRef.get();
 

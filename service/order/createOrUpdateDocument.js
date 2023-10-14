@@ -87,7 +87,7 @@ const createOrUpdateDocument = async (
     }
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to create or update document.");
+    throw error;
   }
 };
 

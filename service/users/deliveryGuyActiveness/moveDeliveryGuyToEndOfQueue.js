@@ -41,9 +41,7 @@ const moveDeliveryGuyToEndOfQueue = async (
       batch.update(docRef, { [branchId]: existingQueue });
     }
   } catch (error) {
-    throw new Error(
-      `Error moving delivery guy to the end of the queue: ${error.message}`
-    );
+    throw error;
   }
 };
 

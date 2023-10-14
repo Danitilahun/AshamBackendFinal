@@ -32,6 +32,16 @@ const updateTable = async (
     const docRef1 = db.collection(collectionName).doc(docId);
     const docRef2 = db.collection(collectionName).doc(docId); // Use the same docId
 
+    const docSnapshot = await docRef1.get();
+    const currentData = docSnapshot.data();
+
+    // Check if the specified IDs exist in the document
+    if (!currentData || !currentData[idToUpdate] || !currentData[idToUpdate2]) {
+      throw new Error(
+        "Daily table do not exist.Please check you have Sheet and table for a day.If not create one first."
+      );
+    }
+
     // Update the data for the first ID
     const updateData1 = {};
     Object.keys(newData).forEach((key) => {
@@ -60,7 +70,6 @@ const updateTable = async (
     const updatedDocSnapshot = await docRef1.get();
     return updatedDocSnapshot.data();
   } catch (error) {
-    console.error("Error updating data:", error);
     throw error; // Re-throw the error to handle it at the caller's level
   }
 };

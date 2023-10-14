@@ -67,7 +67,7 @@ const updateDeliveryGuyName = async (
       batch.update(docRef, { [branchId]: existingQueue });
     }
   } catch (error) {
-    throw new Error(`Error updating delivery guy name: ${error.message}`);
+    throw error;
   }
 };
 

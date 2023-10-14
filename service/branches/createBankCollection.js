@@ -23,10 +23,12 @@
 // module.exports = createBankCollection;
 
 const createBankCollection = async (db, batch, branchId) => {
-  if (!branchId) {
-    return;
-  }
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to create bank collection because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const bankCollectionRef = db.collection("Bank").doc(branchId);
     const bankDocumentSnapshot = await bankCollectionRef.get();
 

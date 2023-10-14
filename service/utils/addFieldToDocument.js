@@ -55,7 +55,7 @@ const addFieldToDocument = async (
     );
   } catch (error) {
     console.error("Error adding field:", error);
-    throw new Error("An error occurred while adding the field.");
+    throw error;
   }
 };
 

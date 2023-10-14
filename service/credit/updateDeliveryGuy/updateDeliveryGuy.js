@@ -70,9 +70,7 @@ const updateDeliveryGuy = async (db, batch, docId, field, value) => {
   } catch (error) {
     // Handle the error and throw an error
     console.error(`Error updating document with ID ${docId}:`, error);
-    throw new Error(
-      `An error occurred while updating the document with ID ${docId}.`
-    );
+    throw error;
   }
 };
 

@@ -10,10 +10,9 @@ const admin = require("../../config/firebase-admin");
  * @throws {Error} Throws an error if the operation fails.
  */
 const createDocument = async (collectionName, data, transaction) => {
-  const db = admin.firestore();
-  const collection = db.collection(collectionName);
-
   try {
+    const db = admin.firestore();
+    const collection = db.collection(collectionName);
     // Ensure that reads are executed before writes within the transaction
     const docRef = collection.doc(); // Create a new document reference
 
@@ -32,9 +31,7 @@ const createDocument = async (collectionName, data, transaction) => {
     return docRef.id; // Return the ID of the created document
   } catch (error) {
     console.error(error);
-    throw new Error(
-      `Failed to create document in collection: ${collectionName}`
-    );
+    throw error;
   }
 };
 

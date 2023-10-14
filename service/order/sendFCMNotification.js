@@ -35,7 +35,7 @@ const sendFCMNotification = async (data, from = "create") => {
         });
     }
   } catch (error) {
-    console.error("Error sending FCM notification:", error);
+    throw error;
   }
 };
 

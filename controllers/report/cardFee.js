@@ -105,12 +105,21 @@ const CardFeeReport = async (req, res) => {
       );
     }
 
-    await updateCalculatorActual(
+    const newTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      parseFloat(data.price ? data.price : 0),
       db,
-      batch,
-      data.active,
-      -parseFloat(data.price) ? -parseFloat(data.price) : 0
+      batch
     );
+    // console.log("new total ", newTotalCredit.total);
+
+    // Update the calculator with the new total credit
+    if (newTotalCredit && newTotalCredit?.total) {
+      await updateCalculator(data.active, newTotalCredit?.total, db, batch);
+    }
+
+    console.log("data.price", data.price);
     // Commit the batch updates
     await batch.commit();
 

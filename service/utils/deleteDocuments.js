@@ -31,7 +31,7 @@ const deleteDocumentsAndGetSum = async (collectionName, Id, db, batch) => {
     return totalAmount; // Return the sum of amounts
   } catch (error) {
     console.error("Error deleting documents:", error);
-    return null; // Handle the error gracefully by returning null
+    throw error;
   }
 };
 

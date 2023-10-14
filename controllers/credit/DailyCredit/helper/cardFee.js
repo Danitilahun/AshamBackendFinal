@@ -1,3 +1,5 @@
+const updateCreditDocument = require("../../../../service/credit/totalCredit/updateCreditDocument");
+const updateCalculator = require("../../../../service/credit/updateCalculator/updateCalculator");
 const updateCalculatorActual = require("../../../../service/utils/updateCalculatorActual");
 const updateCalculatorAmount = require("../../../../service/utils/updateCalculatorAmount");
 const updateTable = require("../../../../service/utils/updateTable");
@@ -44,15 +46,35 @@ const CardFee = async (data, db, batch) => {
       batch
     );
 
-    await updateCalculatorActual(
+    // await updateCalculatorActual(
+    //   db,
+    //   batch,
+    //   data.active,
+    //   parseFloat(data.price) ? parseFloat(data.price) : 0
+    // );
+
+    // Update the total credit by subtracting the deleted credit amount
+    const updatedTotalCredit = await updateCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      -parseFloat(data ? data.price : 0), // Subtract the deleted credit amount
       db,
-      batch,
-      data.active,
-      parseFloat(data.price) ? parseFloat(data.price) : 0
+      batch
     );
+
+    // Update the calculator with the new total credit
+    if (updatedTotalCredit) {
+      await updateCalculator(
+        data.active,
+        parseFloat(updatedTotalCredit.total ? updatedTotalCredit.total : 0),
+        db,
+        batch
+      );
+    }
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in updateDeliveryAndDashboard:", error);
+    throw error;
   }
 };
 

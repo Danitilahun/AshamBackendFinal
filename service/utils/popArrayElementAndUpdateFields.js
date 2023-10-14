@@ -59,6 +59,7 @@ const popArrayElementAndUpdateFields = async (
     }
   } catch (error) {
     console.error("Error removing element or updating fields:", error);
+    throw error;
   }
 };
 

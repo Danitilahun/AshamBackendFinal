@@ -76,7 +76,7 @@ const addStaffToTable = async (
     // Return the updated data without fetching it
     return { ...old, ...newData };
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

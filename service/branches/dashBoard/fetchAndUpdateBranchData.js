@@ -50,10 +50,10 @@
  * @returns {Promise<void>} A Promise that resolves when the operation is complete.
  */
 const fetchAndUpdateBranchData = async (db, batch, id, data) => {
-  if (!id || !data) {
-    return null;
-  }
   try {
+    if (!id || !data) {
+      return null;
+    }
     const dashboardQuerySnapshotBranch = await db
       .collection("branchInfo")
       .limit(1)

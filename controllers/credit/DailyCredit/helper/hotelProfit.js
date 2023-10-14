@@ -109,6 +109,7 @@ const HotelProfit = async (data, db, batch) => {
     console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in HotelProfit:", error);
+    throw error;
   }
 };
 

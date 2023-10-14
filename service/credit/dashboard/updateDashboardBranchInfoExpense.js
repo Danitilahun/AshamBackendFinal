@@ -10,12 +10,12 @@
  */
 
 const updateDashboardBranchInfo = async (branchId, newExpense, db, batch) => {
-  if (!branchId) {
-    throw new Error(
-      "Unable to update dashboard because branch information is missing.Please refresh your browser and try again."
-    );
-  }
   try {
+    if (!branchId) {
+      throw new Error(
+        "Unable to update dashboard because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const dashboardQuerySnapshotBranch = await db
       .collection("branchInfo")
       .limit(1)

@@ -23,7 +23,7 @@ const updateBankBalance = async (bankId, amount, db, batch) => {
   } catch (error) {
     // Handle any errors that occur during the operation
     console.error(error);
-    throw new Error("Failed to update bank balance.");
+    throw error;
   }
 };
 

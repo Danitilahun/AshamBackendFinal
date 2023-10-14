@@ -26,6 +26,7 @@ const updateCardCollection = async (db, batch, branchId) => {
     console.log("All documents updated successfully.");
   } catch (error) {
     console.error("Error fetching or updating documents: ", error);
+    throw error;
   }
 };
 

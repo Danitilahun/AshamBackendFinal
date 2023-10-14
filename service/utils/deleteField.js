@@ -66,7 +66,7 @@ const deleteField = async (db, batch, collectionName, id, fieldName) => {
     }
   } catch (error) {
     console.error("Error deleting field:", error);
-    throw new Error(`Failed to delete field "${fieldName}".`);
+    throw error;
   }
 };
 

@@ -1,4 +1,4 @@
-const updateCalculatorBank = async (db, batch, id, valueToAdd) => {
+const updateBranchCalculatorBank = async (db, batch, id, valueToAdd) => {
   try {
     if (!id) {
       throw new Error(
@@ -13,14 +13,8 @@ const updateCalculatorBank = async (db, batch, id, valueToAdd) => {
       return null;
     }
 
-    const data = docSnapshot.data();
-    const newActual = data.actual + data.bank - valueToAdd;
-    const newBalance = data.sum - newActual;
-
     // Add the operation to the batch
     batch.update(docRef, {
-      actual: newActual,
-      balance: newBalance,
       bank: valueToAdd,
     });
 
@@ -30,4 +24,4 @@ const updateCalculatorBank = async (db, batch, id, valueToAdd) => {
   }
 };
 
-module.exports = updateCalculatorBank;
+module.exports = updateBranchCalculatorBank;

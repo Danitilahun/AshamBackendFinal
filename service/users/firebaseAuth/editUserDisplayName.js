@@ -20,6 +20,7 @@ const editUserDisplayName = async (uid, newDisplayName) => {
   } catch (err) {
     // Log the error and throw it again to propagate it
     console.error(err);
+    throw error;
   }
 };
 

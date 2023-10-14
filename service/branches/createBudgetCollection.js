@@ -30,29 +30,3 @@ const createBudgetCollection = async (db, batch, branchId, budget) => {
 };
 
 module.exports = createBudgetCollection;
-
-// /**
-//  * Create a Budget collection if it doesn't exist.
-//  * @param {string} documentId - The document ID.
-//  * @param {number} budget - The budget value.
-//  * @returns {Promise<void>} A Promise that resolves when the operation is complete.
-//  */
-// const createBudgetCollection = async (documentId, budget) => {
-//   if (!documentId) {
-//     return null;
-//   }
-//   const db = admin.firestore();
-//   const budgetCollectionRef = db.collection("Budget").doc(documentId);
-//   const budgetDocumentSnapshot = await budgetCollectionRef.get();
-
-//   if (!budgetDocumentSnapshot.exists) {
-//     return budgetCollectionRef.set({
-//       sheetSummary: [],
-//       totalCredit: 0,
-//       budget: budget,
-//       total: 0,
-//     });
-//   }
-// };
-
-// module.exports = createBudgetCollection;

@@ -63,7 +63,7 @@ const updateDocumentWithPushAndIncrement = async (
     console.log(`Item added to the '${fieldArray}' array successfully.`);
     console.log(`Numeric field '${numericField}' incremented by ${amount}.`);
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

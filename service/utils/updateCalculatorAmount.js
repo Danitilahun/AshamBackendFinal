@@ -74,6 +74,7 @@ const updateCalculatorAmount = async (db, batch, id, newIncome) => {
     console.log("Calculator amount updated successfully");
   } catch (error) {
     console.log("Error updating Calculator amount:", error);
+    throw error;
   }
 };
 

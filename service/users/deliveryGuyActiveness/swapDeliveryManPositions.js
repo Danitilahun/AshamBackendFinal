@@ -48,7 +48,7 @@ const swapDeliveryManPositions = async (
       }
     });
   } catch (error) {
-    throw new Error(`Error swapping delivery man positions: ${error.message}`);
+    throw error;
   }
 };
 

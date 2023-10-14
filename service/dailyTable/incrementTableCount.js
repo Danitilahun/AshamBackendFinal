@@ -15,6 +15,9 @@ const ChangeSheetTableCount = async (
   value
 ) => {
   try {
+    if (!documentId) {
+      throw new Error("Sheet not found. Please check  and try again.");
+    }
     // Get a reference to Firestore
     const firestore = db;
 
@@ -35,7 +38,7 @@ const ChangeSheetTableCount = async (
       `'count' field in document '${documentId}' updated successfully.`
     );
   } catch (error) {
-    throw new Error(`Error updating 'count' field: ${error.message}`);
+    throw error;
   }
 };
 

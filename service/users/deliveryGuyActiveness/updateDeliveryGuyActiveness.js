@@ -65,7 +65,7 @@ const updateDeliveryGuyActiveness = async (
       }
     }
   } catch (error) {
-    throw new Error(`Error updating delivery guy activeness: ${error.message}`);
+    throw error;
   }
 };
 

@@ -64,7 +64,7 @@ const createUserDocument = async (
     console.log("User document successfully created!");
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to create user document.");
+    throw error;
   }
 };
 

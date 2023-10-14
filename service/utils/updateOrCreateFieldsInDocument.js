@@ -96,7 +96,7 @@ const updateOrCreateFieldsInDocument = async (
     // Return the updated document data
     return { ...documentSnapshot.data(), ...newData };
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

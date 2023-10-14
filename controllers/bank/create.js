@@ -1,6 +1,7 @@
 const admin = require("../../config/firebase-admin");
 const addBank = require("../../service/bank/addBank");
 const pushToFieldArray = require("../../service/bank/pushToFieldArray");
+const updateBranchCalculatorBank = require("../../service/bank/updateBankCal");
 const updateBankTransaction = require("../../service/bank/updateBankTransaction");
 const updateCalculatorBank = require("../../service/bank/updateCalculatorBank");
 const updateBankBalance = require("../../service/expense/updateBankBalance");
@@ -73,7 +74,15 @@ const CreateBank = async (req, res) => {
         data.transactionType !== "Withdraw" ? data.amount : -data.amount
       );
     }
-    if (bank) {
+
+    if (data.source === "branches") {
+      await updateBranchCalculatorBank(
+        db,
+        batch,
+        data.calculatorId,
+        bank.total
+      );
+    } else {
       // Update the calculator with bank data within the batch
       await updateCalculatorBank(db, batch, data.calculatorId, bank.total);
       await updateBankBalance(data.calculatorId, bank.total, db, batch);

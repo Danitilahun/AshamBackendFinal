@@ -11,7 +11,7 @@ const grantAdminAccess = async (uid) => {
     console.log("Admin access granted successfully!");
   } catch (error) {
     console.error("Error granting Admin access:", error);
-    throw Error(error);
+    throw error;
   }
 };
 

@@ -47,7 +47,7 @@ const addDeliveryGuyToTable = async (
     // Return the updated document data
     return updatedData;
   } catch (error) {
-    throw new Error(`Error getting/updating document: ${error.message}`);
+    throw error;
   }
 };
 

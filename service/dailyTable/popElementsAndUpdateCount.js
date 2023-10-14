@@ -22,14 +22,13 @@ const popElementsAndUpdateCount = async (
   element2ToRemove,
   countChange
 ) => {
-  if (!documentId) {
-    throw new Error(
-      "Some required parameters for sheet is missing. Please refresh your browser and try again."
-    );
-  }
-  const docRef = db.collection(collectionName).doc(documentId);
-
   try {
+    if (!documentId) {
+      throw new Error(
+        "Some required parameters for sheet is missing. Please refresh your browser and try again."
+      );
+    }
+    const docRef = db.collection(collectionName).doc(documentId);
     const snapshot = await docRef.get();
     if (snapshot.exists) {
       const data = snapshot.data();
@@ -65,7 +64,7 @@ const popElementsAndUpdateCount = async (
       console.log("Document does not exist.");
     }
   } catch (error) {
-    console.error("Error removing elements and updating count:", error);
+    throw error;
   }
 };
 

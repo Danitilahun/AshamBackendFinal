@@ -50,9 +50,7 @@ const createDocument = async (collectionName, data, db, batch) => {
     return docRef.id; // Return the ID of the created document
   } catch (error) {
     console.error(error);
-    throw new Error(
-      `Failed to create document in collection: ${collectionName}`
-    );
+    throw error;
   }
 };
 

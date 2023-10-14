@@ -9,7 +9,7 @@ const grantSuperAdminAccess = async (uid) => {
     await admin.auth().setCustomUserClaims(uid, customClaims);
     return true;
   } catch (error) {
-    return false;
+    throw error;
   }
 };
 

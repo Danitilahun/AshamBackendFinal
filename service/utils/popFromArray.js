@@ -29,6 +29,7 @@ const popArrayElement = async (
     }
   } catch (error) {
     console.error("Error removing element:", error);
+    throw error;
   }
 };
 

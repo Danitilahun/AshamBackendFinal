@@ -61,7 +61,7 @@ const swapCredit = async (id, data, active, db, batch) => {
     // Determine the SalaryType based on placement
     return Credit_from_amount_normal;
   } catch (error) {
-    throw new Error(`Error updating credit document: ${error.message}`);
+    throw error;
   }
 };
 

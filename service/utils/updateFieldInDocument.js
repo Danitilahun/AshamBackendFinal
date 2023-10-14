@@ -80,8 +80,7 @@ const updateFieldInDocument = async (
       console.log(`Document ${documentId} not found.`);
     }
   } catch (error) {
-    console.error("Error updating document:", error);
-    throw new Error("Failed to update field in document.");
+    throw error;
   }
 };
 

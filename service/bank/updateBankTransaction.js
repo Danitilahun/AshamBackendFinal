@@ -53,13 +53,12 @@ const updateBankTransaction = async (
   valueToAddToBank,
   valueToAddToTransaction
 ) => {
-  if (!customId) {
-    throw new Error(
-      "Unable to update bank transaction for the branch because branch information is missing.Please refresh your browser and try again."
-    );
-  }
-
   try {
+    if (!customId) {
+      throw new Error(
+        "Unable to update bank transaction for the branch because branch information is missing.Please refresh your browser and try again."
+      );
+    }
     const creditRef = db.collection("Bank").doc(customId);
     const creditDocumentSnapshot = await creditRef.get();
 

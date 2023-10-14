@@ -47,13 +47,17 @@ const CardDistrubuteReport = async (req, res) => {
     data.reason = "cardDistributeExpense";
     const oneData = Object.assign({}, data);
     oneData.gain = data.amount;
+
     await createDocument("DailyCredit", oneData, db, batch);
+
     data.total =
       parseFloat(data.amount) +
       parseFloat(data.numberOfCard * companyGain.card_distribute_gain);
+
     data.gain = parseFloat(
       data.numberOfCard * companyGain.card_distribute_gain
     );
+
     data.reason = "cardDistributeGain";
     data.CHECK_SOURCE = generateCustomID("cardDistribute_Report_Reason");
     // Creating a new credit document in the "CardFee" collection

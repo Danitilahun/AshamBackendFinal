@@ -8,9 +8,7 @@ const checkDocumentExistsInTable = async (tableId) => {
     return tableDocSnapshot.exists;
   } catch (error) {
     console.error(error);
-    throw new Error(
-      "An error occurred while checking for the document in the table."
-    );
+    throw error;
   }
 };
 

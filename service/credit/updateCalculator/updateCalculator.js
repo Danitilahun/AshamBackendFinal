@@ -62,6 +62,7 @@ const updateCalculator = async (id, valueToAdd, db, batch) => {
     console.log("Calculator updated successfully");
   } catch (error) {
     console.log("Error updating Calculator in credit:", error);
+    throw error; // Re-throw the error to handle it at the caller's level
   }
 };
 
