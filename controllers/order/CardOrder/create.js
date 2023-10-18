@@ -98,14 +98,7 @@ const createCardOrder = async (req, res) => {
 
     await createDocument("Card", data, db, batch);
     const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(
-      db,
-      batch,
-      "customer",
-      Id,
-      customerData,
-      data.branchId
-    );
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
     data.type = "Card";
     await sendFCMNotification(data);
     // Respond with a success message

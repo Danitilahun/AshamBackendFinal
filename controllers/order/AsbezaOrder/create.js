@@ -92,14 +92,7 @@ const createAsbezaOrder = async (req, res) => {
 
     await createDocument("Asbeza", data, db, batch);
     const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(
-      db,
-      batch,
-      "customer",
-      Id,
-      customerData,
-      data.branchId
-    );
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
     data.type = "Asbeza";
     await sendFCMNotification(data);
 
