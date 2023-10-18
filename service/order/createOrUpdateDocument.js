@@ -42,6 +42,7 @@
 // module.exports = createOrUpdateDocument;
 
 const admin = require("../../config/firebase-admin");
+const splitString = require("../../util/splitString");
 const updateDashboardTotalCustomer = require("./updateDashboardTotalCustomer");
 
 /**
@@ -59,7 +60,8 @@ const createOrUpdateDocument = async (
   batch,
   collectionName,
   documentId,
-  data
+  data,
+  docId
 ) => {
   const docRef = db.collection(collectionName).doc(documentId);
 
@@ -82,12 +84,12 @@ const createOrUpdateDocument = async (
 
       // You may want to add this to the batch as well
       await updateDashboardTotalCustomer(db, batch, 1);
-
-      const docRef = db.collection(collectionName).doc(docId);
+      const id2 = splitString(docId);
+      const docRef1 = db.collection("branches").doc(id2);
 
       // Use the batch to update the document
       batch.set(
-        docRef,
+        docRef1,
         { customerNumber: admin.firestore.FieldValue.increment(1) },
         { merge: true }
       );
