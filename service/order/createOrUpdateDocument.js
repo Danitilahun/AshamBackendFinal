@@ -84,7 +84,7 @@ const createOrUpdateDocument = async (
 
       // You may want to add this to the batch as well
       await updateDashboardTotalCustomer(db, batch, 1);
-      const id2 = splitString(docId);
+      const id2 = splitString(docId ? docId : data.branchId);
       const docRef1 = db.collection("branches").doc(id2);
 
       // Use the batch to update the document
