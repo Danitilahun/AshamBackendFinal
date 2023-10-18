@@ -86,7 +86,14 @@ const createWifiOrder = async (req, res) => {
 
     await createDocument("Wifi", data, db, batch); // Updated function call
     const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
+    await createOrUpdateDocument(
+      db,
+      batch,
+      "customer",
+      Id,
+      customerData,
+      data.branchId
+    ); // Updated function call
     data.type = "Wifi";
     await sendFCMNotification(data);
     // Respond with a success message

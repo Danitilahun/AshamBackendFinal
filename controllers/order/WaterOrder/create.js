@@ -85,7 +85,14 @@ const createWaterOrder = async (req, res) => {
 
     await createDocument("Water", data, db, batch); // Updated function call
     const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
+    await createOrUpdateDocument(
+      db,
+      batch,
+      "customer",
+      Id,
+      customerData,
+      data.branchId
+    ); // Updated function call
     data.type = "Water";
     await sendFCMNotification(data);
     // Respond with a success message
