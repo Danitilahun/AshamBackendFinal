@@ -83,6 +83,14 @@ const createOrUpdateDocument = async (
       // You may want to add this to the batch as well
       await updateDashboardTotalCustomer(db, batch, 1);
 
+      const docRef = db.collection(collectionName).doc(docId);
+
+      // Use the batch to update the document
+      batch.set(
+        docRef,
+        { customerNumber: admin.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
       console.log(`Document with ID ${documentId} added to batch for create.`);
     }
   } catch (error) {

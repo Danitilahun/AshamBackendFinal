@@ -38,6 +38,7 @@ const createBranch = async (req, res) => {
     const count = await getCountOfDocuments("branches");
     data.uniqueName = `B-${count + 1}`;
     data.paid = false;
+    data.customerNumber = 0;
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     // Step 3: Create a branch document in the "branches" collection
     const branchesRef = db.collection("branches");
