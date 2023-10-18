@@ -84,14 +84,17 @@ const createOrUpdateDocument = async (
       // You may want to add this to the batch as well
       await updateDashboardTotalCustomer(db, batch, 1);
       // const id2 = splitString(data.branchId);
-      const docRef1 = db.collection("branches").doc(data.branchId);
 
-      // Use the batch to update the document
-      batch.set(
-        docRef1,
-        { customerNumber: admin.firestore.FieldValue.increment(1) },
-        { merge: true }
-      );
+      if (data.branchId) {
+        const docRef1 = db.collection("branches").doc(data.branchId);
+
+        // Use the batch to update the document
+        batch.set(
+          docRef1,
+          { customerNumber: admin.firestore.FieldValue.increment(1) },
+          { merge: true }
+        );
+      }
       console.log(`Document with ID ${documentId} added to batch for create.`);
     }
   } catch (error) {
