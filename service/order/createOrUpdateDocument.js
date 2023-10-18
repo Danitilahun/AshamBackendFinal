@@ -61,7 +61,7 @@ const createOrUpdateDocument = async (
   collectionName,
   documentId,
   data,
-  docId
+  docId = null
 ) => {
   const docRef = db.collection(collectionName).doc(documentId);
 
