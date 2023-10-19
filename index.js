@@ -9,7 +9,8 @@ require("dotenv").config();
 // configration
 
 const app = express();
-app.use(express.json({ limit: "50mb", extended: true }));
+
+app.use(express.json({ limit: "60mb", extended: true }));
 app.use(express.urlencoded({ extended: false, limit: "50mb" }));
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));

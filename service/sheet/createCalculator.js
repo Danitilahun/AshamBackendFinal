@@ -40,17 +40,13 @@ const createCalculator = async (
       5: 0,
       1: 0,
       sum: 0,
-      actual:
-        -(totalCredit.total ? totalCredit.total : 0) -
-        (bank.total ? bank.total : 0),
-      balance:
-        -(totalCredit.total ? totalCredit.total : 0) -
-        (bank.total ? bank.total : 0),
+      actual: -(totalCredit.total ? totalCredit.total : 0),
+      balance: -(totalCredit.total ? totalCredit.total : 0),
       totalCredit: totalCredit.total ? totalCredit.total : 0,
       active: customId1,
       dailyCredit: 0,
       income: 0,
-      bank: -bank.total ? -bank.total : 0,
+      bank: bank.total ? bank.total : 0,
       sheetId: sheetId,
       branchId: branchId,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
