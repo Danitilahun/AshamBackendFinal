@@ -17,6 +17,7 @@ const disableUserAccount = require("../../../service/users/firebaseAuth/disableU
  * @returns {void}
  * @throws {Error} Throws an error if the operation fails.
  */
+
 const deleteAdmin = async (req, res) => {
   const { id } = req.params;
 

@@ -103,11 +103,11 @@ const createAdmin = async (req, res) => {
 
       // Update sheet status with new SalaryType value
       const newStatus = await updateSheetStatus(
-        db,
-        batch,
         fields.active,
         "totalStaffSalary",
-        newSalaryTable.total.total + parseFloat(fields.salary)
+        newSalaryTable.total.total + parseFloat(fields.salary),
+        db,
+        batch
       );
 
       // Update the dashboard with the new status

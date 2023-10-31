@@ -9,6 +9,7 @@ const deleteDocument = require("../../../service/mainCRUD/deleteDoc");
 const editDocument = require("../../../service/mainCRUD/editDoc");
 const editUserDisplayName = require("../../../service/users/firebaseAuth/editUserDisplayName");
 const editUserEmail = require("../../../service/users/firebaseAuth/editUserEmail");
+const revokeRefreshTokens = require("../../../service/users/firebaseAuth/revokeRefreshTokens");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const popArrayElement = require("../../../service/utils/popArrayElementFromObject");
 const pushToFieldArray = require("../../../service/utils/pushToFieldArray");
@@ -173,14 +174,15 @@ const editAdmin = async (req, res) => {
         role: "BranchAdmin",
       }
     );
-
+    // print(man);
     // Step 11: Edit the "staff" document with the updated data
     await editDocument(db, batch, "staff", id, updatedData);
-    await editUserDisplayName(id, updatedData.branchId);
     await batch.commit();
     // Step 8: If email is changed, update the user's email
     if (emailChange) {
+      await editUserDisplayName(id, updatedData.branchId);
       await editUserEmail(id, updatedData.email);
+      await revokeRefreshTokens(id);
     }
     // Step 12: Respond with a success message
     res.status(200).json({ message: "Admin document edited successfully." });
