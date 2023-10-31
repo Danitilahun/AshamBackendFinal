@@ -67,9 +67,11 @@ const pushToFieldArrayAndUpdateFields = async (
       // Delete documents with the same document ID from "salary" and "staffSalary" collections
       const salaryRef = db.collection("salary").doc(removedItem.id);
       const staffSalaryRef = db.collection("staffSalary").doc(removedItem.id);
+      const statusRef = db.collection("Status").doc(removedItem.id);
 
       batch.delete(salaryRef);
       batch.delete(staffSalaryRef);
+      batch.delete(statusRef);
     }
 
     // Update the 'field' with the updated array and other fields using the batch
