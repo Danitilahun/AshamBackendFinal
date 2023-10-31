@@ -12,6 +12,6 @@ const WaterAssigned = require("../../../controllers/order/WaterOrder/orderAssign
 router.post("/", WaterOrderAuth, createWaterOrder);
 router.post("/orderAssigned", AdminMiddleware, WaterAssigned);
 router.put("/:id", WaterOrderAuth, editWaterOrder);
-router.delete("/:id", WaterOrderAuth, deleteWaterOrder);
+router.delete("/:id/:cn", WaterOrderAuth, deleteWaterOrder);
 
 module.exports = router;

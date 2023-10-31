@@ -28,104 +28,14 @@ const WifiAssigned = async (req, res) => {
       });
     }
     // Logging the received data
-    // console.log(data);
 
     // Updating various tables with wifi information
 
     await updateOrCreateFieldsInDocument(db, batch, "Wifi", data.id, {
-      status: data.status,
+      status: "Assigned",
     });
-    if (data.status === "Assigned") {
-      // First update: Change the daily table
-      await updateTable(
-        db,
-        "tables",
-        data.activeTable,
-        data.deliveryguyId,
-        "total",
-        {
-          wifiCollect: 1,
-        },
-        batch
-      );
+    // First update: Change the daily table
 
-      // Second update: Change the 15 days summery and daily summery tables
-      await updateTable(
-        db,
-        "tables",
-        data.activeDailySummery,
-        data.date,
-        "total",
-        {
-          wifiCollect: 1,
-        },
-        batch
-      );
-
-      // Third update: Individual person's daily work summery
-      await updateTable(
-        db,
-        "tables",
-        data.active,
-        data.deliveryguyId,
-        "total",
-        {
-          wifiCollect: 1,
-        },
-        batch
-      );
-
-      // Getting wifi information from the prices collection
-      const DeliveryGuyGain = await getSingleDocFromCollection("prices");
-
-      if (!DeliveryGuyGain) {
-        return res.status(400).json({
-          message:
-            "Prices information is missing.Please refresh your browser and try again.",
-        });
-      }
-      // Fourth update: Salary of the delivery guy table
-      const newSalaryExpense = await updateTable(
-        db,
-        "salary",
-        data.active,
-        data.deliveryguyId,
-        "total",
-        {
-          wifiCollect: DeliveryGuyGain.wifi_collect_price,
-          total: DeliveryGuyGain.wifi_collect_price,
-        },
-        batch
-      );
-      if (newSalaryExpense) {
-        // Updating sheet status with totalDeliveryGuySalary
-        const newStatus = await updateSheetStatus(
-          db,
-          batch,
-          data.active,
-          "totalDeliveryGuySalary",
-          newSalaryExpense.total.total + DeliveryGuyGain.wifi_collect_price
-        );
-        if (newStatus) {
-          // Commit the batch updates
-
-          // Update the dashboard with the new status
-          await updateDashboard(
-            db,
-            batch,
-            data.branchId,
-            newStatus.totalExpense
-          );
-          // Update dashboard branch info with the new status
-          await updateDashboardBranchInfo(
-            db,
-            batch,
-            data.branchId,
-            newStatus.totalExpense
-          );
-        }
-      }
-    }
     await batch.commit();
     // Responding with a success message
     res.status(200).json({ message: `Wifi Assigned successfully.` });
@@ -138,3 +48,24 @@ const WifiAssigned = async (req, res) => {
 };
 
 module.exports = WifiAssigned;
+
+const originalObject = {
+  date: { _seconds: 1698573289, _nanoseconds: 490000000 },
+  branchId: "qgXMsBtZ6f3hVe0S2m4g",
+  wifi: 100,
+  wifiAccount: "no wifi account",
+  totalDeliveryGuySalary: 0,
+  ethioTelAccount: "no ethio Tel Account",
+  houseRent: 100,
+  ethioTelOwnerName: "no ethio tele phone owner name",
+  totalStaffSalary: 3300,
+  totaltax: 0,
+  taxPersentage: 12,
+  totalIncome: 0,
+  createdDate: "October 29, 2023",
+  ethioTelBill: 100,
+  wifiOwnerName: "no wifi owner name",
+  houseRentOwnerName: "no house owner name",
+  totalExpense: 3600,
+  houseRentAccount: "no house rent account",
+};

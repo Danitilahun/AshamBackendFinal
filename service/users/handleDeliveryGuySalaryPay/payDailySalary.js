@@ -21,7 +21,8 @@ const payDailySalary = async (active, id, branchId, db, batch, credit) => {
       batch
     );
 
-    console.log(newSalaryTable.total.total, Price.fixedSalary);
+    // console.log(newSalaryTable.total.total, Price.fixedSalary);
+
     const newStatus = await updateSheetStatus(
       active,
       "totalDeliveryGuySalary",
@@ -30,7 +31,7 @@ const payDailySalary = async (active, id, branchId, db, batch, credit) => {
       batch
     );
 
-    console.log(newStatus);
+    // console.log(newStatus);
     await updateDashboard(db, batch, branchId, newStatus.totalExpense);
     await updateDashboardBranchInfo(
       db,

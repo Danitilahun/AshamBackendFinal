@@ -4,6 +4,9 @@ const sendFCMNotification = require("../../../service/order/sendFCMNotification"
 const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin");
 const getSingleDocFromCollection = require("../../../service/utils/getSingleDocFromCollection");
+const updateDeliveryGuyData = require("../../../service/utils/cardUpdate");
+const returnDeliveryGuyData = require("../../../service/utils/returnCardAssigned");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 
 /**
  * Edit a Card Order document in the "CardOrder" Firestore collection.
@@ -28,8 +31,12 @@ const editCardOrder = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
+    updatedData.status = "Assigned";
+
+    updatedData.createdAt = admin.firestore.FieldValue.serverTimestamp();
     const companyGain = await getSingleDocFromCollection("companyGain"); // Updated function call
-    console.log(companyGain);
+
     if (!companyGain) {
       return res.status(400).json({
         message: "Company Gain document is missing or empty",
@@ -39,6 +46,16 @@ const editCardOrder = async (req, res) => {
       updatedData.amountBirr / parseInt(companyGain.card_price)
     );
     updatedData.remaingMoney = parseInt(updatedData.amountBirr);
+
+    const CardData = await getDocumentDataById("Card", id);
+    if (updatedData.fromWhere === "edit") {
+      if (CardData.deliveryguyId !== updatedData.deliveryguyId) {
+        await updateDeliveryGuyData(db, updatedData, batch);
+        await returnDeliveryGuyData(db, CardData, batch);
+      }
+    } else {
+      await updateDeliveryGuyData(db, updatedData, batch);
+    }
     // Edit the Card Order document in the "CardOrder" collection
     await editDocument(db, batch, "Card", id, updatedData); // Updated function call
     const customerData = {
@@ -46,7 +63,7 @@ const editCardOrder = async (req, res) => {
       phone: updatedData.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: updatedData.blockHouse,
-      branchId: updatedData.branchId,
+      branchId: updatedData.branchKey,
       branchName: updatedData.branchName,
       createdDate: updatedData.createdDate,
       type: "Card",

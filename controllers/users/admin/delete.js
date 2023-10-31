@@ -83,14 +83,16 @@ const deleteAdmin = async (req, res) => {
         await deleteId1FieldAndReduceTotal(branchData.active, id, db, batch);
       }
     }
-    // Step 4: Update or create the "disable" field in the specified Firestore collection document
-    if (adminData && adminData.email) {
-      // await revokeRefreshTokens(id);
-      await deleteUser(id);
-    }
 
     await batch.commit();
     // Step 7: Respond with a success message
+    // Step 4: Update or create the "disable" field in the specified Firestore collection document
+    if (adminData && adminData.email) {
+      // await revokeRefreshTokens(id);
+      await disableUserAccount(id, true);
+      await revokeRefreshTokens(id);
+      await deleteUser(id);
+    }
     res.status(200).json({ message: "Admin document deleted successfully." });
   } catch (error) {
     // Step 8: Handle any errors that occur during the operation

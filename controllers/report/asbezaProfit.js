@@ -15,11 +15,11 @@ const updateDocumentStatus = require("../../service/order/updateDocumentStatus")
 
 /**
  * Handles the creation of an Asbeza Profit report and related operations.
- *
  * @param {Object} req - Express.js request object containing the Asbeza Profit data in the body.
  * @param {Object} res - Express.js response object.
  * @returns {Object} JSON response indicating success or failure.
  */
+
 const AsbezaProfitReport = async (req, res) => {
   try {
     // Create Firestore database and batch from admin
@@ -46,12 +46,12 @@ const AsbezaProfitReport = async (req, res) => {
     }
     await updateDocumentStatus(db, batch, "Asbeza", data.id, "Completed");
 
-    if (Asbeza.status === "Completed") {
-      return res.status(404).json({
-        message: "Asbeza is already completed",
-        type: "info",
-      });
-    }
+    // if (Asbeza.status === "Completed") {
+    //   return res.status(404).json({
+    //     message: "Asbeza is already completed",
+    //     type: "info",
+    //   });
+    // }
 
     const companyGain = await getSingleDocFromCollection("companyGain");
     if (!companyGain) {

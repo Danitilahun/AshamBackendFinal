@@ -5,6 +5,7 @@ const admin = require("../../config/firebase-admin");
 const createSheetSummary = require("../../service/sheet/createSheetSummary");
 const updateDashboardBranchInfoWhenNewSheetCreated = require("../../service/utils/updateBranchInfoWhenNewSheetCreated");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
+const deleteDocumentsMatchingBranchId = require("../../service/utils/deleteDocumentsMatchingBranchId");
 
 /**
  * Creates a new sheet with multiple steps.
@@ -59,7 +60,62 @@ const ChangeSheetStatus = async (req, res) => {
       batch
     );
 
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "StaffCredit",
+      db,
+      batch
+    );
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "DailyCredit",
+      db,
+      batch
+    );
+
+    await deleteDocumentsMatchingBranchId(data.branchId, "Bonus", db, batch);
+    await deleteDocumentsMatchingBranchId(data.branchId, "Penality", db, batch);
+    await deleteDocumentsMatchingBranchId(data.branchId, "CardFee", db, batch);
+
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "cardDistribute",
+      db,
+      batch
+    );
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "waterDistribute",
+      db,
+      batch
+    );
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "wifiDistribute",
+      db,
+      batch
+    );
+    await deleteDocumentsMatchingBranchId(
+      data.branchId,
+      "hotelProfit",
+      db,
+      batch
+    );
+
     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
+    await updateOrCreateFieldsInDocument(
+      db,
+      batch,
+      "totalCredit",
+      fields.branchId,
+      {
+        total:
+          totalCredit.total - totalCredit.DailyCredit - totalCredit.StaffCredit,
+        DailyCredit: 0,
+        StaffCredit: 0,
+      }
+    );
+
     const currentStatus = await getDocumentDataById("Status", data.active);
     // Step 13: Execute createSheetSummary function within the batch
     if (!totalCredit) {

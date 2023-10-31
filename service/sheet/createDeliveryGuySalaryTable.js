@@ -28,7 +28,12 @@ const createDeliveryGuySalaryTable = async (
       branchId
     );
     // Add "total" entry to deliveryGuyIds
-    deliveryGuyIds.push({ id: "total", uniqueName: "total", name: "total" });
+    deliveryGuyIds.push({
+      id: "total",
+      uniqueName: "total",
+      name: "total",
+      bankAccount: "",
+    });
 
     const deliveryToWorkMappingSalary = await getDeliveryGuySalaryMapping(
       deliveryGuyIds

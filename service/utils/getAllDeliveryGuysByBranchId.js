@@ -16,6 +16,7 @@ const getAllDeliveryGuysByBranchId = async (collectionName, branchId) => {
         name: data.fullName,
         uniqueName: data.uniqueName,
         activeness: data.activeness,
+        bankAccount: data.bankAccount,
       };
       deliveryGuys.push(deliveryGuy);
     });

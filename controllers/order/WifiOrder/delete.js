@@ -4,6 +4,8 @@ const getDocumentDataById = require("../../../service/utils/getDocumentDataById"
 const updateFieldInDocument = require("../../../service/utils/updateFieldInDocument");
 const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin"); // Import admin here
+const payWifiDeliveryGuy = require("../../../service/utils/AssignedPay/WifiPay");
+const returnDeliveryGuyData = require("../../../service/utils/wifiReturn");
 
 /**
  * Delete a Wifi Order document from the "Wifi Order" Firestore collection.
@@ -18,24 +20,32 @@ const deleteWifiOrder = async (req, res) => {
     const batch = db.batch();
 
     // Get document ID from the request parameters
-    const { id } = req.params;
+    const { id, cn } = req.params;
+
     if (!id) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
     const WifiData = await getDocumentDataById("Wifi", id); // Updated function call
     if (!WifiData) {
       return res.status(400).json({
         message: "Wifi order does not eist",
       });
     }
+
     // Delete the Wifi Order document from the "Wifi Order" collection
     await deleteDocument(db, batch, "Wifi", id); // Updated function call
     const Id = generateCustomID(`${WifiData.blockHouse}`);
     await updateFieldInDocument(db, batch, "customer", Id, "Wifi", "No"); // Updated function call
-    // await updateDashboardTotalCustomer(-1);
+
+    if (cn === "pay") {
+      await payWifiDeliveryGuy(db, WifiData, batch, 1);
+    } else {
+      await returnDeliveryGuyData(db, WifiData, batch);
+    }
     await batch.commit();
     // Respond with a success message
     res

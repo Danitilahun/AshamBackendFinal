@@ -42,7 +42,6 @@ const updateDocumentWithPushAndIncrement = async (
 
     // Check if itemToPush exists in the array
     if (!existingArray.includes(itemToPush)) {
-      // Push the new item into the array
       existingArray.push(itemToPush);
     } else {
       console.log(
@@ -52,12 +51,20 @@ const updateDocumentWithPushAndIncrement = async (
 
     // Step 2: Get the current value of the numeric field
     const currentValue = documentSnapshot.get(numericField) || 0;
+    const currentValueTotalIncome = documentSnapshot.get("totalIncome") || 0;
+    const newTotalIncome =
+      currentValueTotalIncome + parseInt(itemToPush.totalIncome);
+    const currentValueTotalExpense = documentSnapshot.get("totalExpense") || 0;
+    const newTotalExpense =
+      currentValueTotalExpense + parseInt(itemToPush.totalExpense);
     const newValue = currentValue + amount;
 
     // Update the field array and numeric field with the updated values within the batch
     batch.update(documentRef, {
       [fieldArray]: existingArray,
       [numericField]: newValue,
+      ["totalIncome"]: newTotalIncome,
+      ["totalExpense"]: newTotalExpense,
     });
 
     console.log(`Item added to the '${fieldArray}' array successfully.`);

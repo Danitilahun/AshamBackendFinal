@@ -20,6 +20,7 @@ const getAllStaffByBranchId = async (collectionName, branchId) => {
         name: data.fullName,
         salary: data.paid ? data.salary : 0,
         uniqueName: data.uniqueName,
+        bankAccount: data.bankAccount,
       };
       deliveryGuys.push(deliveryGuy);
     });

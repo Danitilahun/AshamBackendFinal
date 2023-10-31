@@ -5,10 +5,12 @@ const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const swapDeliveryManPositions = require("../../../service/users/deliveryGuyActiveness/swapDeliveryManPositions");
+const returnDeliveryGuyData = require("../../../service/utils/reverseDeliveryGuyData");
+const updateDeliveryGuyData = require("../../../service/utils/updateDeliveryGuyData");
+const getInternationalDate = require("../../../utils/getInternationalDate");
 
 /**
  * Edit an Asbeza Order document in the "Asbeza Order" Firestore collection.
- *
  * @param {Object} req - The Express request object.
  * @param {Object} res - The Express response object.
  * @returns {void}
@@ -16,11 +18,12 @@ const swapDeliveryManPositions = require("../../../service/users/deliveryGuyActi
 
 const editAsbezaOrder = async (req, res) => {
   try {
-    const db = admin.firestore(); // Create a Firestore database instance
-    const batch = db.batch(); // Create a Firestore batch instance
+    const db = admin.firestore();
+    const batch = db.batch();
 
     // Get document ID and updated updatedData from the request body
     const updatedData = req.body;
+
     const { id } = req.params;
 
     if (!updatedData || !id) {
@@ -30,21 +33,37 @@ const editAsbezaOrder = async (req, res) => {
       });
     }
 
+    console.log(updatedData);
+
+    updatedData.status = "Assigned";
+
+    updatedData.createdAt = admin.firestore.FieldValue.serverTimestamp();
+
+    const AsbezaData = await getDocumentDataById("Asbeza", id);
+    if (updatedData.fromWhere === "edit") {
+      if (AsbezaData.deliveryguyId !== updatedData.deliveryguyId) {
+        await updateDeliveryGuyData(db, updatedData, batch);
+        await returnDeliveryGuyData(db, AsbezaData, batch);
+      }
+    } else {
+      await updateDeliveryGuyData(db, updatedData, batch);
+    }
     // Edit the Asbeza Order document in the "Asbeza Order" collection
-    await editDocument(db, batch, "Asbeza", id, updatedData); // Updated function call
+    await editDocument(db, batch, "Asbeza", id, updatedData);
+
     const customerData = {
       name: updatedData.name,
       phone: updatedData.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: updatedData.blockHouse,
-      branchId: updatedData.branchId,
+      branchId: updatedData.branchKey,
       branchName: updatedData.branchName,
       createdDate: updatedData.createdDate,
       type: "Asbeza",
     };
 
     const Id = generateCustomID(`${updatedData.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
 
     // Commit the batch to execute all operations together
     await batch.commit();

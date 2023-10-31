@@ -18,6 +18,8 @@ const createBudgetCollection = async (db, batch, branchId, budget) => {
         totalCredit: 0,
         budget: budget,
         total: 0,
+        totalExpense: 0,
+        totalIncome: 0,
       };
 
       // Add the operation to the batch

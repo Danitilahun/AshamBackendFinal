@@ -28,17 +28,15 @@ const editFinance = async (req, res) => {
       phone: updatedData.phone,
     });
     // Commit the batch updates
+    await batch.commit();
     // console.log(man);
     if (emailChange) {
       await editUserEmail(id, updatedData.email);
     }
-    await batch.commit();
     res.status(200).json({ message: "Finance updated successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
-    const user = await getDocumentDataById("finance", id);
-    await editUserEmail(id, user.email);
   }
 };
 

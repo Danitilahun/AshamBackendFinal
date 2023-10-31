@@ -43,6 +43,7 @@ const admin = require("../../config/firebase-admin");
  * @param {number} newIncome - The new income value.
  * @returns {Promise<void>} A Promise that resolves when the batch operation is complete.
  */
+
 const updateCalculatorAmount = async (db, batch, id, newIncome) => {
   try {
     if (!id) {

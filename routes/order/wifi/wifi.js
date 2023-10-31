@@ -12,6 +12,6 @@ const WifiAssigned = require("../../../controllers/order/WifiOrder/orderAssigned
 router.post("/", WifiOrderAuth, createWifiOrder);
 router.post("/orderAssigned", AdminMiddleware, WifiAssigned);
 router.put("/:id", WifiOrderAuth, editWifiOrder);
-router.delete("/:id", WifiOrderAuth, deleteWifiOrder);
+router.delete("/:id/:cn", WifiOrderAuth, deleteWifiOrder);
 
 module.exports = router;

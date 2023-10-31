@@ -63,17 +63,25 @@ const CreateBank = async (req, res) => {
       data.bankName
     );
 
-    if (data.source !== "finance") {
-      console.log("add bank");
-      console.log(data.transaction, data.transaction !== "Withdraw");
-      await addBank(
-        db,
-        batch,
-        data.branchId,
-        data.bankName,
-        data.transactionType !== "Withdraw" ? data.amount : -data.amount
-      );
-    }
+    // if (data.source !== "finance") {
+    //   console.log("add bank");
+    //   console.log(data.transaction, data.transaction !== "Withdraw");
+    //   await addBank(
+    //     db,
+    //     batch,
+    //     data.branchId,
+    //     data.bankName,
+    //     data.transactionType !== "Withdraw" ? data.amount : -data.amount
+    //   );
+    // }
+
+    await addBank(
+      db,
+      batch,
+      data.branchId,
+      data.bankName,
+      data.transactionType !== "Withdraw" ? data.amount : -data.amount
+    );
 
     if (data.source === "branches") {
       await updateBranchCalculatorBank(
@@ -94,7 +102,7 @@ const CreateBank = async (req, res) => {
 
     // Respond with a success message
     res.status(200).json({
-      message: `Branch transaction recorded successfully.`,
+      message: `Bank transaction recorded successfully.`,
     });
   } catch (error) {
     // Handle any errors that occur during the operation

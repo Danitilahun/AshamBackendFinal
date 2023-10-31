@@ -9,9 +9,13 @@ const editDeliveryGuy = require("../../../controllers/users/deliveryGuy/edit");
 const deleteDeliveryGuy = require("../../../controllers/users/deliveryGuy/delete");
 const setDeliveryGuyActiveness = require("../../../controllers/users/deliveryGuy/setDeliveryGuyActiveness");
 const handlePayController = require("../../../controllers/users/deliveryGuy/handleSalaryPay");
+const {
+  completeTask,
+} = require("../../../controllers/users/deliveryGuy/CompleteTask");
 
 // Define the route for creating data for an admin
 router.post("/", UserMiddleware, createDeliveryGuy);
+router.post("/completeTask", AdminMiddleware, completeTask);
 router.post("/setActiveness", AdminMiddleware, setDeliveryGuyActiveness);
 router.put("/:id", UserMiddleware, editDeliveryGuy);
 router.put("/pay/:id/:active", AdminMiddleware, handlePayController);

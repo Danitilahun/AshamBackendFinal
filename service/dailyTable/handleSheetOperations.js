@@ -48,6 +48,7 @@ const handleSheetOperations = async (db, batch, sheetId, date, branchId) => {
       activeTable: customId1,
       paid: false,
       cardPaid: true,
+      cardDate: date,
     });
   } catch (error) {
     console.error("Error in handleSheetOperations:", error);

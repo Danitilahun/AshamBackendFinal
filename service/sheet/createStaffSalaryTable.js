@@ -71,7 +71,13 @@ const createStaffSalaryTable = async (
 
     const staffs = await getAllStaffByBranchId("staff", branchId);
     // Add "total" entry to staffs
-    staffs.push({ id: "total", uniqueName: "total", name: "total", salary: 0 });
+    staffs.push({
+      id: "total",
+      uniqueName: "total",
+      name: "total",
+      salary: 0,
+      bankAccount: "",
+    });
 
     const staffToWorkMappingSalary = await getStaffToWorkMapping(staffs);
 

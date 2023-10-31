@@ -40,19 +40,19 @@ const handlePayController = async (req, res) => {
         waiting: false,
       });
     }
-    if (!data.paid) {
-      await updateOrCreateFieldsInDocument(
-        db,
-        batch,
-        "branches",
-        data.branchId,
-        {
-          activeTable: "",
-          paid: true,
-          cardPaid: false,
-        }
-      );
-    }
+
+    // if (!data.paid) {
+    //   await updateOrCreateFieldsInDocument(
+    //     db,
+    //     batch,
+    //     "branches",
+    //     data.branchId,
+    //     {
+    //       activeTable: "",
+    //       paid: true,
+    //     }
+    //   );
+    // }
 
     await payDailySalary(
       active,

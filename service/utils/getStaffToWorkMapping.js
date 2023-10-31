@@ -8,6 +8,7 @@ const getStaffToWorkMapping = async (staffWorkers) => {
     const work = getStaffSalaryData(staffWorker.salary);
     work.uniqueName = staffWorker.uniqueName;
     work.name = staffWorker.name;
+    work.bankAccount = staffWorker.bankAccount;
     deliveryToWorkMapping[staffWorker.id] = work;
   }
   deliveryToWorkMapping.total.total = totalSalary;

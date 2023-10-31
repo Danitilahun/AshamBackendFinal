@@ -1,0 +1,55 @@
+// Import required modules
+const express = require("express");
+const router = express.Router();
+const UserMiddleware = require("../../middlewares/JoinedAuth/UserAuth");
+const BankAuth = require("../../middlewares/JoinedAuth/BankAuth");
+const ExportDeliveryGuySalaryTable = require("../../controllers/Export/DeliveryGuySalary");
+const SheetStatusExport = require("../../controllers/Export/SheetStatus");
+const ExportStaffSalaryTable = require("../../controllers/Export/StaffSalary");
+const DaySummeryTable = require("../../controllers/Export/DaySummery");
+const DeliveryGuySalarySummeryTable = require("../../controllers/Export/DeliveryGuy15DaySummery");
+const BudgetTable = require("../../controllers/Export/branchBudget");
+const CustomerTable = require("../../controllers/Export/customer");
+const BranchCustomerTable = require("../../controllers/Export/BranchCustomer");
+const WifiTable = require("../../controllers/Export/orders/Wifi");
+const WaterTable = require("../../controllers/Export/orders/Water");
+const CardTable = require("../../controllers/Export/orders/Card");
+const AsbezaTable = require("../../controllers/Export/orders/Asbeza");
+const BankExportTable = require("../../controllers/Export/bankExport");
+const CardFeeTable = require("../../controllers/Export/report/cardFee");
+const CardDisTable = require("../../controllers/Export/report/cardDistribute");
+const WaterDisTable = require("../../controllers/Export/report/waterDistribute");
+const WifiDisTable = require("../../controllers/Export/report/wifiDistribute");
+const HotelProfitTable = require("../../controllers/Export/report/hotelProfit");
+const CustomerCreditTable = require("../../controllers/Export/credit/customer");
+const FinanceCreditExportTable = require("../../controllers/Export/credit/finance");
+const StaffCreditExportTable = require("../../controllers/Export/credit/staff");
+const BonusTable = require("../../controllers/Export/bonus");
+const PenalityTable = require("../../controllers/Export/penality");
+
+// Define the route for creating data for an admin
+router.post("/delSal", BankAuth, ExportDeliveryGuySalaryTable);
+router.post("/sheetstatus", BankAuth, SheetStatusExport);
+router.post("/staffsalary", BankAuth, ExportStaffSalaryTable);
+router.post("/dailySummeryForSheet", UserMiddleware, DaySummeryTable);
+router.post("/delveryGuyTables", UserMiddleware, DeliveryGuySalarySummeryTable);
+router.post("/asbeza", UserMiddleware, AsbezaTable);
+router.post("/card", UserMiddleware, CardTable);
+router.post("/water", UserMiddleware, WaterTable);
+router.post("/wifi", UserMiddleware, WifiTable);
+router.post("/branchCustomer", UserMiddleware, BranchCustomerTable);
+router.post("/customer", UserMiddleware, CustomerTable);
+router.post("/budget", UserMiddleware, BudgetTable);
+router.post("/bank", BankAuth, BankExportTable);
+router.post("/cardF", UserMiddleware, CardFeeTable);
+router.post("/cardD", UserMiddleware, CardDisTable);
+router.post("/waterD", UserMiddleware, WaterDisTable);
+router.post("/wifiD", UserMiddleware, WifiDisTable);
+router.post("/hotelP", UserMiddleware, HotelProfitTable);
+router.post("/customerC", UserMiddleware, CustomerCreditTable);
+router.post("/financeC", BankAuth, FinanceCreditExportTable);
+router.post("/staffC", BankAuth, StaffCreditExportTable);
+router.post("/bonus", BankAuth, BonusTable);
+router.post("/penality", BankAuth, PenalityTable);
+
+module.exports = router;

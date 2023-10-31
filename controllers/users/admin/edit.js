@@ -129,11 +129,6 @@ const editAdmin = async (req, res) => {
       );
     }
 
-    // Step 8: If email is changed, update the user's email
-    if (emailChange) {
-      await editUserEmail(id, updatedData.email);
-    }
-
     // Step 9: If branchId is changed, update or create fields in "branches" documents
     if (branchIdChange) {
       // Update or create fields in "branches" document for the old branchId
@@ -183,6 +178,10 @@ const editAdmin = async (req, res) => {
     await editDocument(db, batch, "staff", id, updatedData);
     await editUserDisplayName(id, updatedData.branchId);
     await batch.commit();
+    // Step 8: If email is changed, update the user's email
+    if (emailChange) {
+      await editUserEmail(id, updatedData.email);
+    }
     // Step 12: Respond with a success message
     res.status(200).json({ message: "Admin document edited successfully." });
   } catch (error) {

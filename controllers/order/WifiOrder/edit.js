@@ -3,6 +3,9 @@ const createOrUpdateDocument = require("../../../service/order/createOrUpdateDoc
 const sendFCMNotification = require("../../../service/order/sendFCMNotification");
 const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin"); // Import admin here
+const updateDeliveryGuyData = require("../../../service/utils/wifiUpdate");
+const returnDeliveryGuyData = require("../../../service/utils/wifiReturn");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 
 /**
  * Edit a Wifi Order document in the "Wifi Order" Firestore collection.
@@ -21,14 +24,28 @@ const editWifiOrder = async (req, res) => {
     // Get document ID and updated data from the request body
     const updatedData = req.body;
     const { id } = req.params;
-
+    console.log(updatedData);
     if (!updatedData || !id) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
+    updatedData.status = "Assigned";
+
+    updatedData.createdAt = admin.firestore.FieldValue.serverTimestamp();
+
     // Edit the Wifi Order document in the "Wifi Order" collection
+    const WifiData = await getDocumentDataById("Wifi", id); // Updated function call
+    if (updatedData.fromWhere === "edit") {
+      if (WifiData.deliveryguyId !== updatedData.deliveryguyId) {
+        await updateDeliveryGuyData(db, updatedData, batch);
+        await returnDeliveryGuyData(db, WifiData, batch);
+      }
+    } else {
+      await updateDeliveryGuyData(db, updatedData, batch);
+    }
     await editDocument(db, batch, "Wifi", id, updatedData); // Updated function call
 
     const customerData = {
@@ -36,7 +53,7 @@ const editWifiOrder = async (req, res) => {
       phone: updatedData.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: updatedData.blockHouse,
-      branchId: updatedData.branchId,
+      branchId: updatedData.branchKey,
       branchName: updatedData.branchName,
       createdDate: updatedData.createdDate,
       type: "Wifi",

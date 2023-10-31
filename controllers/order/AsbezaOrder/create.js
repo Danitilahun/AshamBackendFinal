@@ -7,6 +7,8 @@ const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiv
 const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
+const updateDeliveryGuyData = require("../../../service/utils/updateDeliveryGuyData");
+const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
 
 /**
  * Create an Asbeza Order document in the "Asbeza Order" Firestore collection.
@@ -17,13 +19,16 @@ const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyA
  * @param {Object} res - The Express response object.
  * @returns {void}
  */
+
 const createAsbezaOrder = async (req, res) => {
   const db = admin.firestore();
   const batch = db.batch(); // Create a Firestore batch
   try {
     // Get data from the request body
     const data = req.body;
+
     console.log(data);
+
     if (!data) {
       return res.status(400).json({
         message:
@@ -31,10 +36,24 @@ const createAsbezaOrder = async (req, res) => {
       });
     }
 
+    data.status = "Assigned";
+
+    const check = await documentExistsAndHasField(
+      "tables",
+      data.activeDailySummery,
+      data.date
+    );
+
+    if (!check) {
+      return res.status(400).json({
+        message: `You can't create order since there is no daily table for ${data.date}. Please create a daily table first.`,
+      });
+    }
+
     // console.log(manye);
     const branch = await getDocumentDataById(
       "branches",
-      data.cardBranch ? data.cardBranch : data.branchId
+      data.cardBranch ? data.cardBranch : data.branchKey
     );
     if (
       !branch ||
@@ -67,7 +86,7 @@ const createAsbezaOrder = async (req, res) => {
       await moveDeliveryGuyToEndOfQueue(
         db,
         batch,
-        data.branchId,
+        data.branchKey,
         data.deliveryguyId,
         data.deliveryguyName
       );
@@ -78,27 +97,26 @@ const createAsbezaOrder = async (req, res) => {
       phone: data.phone || "",
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: data.blockHouse || "",
-      branchId: data.branchId,
+      branchId: data.branchKey,
       branchName: data.branchName || "",
       createdDate: data.createdDate || "",
       type: "Asbeza",
     };
 
-    console.log(customerData);
+    const Id = generateCustomID(`${data.blockHouse}`);
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
 
     if (data.from === "branch") {
       data.branchId = data.branchId + " normal";
     }
 
     await createDocument("Asbeza", data, db, batch);
-    const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
-    data.type = "Asbeza";
-    await sendFCMNotification(data);
 
-    // Respond with a success message
+    await updateDeliveryGuyData(db, data, batch);
+
     // Commit the batch to execute all operations together
     await batch.commit();
+
     res
       .status(200)
       .json({ message: "Asbeza Order document created successfully." });

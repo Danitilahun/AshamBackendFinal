@@ -88,8 +88,13 @@ const updateStatusAndTotalExpense = (statusData, updateData) => {
     updatedStatusData.wifi = parseInt(updateData.wifi) || 0;
     updatedStatusData.taxPersentage = parseInt(updateData.taxPersentage) || 0;
     updatedStatusData.totalIncome = parseInt(statusData.totalIncome) || 0;
-
     // Calculate totalTax based on totalIncome and taxPersentage
+    updatedStatusData.wifiAccount = updateData.wifiAccount;
+    updatedStatusData.wifiOwnerName = updateData.wifiOwnerName;
+    updatedStatusData.houseRentAccount = updateData.houseRentAccount;
+    updatedStatusData.houseRentOwnerName = updateData.houseRentOwnerName;
+    updatedStatusData.ethioTelAccount = updateData.ethioTelAccount;
+    updatedStatusData.ethioTelOwnerName = updateData.ethioTelOwnerName;
     updatedStatusData.totaltax =
       (updatedStatusData.totalIncome * updatedStatusData.taxPersentage) / 100;
 

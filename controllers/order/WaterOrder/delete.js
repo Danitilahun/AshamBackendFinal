@@ -4,6 +4,8 @@ const getDocumentDataById = require("../../../service/utils/getDocumentDataById"
 const updateFieldInDocument = require("../../../service/utils/updateFieldInDocument");
 const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin");
+const payWaterDeliveryGuy = require("../../../service/utils/AssignedPay/WaterPay");
+const returnDeliveryGuyData = require("../../../service/utils/waterReturn");
 
 /**
  * Delete a Water Order document from the "Water Order" Firestore collection.
@@ -19,7 +21,8 @@ const deleteWaterOrder = async (req, res) => {
   const batch = db.batch();
   try {
     // Get document ID from the request parameters
-    const { id } = req.params;
+    const { id, cn } = req.params;
+
     if (!id) {
       return res.status(400).json({
         message:
@@ -38,6 +41,11 @@ const deleteWaterOrder = async (req, res) => {
     await updateFieldInDocument(db, batch, "customer", Id, "Water", "No"); // Updated function call
     // await updateDashboardTotalCustomer(-1);
     // Respond with a success message
+    if (cn === "pay") {
+      await payWaterDeliveryGuy(db, WaterData, batch, 1);
+    } else {
+      await returnDeliveryGuyData(db, WaterData, batch);
+    }
     await batch.commit();
     res
       .status(200)

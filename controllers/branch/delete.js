@@ -34,6 +34,7 @@ const deleteBranch = async (req, res) => {
     await deleteField(db, batch, "Deliveryturn", "turnQueue", id);
     await deleteDocument(db, batch, "branches", id);
     await editUserDisplayName(branchData.managerId, "");
+
     // await revokeRefreshTokens(branchData.managerId);
     // await disableUserAccount(branchData.managerId);
 
@@ -51,6 +52,9 @@ const deleteBranch = async (req, res) => {
     }
     // Commit the batch
     await batch.commit();
+
+    await revokeRefreshTokens(branchData.managerId);
+    await disableUserAccount(branchData.managerId, true);
 
     res.status(200).json({ message: "Branch document deleted successfully." });
   } catch (error) {

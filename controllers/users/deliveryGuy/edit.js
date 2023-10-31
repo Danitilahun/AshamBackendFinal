@@ -41,6 +41,7 @@ const editDeliveryGuy = async (req, res) => {
       await updateFieldsInNestedObject(db, batch, "salary", active, id, {
         name: updatedData.fullName,
         uniqueName: updatedData.uniqueName,
+        bankAccount: updatedData.bankAccount,
       });
     }
 

@@ -3,6 +3,9 @@ const createOrUpdateDocument = require("../../../service/order/createOrUpdateDoc
 const sendFCMNotification = require("../../../service/order/sendFCMNotification");
 const generateCustomID = require("../../../util/generateCustomID");
 const admin = require("../../../config/firebase-admin");
+const updateDeliveryGuyData = require("../../../service/utils/waterUpdate");
+const returnDeliveryGuyData = require("../../../service/utils/waterReturn");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 
 /**
  * Edit a Water Order document in the "Water Order" Firestore collection.
@@ -26,7 +29,22 @@ const editWaterOrder = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
+    updatedData.status = "Assigned";
+
+    updatedData.createdAt = admin.firestore.FieldValue.serverTimestamp();
+
     // Edit the Water Order document in the "Water Order" collection
+
+    const WaterData = await getDocumentDataById("Water", id);
+    if (updatedData.fromWhere === "edit") {
+      if (WaterData.deliveryguyId !== updatedData.deliveryguyId) {
+        await updateDeliveryGuyData(db, updatedData, batch);
+        await returnDeliveryGuyData(db, WaterData, batch);
+      }
+    } else {
+      await updateDeliveryGuyData(db, updatedData, batch);
+    }
     await editDocument(db, batch, "Water", id, updatedData); // Updated function call
 
     const customerData = {
@@ -34,7 +52,7 @@ const editWaterOrder = async (req, res) => {
       phone: updatedData.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: updatedData.blockHouse,
-      branchId: updatedData.branchId,
+      branchId: updatedData.branchKey,
       branchName: updatedData.branchName,
       createdDate: updatedData.createdDate,
       type: "Water",

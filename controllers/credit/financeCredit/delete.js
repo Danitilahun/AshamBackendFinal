@@ -19,12 +19,10 @@ const deleteFinanceCredit = async (req, res) => {
     // Get document ID from the request parameters
     const { id } = req.params;
     if (!id) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request parameters are missing or empty.Please refresh your browser and try again.",
-        });
+      return res.status(400).json({
+        message:
+          "Request parameters are missing or empty.Please refresh your browser and try again.",
+      });
     }
     // Get credit data before deleting for updating total credit
     const credit = await getDocumentDataById("FinanceCredit", id);
@@ -49,12 +47,12 @@ const deleteFinanceCredit = async (req, res) => {
 
     // Update the calculator with the new total credit within the batch
     if (updatedTotalCredit) {
-      await updateCalculator(
-        credit.branchId,
-        parseFloat(updatedTotalCredit.total),
-        db,
-        batch
-      );
+      // await updateCalculator(
+      //   credit.branchId,
+      //   parseFloat(updatedTotalCredit.total),
+      //   db,
+      //   batch
+      // );
       await updateBankCredit(
         credit.branchId,
         parseFloat(updatedTotalCredit.total),

@@ -44,19 +44,19 @@ const swapCredit = async (id, data, active, db, batch) => {
       -parseInt(Credit_from_amount_normal)
     );
 
-    // Update Salary table
-    const newSalaryTable = await updateSalaryTable(
-      "salary",
-      active,
-      id,
-      "total",
-      {
-        totalCredit: parseInt(Credit_from_amount_normal),
-        total: -parseInt(Credit_from_amount_normal),
-      },
-      db,
-      batch
-    );
+    // // Update Salary table
+    // const newSalaryTable = await updateSalaryTable(
+    //   "salary",
+    //   active,
+    //   id,
+    //   "total",
+    //   {
+    //     totalCredit: parseInt(Credit_from_amount_normal),
+    //     total: -parseInt(Credit_from_amount_normal),
+    //   },
+    //   db,
+    //   batch
+    // );
 
     // Determine the SalaryType based on placement
     return Credit_from_amount_normal;

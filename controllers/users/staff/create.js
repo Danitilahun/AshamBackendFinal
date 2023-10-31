@@ -46,6 +46,7 @@ const createStaff = async (req, res) => {
       const Work = getStaffSalaryData(fields.salary);
       Work.name = fields.fullName;
       Work.uniqueName = fields.uniqueName;
+      Work.bankAccount = fields.bankAccount;
       const newSalaryTable = await addStaffToTable(
         db,
         batch,

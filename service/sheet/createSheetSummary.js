@@ -84,12 +84,12 @@ const createSheetSummary = async (currentStatus, totalCredit, db, batch) => {
 
     // Create the summary sheet object by inheriting fields from currentStatus
     const summarySheet = {
-      ...currentStatus, // Inherit fields from currentStatus (the current status)
-      date: date, // Overwrite date with the new date
+      ...currentStatus,
+      date: date,
       dayRange: date,
-      Sheetstatus: status, // Add status
-      amount: amount, // Add amount
-      totalCredit: totalCredit ? totalCredit.total : 0, // Add totalCredit or set to 0 if not available
+      Sheetstatus: status,
+      amount: amount,
+      totalCredit: totalCredit ? totalCredit.total : 0,
     };
 
     await updateDocumentWithPushAndIncrement(
@@ -102,6 +102,7 @@ const createSheetSummary = async (currentStatus, totalCredit, db, batch) => {
       summarySheet,
       amount
     );
+
     await updateFieldInCollection(
       db,
       batch,

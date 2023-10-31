@@ -25,11 +25,11 @@ const editCallCenter = async (req, res) => {
       phone: updatedData.phone,
     });
 
+    // Commit the batch updates
+    await batch.commit();
     if (emailChange) {
       await editUserEmail(id, updatedData.email);
     }
-    // Commit the batch updates
-    await batch.commit();
     res.status(200).json({ message: "Call Center updated successfully." });
   } catch (error) {
     console.error(error);

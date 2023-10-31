@@ -8,6 +8,8 @@ const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiv
 const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
+const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
+const updateDeliveryGuyData = require("../../../service/utils/cardUpdate");
 
 /**
  * Create a Card Order document in the "CardOrder" Firestore collection.
@@ -24,17 +26,31 @@ const createCardOrder = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
-    console.log(data);
+
     if (!data) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
+    data.status = "Assigned";
+
+    const check = await documentExistsAndHasField(
+      "tables",
+      data.activeDailySummery,
+      data.date
+    );
+
+    if (!check) {
+      return res.status(400).json({
+        message: `You can't create order since there is no daily table for ${data.date}. Please create a daily table first.`,
+      });
+    }
     // console.log(manye);
     const branch = await getDocumentDataById(
       "branches",
-      data.cardBranch ? data.cardBranch : data.branchId
+      data.cardBranch ? data.cardBranch : data.branchKey
     );
     if (
       !branch ||
@@ -65,21 +81,26 @@ const createCardOrder = async (req, res) => {
     await moveDeliveryGuyToEndOfQueue(
       db,
       batch,
-      data.branchId,
+      data.branchKey,
       data.deliveryguyId,
       data.deliveryguyName
     );
+
     const customerData = {
       name: data.name,
       phone: data.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: data.blockHouse,
-      branchId: data.branchId,
+      branchId: data.branchKey,
       branchName: data.branchName,
       createdDate: data.createdDate,
       type: "Card",
     };
+
     console.log(customerData);
+    const Id = generateCustomID(`${data.blockHouse}`);
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
+
     if (data.from === "branch") {
       data.branchId = data.branchId + " normal";
     }
@@ -97,13 +118,11 @@ const createCardOrder = async (req, res) => {
     data.remaingMoney = parseInt(data.amountBirr);
 
     await createDocument("Card", data, db, batch);
-    const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData);
-    data.type = "Card";
-    await sendFCMNotification(data);
-    // Respond with a success message
+
+    await updateDeliveryGuyData(db, data, batch);
     // Commit the batch to execute all operations together
     await batch.commit();
+
     res
       .status(200)
       .json({ message: "Card Order document created successfully." });

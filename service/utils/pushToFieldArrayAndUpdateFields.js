@@ -61,7 +61,15 @@ const pushToFieldArrayAndUpdateFields = async (
 
     // If the array has more than 4 items, remove the earliest items
     if (existingArray.length > 4) {
-      existingArray.splice(0, existingArray.length - 4);
+      const removedItem = existingArray.shift(); // Remove the first item and store it in 'removedItem'
+      console.log(`Removed item: ${JSON.stringify(removedItem)}`);
+
+      // Delete documents with the same document ID from "salary" and "staffSalary" collections
+      const salaryRef = db.collection("salary").doc(removedItem.id);
+      const staffSalaryRef = db.collection("staffSalary").doc(removedItem.id);
+
+      batch.delete(salaryRef);
+      batch.delete(staffSalaryRef);
     }
 
     // Update the 'field' with the updated array and other fields using the batch

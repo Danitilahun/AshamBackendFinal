@@ -51,6 +51,7 @@ const createDeliveryGuy = async (req, res) => {
     const salary = getDeliveryGuySalaryData();
     salary.name = fields.fullName;
     salary.uniqueName = fields.uniqueName;
+    salary.bankAccount = fields.bankAccount;
 
     // Step 4: Add Work data to specified tables if activeTable is provided
     if (activeTable) {

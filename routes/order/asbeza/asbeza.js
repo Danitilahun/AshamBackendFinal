@@ -12,6 +12,6 @@ const AsbezaAssigned = require("../../../controllers/order/AsbezaOrder/orderAssi
 router.post("/", AsbezaOrderAuth, createAsbezaOrder);
 router.post("/orderAssigned", AdminMiddleware, AsbezaAssigned);
 router.put("/:id", AsbezaOrderAuth, editAsbezaOrder);
-router.delete("/:id", AsbezaOrderAuth, deleteAsbezaOrder);
+router.delete("/:id/:cn", AsbezaOrderAuth, deleteAsbezaOrder);
 
 module.exports = router;

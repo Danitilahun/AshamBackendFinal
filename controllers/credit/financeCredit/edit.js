@@ -47,12 +47,12 @@ const editFinanceCredit = async (req, res) => {
     );
 
     if (totalCredit) {
-      await updateCalculator(
-        updatedData.branchId,
-        parseFloat(totalCredit.total),
-        db,
-        batch
-      );
+      // await updateCalculator(
+      //   updatedData.branchId,
+      //   parseFloat(totalCredit.total),
+      //   db,
+      //   batch
+      // );
 
       await updateBankCredit(
         updatedData.branchId,

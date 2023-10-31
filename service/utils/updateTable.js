@@ -12,6 +12,7 @@ const admin = require("../../config/firebase-admin");
  * @param {Object} batch - The Firestore batch to which the updates should be added.
  * @throws {Error} Throws an error if the update operation fails.
  */
+
 const updateTable = async (
   db,
   collectionName,
@@ -22,6 +23,7 @@ const updateTable = async (
   batch
 ) => {
   try {
+    console.log("Updating data...", docId, idToUpdate, idToUpdate2, newData);
     if (!docId || !idToUpdate || !idToUpdate2) {
       throw new Error(
         "Missing required parameters for update table.Please check you have table Sheet and table for a day."

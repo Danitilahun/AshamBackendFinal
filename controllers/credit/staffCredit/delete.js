@@ -35,54 +35,54 @@ const deleteCredit = async (req, res) => {
     // Delete the credit document in the "CustomerCredit" collection
     await deleteDocument(db, batch, "StaffCredit", creditId);
 
-    const salaryUpdate = {
-      totalCredit: -parseInt(creditData.amount),
-      total: parseInt(creditData.amount),
-    };
-    const collectionName =
-      creditData.placement === "DeliveryGuy" ? "salary" : "staffSalary";
-    const newSalaryTable = await updateSalaryTable(
-      collectionName,
-      creditData.active,
-      creditData.employeeId,
-      "total",
-      salaryUpdate,
-      db,
-      batch
-    );
+    // const salaryUpdate = {
+    //   totalCredit: -parseInt(creditData.amount),
+    //   total: parseInt(creditData.amount),
+    // };
+    // const collectionName =
+    //   creditData.placement === "DeliveryGuy" ? "salary" : "staffSalary";
+    // const newSalaryTable = await updateSalaryTable(
+    //   collectionName,
+    //   creditData.active,
+    //   creditData.employeeId,
+    //   "total",
+    //   salaryUpdate,
+    //   db,
+    //   batch
+    // );
 
-    // Determine the SalaryType based on placement
-    const SalaryType =
-      creditData.placement === "DeliveryGuy"
-        ? "totalDeliveryGuySalary"
-        : "totalStaffSalary";
+    // // Determine the SalaryType based on placement
+    // const SalaryType =
+    //   creditData.placement === "DeliveryGuy"
+    //     ? "totalDeliveryGuySalary"
+    //     : "totalStaffSalary";
 
-    // Update sheet status with new SalaryType value
-    const newStatus = await updateSheetStatus(
-      creditData.active,
-      SalaryType,
-      newSalaryTable.total.total + parseInt(creditData.amount),
-      db,
-      batch
-    );
+    // // Update sheet status with new SalaryType value
+    // const newStatus = await updateSheetStatus(
+    //   creditData.active,
+    //   SalaryType,
+    //   newSalaryTable.total.total + parseInt(creditData.amount),
+    //   db,
+    //   batch
+    // );
 
-    if (newStatus) {
-      // Update the dashboard with the new status
-      await updateDashboard(
-        db,
-        batch,
-        creditData.branchId,
-        newStatus.totalExpense ? newStatus.totalExpense : 0
-      );
+    // if (newStatus) {
+    //   // Update the dashboard with the new status
+    //   await updateDashboard(
+    //     db,
+    //     batch,
+    //     creditData.branchId,
+    //     newStatus.totalExpense ? newStatus.totalExpense : 0
+    //   );
 
-      // Update dashboard branch info with the new status
-      await updateDashboardBranchInfo(
-        db,
-        batch,
-        creditData.branchId,
-        newStatus.totalExpense ? newStatus.totalExpense : 0
-      );
-    }
+    //   // Update dashboard branch info with the new status
+    //   await updateDashboardBranchInfo(
+    //     db,
+    //     batch,
+    //     creditData.branchId,
+    //     newStatus.totalExpense ? newStatus.totalExpense : 0
+    //   );
+    // }
 
     // Update the total credit by subtracting the deleted credit amount
     const updatedTotalCredit = await updateCreditDocument(

@@ -7,6 +7,8 @@ const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiv
 const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
+const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
+const updateDeliveryGuyData = require("../../../service/utils/wifiUpdate");
 
 /**
  * Create a Wifi Order document in the "Wifi Order" Firestore collection.
@@ -30,10 +32,25 @@ const createWifiOrder = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
+
+    data.status = "Assigned";
+
+    const check = await documentExistsAndHasField(
+      "tables",
+      data.activeDailySummery,
+      data.date
+    );
+
+    if (!check) {
+      return res.status(400).json({
+        message: `You can't create order since there is no daily table for ${data.date}. Please create a daily table first.`,
+      });
+    }
+
     // console.log(manye);
     const branch = await getDocumentDataById(
       "branches",
-      data.cardBranch ? data.cardBranch : data.branchId
+      data.cardBranch ? data.cardBranch : data.branchKey
     );
     if (
       !branch ||
@@ -62,7 +79,7 @@ const createWifiOrder = async (req, res) => {
     await moveDeliveryGuyToEndOfQueue(
       db,
       batch,
-      data.branchId,
+      data.branchKey,
       data.deliveryguyId,
       data.deliveryguyName
     );
@@ -73,25 +90,27 @@ const createWifiOrder = async (req, res) => {
       phone: data.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: data.blockHouse,
-      branchId: data.branchId,
+      branchId: data.branchKey,
       branchName: data.branchName,
       createdDate: data.createdDate,
       type: "Wifi",
     };
     console.log(customerData);
 
+    const Id = generateCustomID(`${data.blockHouse}`);
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
+
     if (data.from === "branch") {
       data.branchId = data.branchId + " normal";
     }
 
     await createDocument("Wifi", data, db, batch); // Updated function call
-    const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
-    data.type = "Wifi";
-    await sendFCMNotification(data);
+
+    await updateDeliveryGuyData(db, data, batch);
     // Respond with a success message
 
     await batch.commit();
+
     res
       .status(200)
       .json({ message: "Wifi Order document created successfully." });

@@ -6,6 +6,7 @@ const updateSheetStatus = require("../../../service/credit/updateSheetStatus/upd
 const updateDashboard = require("../../../service/credit/dashboard/updateDashboard");
 const updateDashboardBranchInfo = require("../../../service/credit/dashboard/updateDashboardBranchInfo");
 const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
+
 /**
  * Edit delivery guy data by processing a request.
  *
@@ -38,6 +39,7 @@ const editStaff = async (req, res) => {
       await updateFieldsInNestedObject(db, batch, "staffSalary", active, id, {
         name: updatedData.fullName,
         uniqueName: updatedData.uniqueName,
+        bankAccount: updatedData.bankAccount,
       });
     }
 

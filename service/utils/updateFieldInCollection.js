@@ -87,10 +87,6 @@ const updateFieldInCollection = async (
     );
 
     console.log("Updating Calculator amount...", docIds);
-    // Loop over the docIds array and call updateCalculatorAmount for each doc.id
-    // for (const docId of docIds) {
-    //   await updateCalculatorAmount(db, batch, docId, parseFloat(incrementBy));
-    // }
 
     for (const [docId, updatedValue] of docIds) {
       await updateCalculatorAmount(db, batch, docId, parseFloat(updatedValue));

@@ -13,6 +13,7 @@ const generateCustomID = require("../../util/generateCustomID");
  * @param {object} res - Express response object.
  * @returns {object} JSON response with the table creation result.
  */
+
 const createTable = async (req, res) => {
   const { date, sheetId, branchId } = req.body;
 
@@ -33,6 +34,14 @@ const createTable = async (req, res) => {
       });
     }
 
+    const branch = await getDocumentDataById("branches", branchId);
+    if (!branch) {
+      return res.status(404).json({
+        message: "Branch document not found.",
+        type: "info",
+      });
+    }
+
     // Step 2: Check the number of tables on the sheet
     const count = documentData.tablecount;
     if (count == 15) {
@@ -45,6 +54,7 @@ const createTable = async (req, res) => {
 
     // Step 3: Generate custom ID for the table
     const customId1 = generateCustomID(`${date}-${sheetId}-${branchId}`);
+
     // Step 4: Check if the table with the given date already exists
     const table1Exists = await checkDocumentExistsInTable(customId1);
 
@@ -57,6 +67,7 @@ const createTable = async (req, res) => {
       // Step 5: Handle delivery operations
       const db = admin.firestore();
       const batch = db.batch();
+
       await handleDeliveryOperations(db, batch, branchId, sheetId, date);
 
       // Step 6: Handle sheet operations
@@ -65,10 +76,10 @@ const createTable = async (req, res) => {
       // Step 7: Add the day to the daily 15-day summary sheet
       await addDayToDaily15DaySummerySheet(db, batch, sheetId, branchId, date);
 
-      const branch = await getDocumentDataById("branches", branchId);
-      if (!branch.cardPaid) {
+      if (!branch.cardDate || branch.cardDate !== date) {
         await updateCardCollection(db, batch, branchId);
       }
+
       // Commit the batch
       await batch.commit();
     }

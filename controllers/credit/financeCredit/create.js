@@ -40,12 +40,12 @@ const createFinanceCredit = async (req, res) => {
     // Update the calculator with the new total credit within the batch
 
     if (totalCredit) {
-      await updateCalculator(
-        data.branchId,
-        parseFloat(totalCredit.total),
-        db,
-        batch
-      );
+      // await updateCalculator(
+      //   data.branchId,
+      //   parseFloat(totalCredit.total),
+      //   db,
+      //   batch
+      // );
       await updateBankCredit(
         data.branchId,
         parseFloat(totalCredit.total),

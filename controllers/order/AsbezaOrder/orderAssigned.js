@@ -20,8 +20,8 @@ const AsbezaAssigned = async (req, res) => {
 
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
+
     // Logging the received data
-    console.log(data);
 
     if (!data) {
       return res
@@ -31,104 +31,12 @@ const AsbezaAssigned = async (req, res) => {
 
     // Updating various tables with cardFee information
     await updateOrCreateFieldsInDocument(db, batch, "Asbeza", data.id, {
-      status: data.status,
+      status: "Assigned",
     });
 
-    if (data.status === "Assigned") {
-      // First update: Change the daily table
-      await updateTable(
-        db,
-        "tables",
-        data.activeTable,
-        data.deliveryguyId,
-        "total",
-        {
-          asbezaNumber: 1,
-        },
-        batch
-      );
+    // Commit the batch to execute all operations together
+    await batch.commit();
 
-      // Second update: Change the 15 days summery and daily summery tables
-      await updateTable(
-        db,
-        "tables",
-        data.activeDailySummery,
-        data.date,
-        "total",
-        {
-          asbezaNumber: 1,
-        },
-        batch
-      );
-
-      // Third update: Individual person's daily work summery
-      await updateTable(
-        db,
-        "tables",
-        data.active,
-        data.deliveryguyId,
-        "total",
-        {
-          asbezaNumber: 1,
-        },
-        batch
-      );
-
-      // Getting cardFee information from the prices collection
-      const DeliveryGuyGain = await getSingleDocFromCollection("prices");
-
-      if (!DeliveryGuyGain) {
-        return res.status(400).json({
-          message:
-            "Prices information is missing.Please refresh your browser and try again.",
-        });
-      }
-      // Fourth update: Salary of the delivery guy table
-      const newSalaryExpense = await updateTable(
-        db,
-        "salary",
-        data.active,
-        data.deliveryguyId,
-        "total",
-        {
-          asbezaNumber: DeliveryGuyGain.asbezaPrice,
-          total: DeliveryGuyGain.asbezaPrice,
-        },
-        batch
-      );
-
-      if (newSalaryExpense) {
-        // Updating sheet status with totalDeliveryGuySalary
-        const newStatus = await updateSheetStatus(
-          db,
-          batch,
-          data.active,
-          "totalDeliveryGuySalary",
-          newSalaryExpense.total.total + DeliveryGuyGain.asbezaPrice
-        );
-
-        if (newStatus) {
-          // Update the dashboard with the new status
-          await updateDashboard(
-            db,
-            batch,
-            data.branchId,
-            newStatus.totalExpense ? newStatus.totalExpense : 0
-          );
-
-          // Update dashboard branch info with the new status
-          await updateDashboardBranchInfo(
-            db,
-            batch,
-            data.branchId,
-            newStatus.totalExpense ? newStatus.totalExpense : 0
-          );
-        }
-      }
-
-      // Commit the batch to execute all operations together
-      await batch.commit();
-    }
     res.status(200).json({ message: `Asbeza Assigned successfully.` });
   } catch (error) {
     // Handling and logging any errors

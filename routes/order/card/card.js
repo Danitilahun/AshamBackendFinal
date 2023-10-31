@@ -12,6 +12,6 @@ const CardAssigned = require("../../../controllers/order/CardOrder/orderAssigned
 router.post("/", CardOrderAuth, createCardOrder);
 router.post("/orderAssigned", AdminMiddleware, CardAssigned);
 router.put("/:id", CardOrderAuth, editCardOrder);
-router.delete("/:id", CardOrderAuth, deleteCardOrder);
+router.delete("/:id/:cn", CardOrderAuth, deleteCardOrder);
 
 module.exports = router;

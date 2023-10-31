@@ -1,12 +1,14 @@
+const admin = require("../../../config/firebase-admin");
 const createDocument = require("../../../service/mainCRUD/createDoc");
 const createOrUpdateDocument = require("../../../service/order/createOrUpdateDocument");
 const sendFCMNotification = require("../../../service/order/sendFCMNotification");
 const generateCustomID = require("../../../util/generateCustomID");
-const admin = require("../../../config/firebase-admin");
 const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/removeFromDeliveryQueue");
 const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
+const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
+const updateDeliveryGuyData = require("../../../service/utils/waterUpdate");
 
 /**
  * Create a Water Order document in the "Water Order" Firestore collection.
@@ -17,12 +19,14 @@ const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyA
  * @param {Object} res - The Express response object.
  * @returns {void}
  */
+
 const createWaterOrder = async (req, res) => {
   const db = admin.firestore();
   const batch = db.batch();
   try {
     // Get data from the request body
     const data = req.body;
+
     if (!data) {
       return res.status(400).json({
         message:
@@ -30,10 +34,23 @@ const createWaterOrder = async (req, res) => {
       });
     }
 
+    data.status = "Assigned";
+
+    const check = await documentExistsAndHasField(
+      "tables",
+      data.activeDailySummery,
+      data.date
+    );
+
+    if (!check) {
+      return res.status(400).json({
+        message: `You can't create order since there is no daily table for ${data.date}. Please create a daily table first.`,
+      });
+    }
     // console.log(manye);
     const branch = await getDocumentDataById(
       "branches",
-      data.cardBranch ? data.cardBranch : data.branchId
+      data.cardBranch ? data.cardBranch : data.branchKey
     );
     if (
       !branch ||
@@ -62,7 +79,7 @@ const createWaterOrder = async (req, res) => {
     await moveDeliveryGuyToEndOfQueue(
       db,
       batch,
-      data.branchId,
+      data.branchKey,
       data.deliveryguyId,
       data.deliveryguyName
     ); // Updated function call
@@ -73,21 +90,22 @@ const createWaterOrder = async (req, res) => {
       phone: data.phone,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       blockHouse: data.blockHouse,
-      branchId: data.branchId,
+      branchId: data.branchKey,
       branchName: data.branchName,
       createdDate: data.createdDate,
       type: "Water",
     };
+
+    const Id = generateCustomID(`${data.blockHouse}`);
+    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
 
     if (data.from === "branch") {
       data.branchId = data.branchId + " normal";
     }
 
     await createDocument("Water", data, db, batch); // Updated function call
-    const Id = generateCustomID(`${data.blockHouse}`);
-    await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
-    data.type = "Water";
-    await sendFCMNotification(data);
+
+    await updateDeliveryGuyData(db, data, batch);
     // Respond with a success message
 
     await batch.commit();

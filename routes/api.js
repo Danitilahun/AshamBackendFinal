@@ -15,6 +15,7 @@ const DailyTableRoutes = require("./dailyTable/dailyTable");
 const SheetRoute = require("./sheet/sheet");
 const CalculatorRoute = require("./calculator/calculator");
 const DashboardRoute = require("./dashboard/dashboard");
+const ExportRoutes = require("./export/export");
 
 // Use sub-routes under "/api"
 router.use("/user", userRoute);
@@ -25,6 +26,7 @@ router.use("/bank", BankRoute);
 router.use("/essential", EssentialRoute);
 router.use("/expense", ExpenseRoute);
 router.use("/order", OrderRoute);
+router.use("/export", ExportRoutes);
 router.use("/branch", BranchRoute);
 router.use("/calculator", CalculateRoute);
 router.use("/notification", NotificationRoute);

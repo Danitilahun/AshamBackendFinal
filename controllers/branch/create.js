@@ -19,6 +19,8 @@ const getCountOfDocuments = require("../../service/utils/getCountOfDocuments");
  * @example
  */
 const createBranch = async (req, res) => {
+  print("hello world");
+
   const db = admin.firestore();
   const batch = db.batch(); // Initialize a Firestore batch
 
@@ -39,6 +41,8 @@ const createBranch = async (req, res) => {
     data.uniqueName = `B-${count + 1}`;
     data.paid = false;
     data.customerNumber = 0;
+    data.totalIncome = 0;
+    data.totalExpense = 0;
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
     // Step 3: Create a branch document in the "branches" collection
     const branchesRef = db.collection("branches");
