@@ -53,8 +53,10 @@ const deleteBranch = async (req, res) => {
     // Commit the batch
     await batch.commit();
 
-    await revokeRefreshTokens(branchData.managerId);
-    await disableUserAccount(branchData.managerId, true);
+    if (branchData.managerId) {
+      await revokeRefreshTokens(branchData.managerId);
+      await disableUserAccount(branchData.managerId, true);
+    }
 
     res.status(200).json({ message: "Branch document deleted successfully." });
   } catch (error) {
