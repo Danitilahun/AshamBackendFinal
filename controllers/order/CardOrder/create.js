@@ -42,9 +42,10 @@ const createCardOrder = async (req, res) => {
       data.date
     );
 
+    console.log(check);
     if (!check) {
       return res.status(400).json({
-        message: `You can't create order since there is no daily table for ${data.date}. Please create a daily table first.`,
+        message: `You cannot create an order because there is no daily table available for the date ${data.date}. Please create a daily table for this date. If you believe you have already created a table for this day, this error may be due to an issue with your internet connection. Please check your internet connection and try again.`,
       });
     }
     // console.log(manye);

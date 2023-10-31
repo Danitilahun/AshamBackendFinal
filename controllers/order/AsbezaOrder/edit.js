@@ -40,6 +40,7 @@ const editAsbezaOrder = async (req, res) => {
     updatedData.createdAt = admin.firestore.FieldValue.serverTimestamp();
 
     const AsbezaData = await getDocumentDataById("Asbeza", id);
+
     if (updatedData.fromWhere === "edit") {
       if (AsbezaData.deliveryguyId !== updatedData.deliveryguyId) {
         await updateDeliveryGuyData(db, updatedData, batch);

@@ -19,7 +19,7 @@ const documentExistsAndHasField = async (
     return false;
   } catch (error) {
     console.error("Error checking document:", error);
-    return false;
+    throw error;
   }
 };
 

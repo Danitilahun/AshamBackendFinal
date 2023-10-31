@@ -28,8 +28,11 @@ const DeleteTable = async (req, res) => {
     if (!tableData) {
       return res.status(404).json({ error: "Table not found." });
     }
-
-    if (tableData.total.total > 0) {
+    console.log(tableData.total);
+    const hasValueGreaterThanOne = Object.values(tableData.total).some(
+      (value) => value > 1
+    );
+    if (hasValueGreaterThanOne > 0) {
       return res.status(409).json({
         message: "Table has some data. You can't delete it.",
         type: "info",
