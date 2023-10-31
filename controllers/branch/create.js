@@ -19,8 +19,6 @@ const getCountOfDocuments = require("../../service/utils/getCountOfDocuments");
  * @example
  */
 const createBranch = async (req, res) => {
-  print("hello world");
-
   const db = admin.firestore();
   const batch = db.batch(); // Initialize a Firestore batch
 

@@ -39,7 +39,7 @@ router.post("/water", UserMiddleware, WaterTable);
 router.post("/wifi", UserMiddleware, WifiTable);
 router.post("/branchCustomer", UserMiddleware, BranchCustomerTable);
 router.post("/customer", UserMiddleware, CustomerTable);
-router.post("/budget", UserMiddleware, BudgetTable);
+router.post("/budget", BankAuth, BudgetTable);
 router.post("/bank", BankAuth, BankExportTable);
 router.post("/cardF", UserMiddleware, CardFeeTable);
 router.post("/cardD", UserMiddleware, CardDisTable);
