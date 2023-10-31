@@ -1,4 +1,5 @@
 const admin = require("../../../config/firebase-admin");
+const swapCreditDocument = require("../../../service/credit/totalCredit/SwapCredit");
 const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
 const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
 const payDailySalary = require("../../../service/users/handleDeliveryGuySalaryPay/payDailySalary");
@@ -21,6 +22,7 @@ const handlePayController = async (req, res) => {
     const deliveryGuySnapshot = await deliveryGuyRef.get();
     if (deliveryGuySnapshot.exists) {
       if (deliveryGuySnapshot.data().dailyCredit > 0) {
+        console.log("here");
         credit = await swapCredit(
           id,
           deliveryGuySnapshot.data(),
@@ -41,40 +43,24 @@ const handlePayController = async (req, res) => {
       });
     }
 
-    // if (!data.paid) {
-    //   await updateOrCreateFieldsInDocument(
-    //     db,
-    //     batch,
-    //     "branches",
-    //     data.branchId,
-    //     {
-    //       activeTable: "",
-    //       paid: true,
-    //     }
-    //   );
-    // }
-
     await payDailySalary(
       active,
       id,
       deliveryGuySnapshot.data().branchId,
       db,
-      batch,
-      credit
+      batch
     );
 
-    // const newTotalCredit = await updateCreditDocument(
-    //   deliveryGuySnapshot.data().branchId,
-    //   "StaffCredit",
-    //   parseFloat(credit ? credit : 0),
-    //   db,
-    //   batch
-    // );
+    await swapCreditDocument(
+      data.branchId,
+      "DailyCredit",
+      "StaffCredit",
+      credit,
+      credit,
+      db,
+      batch
+    );
 
-    // // Update the calculator with the new total credit
-    // if (newTotalCredit && newTotalCredit?.total) {
-    //   await updateCalculator(active, newTotalCredit?.total, db, batch);
-    // }
     // Commit the batch updates
     await batch.commit();
     return res.status(200).json({ message: "Data successfully updated." });

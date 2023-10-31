@@ -17,23 +17,26 @@ const swapCredit = async (id, data, active, db, batch) => {
       batch
     );
 
+    console.log(Credit_from_amount_normal);
     const creditCollection = db.collection("StaffCredit");
 
-    const newData = {
-      employeeId: id,
-      placement: "DeliveryGuy",
-      employeeName: data.fullName,
-      amount: parseInt(Credit_from_amount_normal),
-      branchId: data.branchId,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      date: new Date(),
-      type: "StaffCredit",
-      reason: "Do not complete the daily credit return.",
-      active: active,
-    };
+    if (Credit_from_amount_normal !== 0) {
+      const newData = {
+        employeeId: id,
+        placement: "DeliveryGuy",
+        employeeName: data.fullName,
+        amount: parseInt(Credit_from_amount_normal),
+        branchId: data.branchId,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        date: new Date(),
+        type: "StaffCredit",
+        reason: "Do not complete the daily credit return.",
+        active: active,
+      };
 
-    const newCreditRef = creditCollection.doc();
-    batch.set(newCreditRef, newData);
+      const newCreditRef = creditCollection.doc();
+      batch.set(newCreditRef, newData);
+    }
 
     // console.log();
     await updateDeliveryGuy(
