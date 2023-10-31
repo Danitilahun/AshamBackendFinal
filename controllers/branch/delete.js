@@ -52,8 +52,7 @@ const deleteBranch = async (req, res) => {
     }
     // Commit the batch
     await batch.commit();
-
-    if (branchData.managerId) {
+    if (branchData.managerId !== "not assigned") {
       await revokeRefreshTokens(branchData.managerId);
       await disableUserAccount(branchData.managerId, true);
     }
