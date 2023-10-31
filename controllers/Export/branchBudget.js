@@ -97,9 +97,9 @@ const BudgetTable = async (req, res) => {
       Totaltax: item.Totaltax,
       ...item,
     }));
-    // await updateOrCreateFieldsInDocument(db, batch, "Budget", fields.branchId, {
-    //   sheetSummary: [],
-    // });
+    await updateOrCreateFieldsInDocument(db, batch, "Budget", fields.branchId, {
+      sheetSummary: [],
+    });
     // await batch.commit();
     // Respond with a success message
     res.status(200).json({

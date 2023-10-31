@@ -2,6 +2,7 @@ const admin = require("../../../config/firebase-admin");
 const getDocumentByBranchAndThenDelete = require("../../../service/utils/getAndDelete");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const getDocumentsByBranchId = require("../../../service/utils/getDocumentsByBranchId");
+const convertDate = require("../../../util/convertDate");
 
 const StaffCreditExportTable = async (req, res) => {
   const db = admin.firestore();
@@ -96,7 +97,10 @@ const StaffCreditExportTable = async (req, res) => {
       Placement: item.Placement,
       Amount: item.Amount,
       Reason: item.Reason,
-      BorrowedOn: convertDate(item.Date),
+      BorrowedOn:
+        convertDate(item.Date) !== "Invalid Date"
+          ? convertDate(item.Date)
+          : item.Date,
     }));
 
     await batch.commit();

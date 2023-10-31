@@ -1,4 +1,5 @@
 const admin = require("../../../config/firebase-admin");
+const getInternationalDate = require("../../../utils/getInternationalDate");
 const updateDashboard = require("../../credit/dashboard/updateDashboard");
 const updateDashboardBranchInfo = require("../../credit/dashboard/updateDashboardBranchInfo");
 const updateCreditDocument = require("../../credit/totalCredit/updateCreditDocument");
@@ -20,6 +21,7 @@ const swapCredit = async (id, data, active, db, batch) => {
     console.log(Credit_from_amount_normal);
     const creditCollection = db.collection("StaffCredit");
 
+    const date = getInternationalDate();
     if (Credit_from_amount_normal !== 0) {
       const newData = {
         employeeId: id,
@@ -28,7 +30,7 @@ const swapCredit = async (id, data, active, db, batch) => {
         amount: parseInt(Credit_from_amount_normal),
         branchId: data.branchId,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        date: new Date(),
+        date: date,
         type: "StaffCredit",
         reason: "Do not complete the daily credit return.",
         active: active,
