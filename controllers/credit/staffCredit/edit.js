@@ -22,12 +22,7 @@ const editCredit = async (req, res) => {
     const newValue = updatedData.difference;
     delete updatedData.difference;
 
-    if (
-      !updatedData ||
-      !creditId ||
-      !updatedData.branchId ||
-      !updatedData.active
-    ) {
+    if (!updatedData || !creditId || !updatedData.branchId) {
       return res
         .status(400)
         .json({ message: "Request body is missing or empty." });
