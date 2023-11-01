@@ -13,7 +13,7 @@ const createCredit = async (req, res) => {
     const data = req.body;
     console.log(data);
 
-    if (!data || !data.branchId || !data.employeeId) {
+    if (!data || !data.active || !data.branchId || !data.employeeId) {
       return res.status(400).json({
         message:
           "Request body is missing or empty.Please refresh your browser and try again.",
