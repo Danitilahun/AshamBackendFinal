@@ -40,7 +40,7 @@ const updateTable = async (
     // Check if the specified IDs exist in the document
     if (!currentData || !currentData[idToUpdate] || !currentData[idToUpdate2]) {
       throw new Error(
-        "Daily table do not exist.Please check you have Sheet and table for a day.If not create one first.This error may becaused by internet connection also.Please check your internet connection and try again."
+        "Daily table do not exist.Please check you have Sheet and table for a day.If not create one first.This error may be caused by internet connection also.Please check your internet connection and try again."
       );
     }
 
