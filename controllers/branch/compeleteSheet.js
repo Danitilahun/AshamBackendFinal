@@ -103,11 +103,12 @@ const ChangeSheetStatus = async (req, res) => {
     );
 
     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
+    console.log(totalCredit, "totalCredit");
     await updateOrCreateFieldsInDocument(
       db,
       batch,
       "totalCredit",
-      fields.branchId,
+      data.branchId,
       {
         total:
           totalCredit.total - totalCredit.DailyCredit - totalCredit.StaffCredit,
