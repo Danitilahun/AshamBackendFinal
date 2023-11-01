@@ -37,6 +37,7 @@ const updateTable = async (
     const docSnapshot = await docRef1.get();
     const currentData = docSnapshot.data();
 
+    console.log("currentData", currentData);
     // Check if the specified IDs exist in the document
     if (!currentData || !currentData[idToUpdate] || !currentData[idToUpdate2]) {
       throw new Error(

@@ -6,6 +6,7 @@ const updateTable = require("../../../../service/utils/updateTable");
 
 const CardFee = async (data, db, batch) => {
   try {
+    console.log(data, "data");
     // First update: Update the "tables" collection with cardFee: 1
     await updateTable(
       db,
