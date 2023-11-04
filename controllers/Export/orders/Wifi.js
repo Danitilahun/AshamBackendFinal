@@ -52,6 +52,7 @@ const WifiTable = async (req, res) => {
         createdAt,
         status,
         type,
+        from,
         callcenterId,
         branchId,
         order,

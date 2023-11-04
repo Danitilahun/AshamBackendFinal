@@ -51,6 +51,7 @@ const CardTable = async (req, res) => {
         activeDailySummery,
         createdAt,
         status,
+        from,
         type,
         branchKey,
         callcenterId,

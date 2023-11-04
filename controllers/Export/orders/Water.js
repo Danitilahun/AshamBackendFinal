@@ -52,6 +52,7 @@ const WaterTable = async (req, res) => {
         createdAt,
         status,
         type,
+        from,
         callcenterId,
         branchId,
         order,
