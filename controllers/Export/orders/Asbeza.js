@@ -59,6 +59,7 @@ const AsbezaTable = async (req, res) => {
         callcenterId,
         branchId,
         order,
+        branchKey,
         deliveryguyId,
         ...rest
       } = item;

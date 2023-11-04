@@ -52,6 +52,7 @@ const CardTable = async (req, res) => {
         createdAt,
         status,
         type,
+        branchKey,
         callcenterId,
         branchId,
         order,
