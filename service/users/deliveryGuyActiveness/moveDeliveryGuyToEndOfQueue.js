@@ -19,8 +19,7 @@ const moveDeliveryGuyToEndOfQueue = async (
           { deliveryManId: deliveryManId, deliveryGuyName: deliveryGuyName },
         ],
       };
-      batch.set(docRef, newDocData);
-      return;
+      return batch.set(docRef, newDocData);
     }
 
     const existingData = docSnapshot.data();
@@ -38,7 +37,7 @@ const moveDeliveryGuyToEndOfQueue = async (
       // Push the item to the end of the queue
       existingQueue.push(movedItem);
 
-      batch.update(docRef, { [branchId]: existingQueue });
+      return batch.update(docRef, { [branchId]: existingQueue });
     }
   } catch (error) {
     throw error;

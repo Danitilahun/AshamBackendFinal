@@ -5,9 +5,10 @@ const PenalityAuth = require("../../../middlewares/IndivitualAuth/AdminAuthMiddl
 const createPenality = require("../../../controllers/incentive/penality/create");
 const editPenality = require("../../../controllers/incentive/penality/edit");
 const deletePenality = require("../../../controllers/incentive/penality/delete");
+const checkRequestBodyMiddleware = require("../../../middlewares/checkRequestBodyMiddleware");
 
 // Define the route for creating data for an admin
-router.post("/", PenalityAuth, createPenality);
+router.post("/", PenalityAuth, checkRequestBodyMiddleware, createPenality);
 router.put("/:penalityId", PenalityAuth, editPenality);
 router.delete("/:penalityId", PenalityAuth, deletePenality);
 

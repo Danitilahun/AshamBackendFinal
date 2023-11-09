@@ -43,6 +43,7 @@ const payAsbezaDeliveryGuy = async (db, data, batch, AsbezaCount) => {
 
       if (newStatus) {
         // Update the dashboard with the new status
+        console.log(data);
         await updateDashboard(
           db,
           batch,

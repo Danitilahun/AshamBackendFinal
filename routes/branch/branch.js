@@ -8,12 +8,19 @@ const editBranch = require("../../controllers/branch/edit");
 const deleteBranch = require("../../controllers/branch/delete");
 const ChangeSheetStatus = require("../../controllers/branch/compeleteSheet");
 const updateBranchName = require("../../controllers/branch/updateBranchName");
+const validateIdParam = require("../../middlewares/validateIdParam");
+const checkRequestBodyMiddleware = require("../../middlewares/checkRequestBodyMiddleware");
 
 // Define the route for creating data for an admin
-router.post("/", BranchAuth, createBranch);
-router.post("/changeSheetStatus", SheetStatusAuth, ChangeSheetStatus);
-router.put("/:id", BranchAuth, editBranch);
-router.put("/name/:id", BranchAuth, updateBranchName);
-router.delete("/:id", BranchAuth, deleteBranch);
+router.post("/", BranchAuth, checkRequestBodyMiddleware, createBranch);
+router.post(
+  "/changeSheetStatus",
+  SheetStatusAuth,
+  checkRequestBodyMiddleware,
+  ChangeSheetStatus
+);
+router.put("/:id", validateIdParam, BranchAuth, editBranch);
+router.put("/name/:id", BranchAuth, validateIdParam, updateBranchName);
+router.delete("/:id", BranchAuth, validateIdParam, deleteBranch);
 
 module.exports = router;

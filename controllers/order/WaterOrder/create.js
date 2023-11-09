@@ -1,14 +1,11 @@
 const admin = require("../../../config/firebase-admin");
 const createDocument = require("../../../service/mainCRUD/createDoc");
 const createOrUpdateDocument = require("../../../service/order/createOrUpdateDocument");
-const sendFCMNotification = require("../../../service/order/sendFCMNotification");
 const generateCustomID = require("../../../util/generateCustomID");
-const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/removeFromDeliveryQueue");
-const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
 const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
-const updateDeliveryGuyData = require("../../../service/utils/waterUpdate");
+const createCustomerData = require("../../../util/createCustomerData");
 
 /**
  * Create a Water Order document in the "Water Order" Firestore collection.
@@ -26,55 +23,7 @@ const createWaterOrder = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
-
-    if (!data) {
-      return res.status(400).json({
-        message:
-          "Request body is missing or empty.Please refresh your browser and try again.",
-      });
-    }
-
     data.status = "Assigned";
-
-    const check = await documentExistsAndHasField(
-      "tables",
-      data.activeDailySummery,
-      data.date
-    );
-
-    if (!check) {
-      return res.status(400).json({
-        message: `You cannot create an order because there is no daily table available for the date ${data.date}. Please create a daily table for this date. If you believe you have already created a table for this day, this error may be due to an issue with your internet connection. Please check your internet connection and try again.`,
-      });
-    }
-    // console.log(manye);
-    const branch = await getDocumentDataById(
-      "branches",
-      data.cardBranch ? data.cardBranch : data.branchKey
-    );
-    if (
-      !branch ||
-      !branch.active ||
-      !branch.activeSheet ||
-      !branch.activeTable
-    ) {
-      return res.status(400).json({
-        message:
-          "You can't create order since there is no daily table or sheet.",
-      });
-    }
-
-    if (!data.active || !data.activeDailySummery || !data.activeTable) {
-      return res.status(400).json({
-        message:
-          "You can't create order since there is no daily table or sheet.",
-      });
-    }
-    if (!data.branchId || !data.deliveryguyId) {
-      return res
-        .status(400)
-        .json({ message: "Branch ID and Delivery Guy ID are required." });
-    }
 
     await moveDeliveryGuyToEndOfQueue(
       db,
@@ -84,19 +33,10 @@ const createWaterOrder = async (req, res) => {
       data.deliveryguyName
     ); // Updated function call
 
-    // Create a Water Order document in the "Water Order" collection
-    const customerData = {
-      name: data.name,
-      phone: data.phone,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      blockHouse: data.blockHouse,
-      branchId: data.branchKey,
-      branchName: data.branchName,
-      createdDate: data.createdDate,
-      type: "Water",
-    };
+    const customerData = createCustomerData(data, "Water");
 
     const Id = generateCustomID(`${data.blockHouse}`);
+
     await createOrUpdateDocument(db, batch, "customer", Id, customerData); // Updated function call
 
     if (data.from === "branch") {
@@ -105,7 +45,6 @@ const createWaterOrder = async (req, res) => {
 
     await createDocument("Water", data, db, batch); // Updated function call
 
-    await updateDeliveryGuyData(db, data, batch);
     // Respond with a success message
 
     await batch.commit();

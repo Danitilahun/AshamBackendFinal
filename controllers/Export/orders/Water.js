@@ -1,6 +1,8 @@
 const getDocumentByBranchOrCallcenterIdAndDelete = require("../../../service/utils/getDocumentByBranchIdAndDelete");
-const getDocumentsByBranchId = require("../../../service/utils/getDocumentsByBranchId");
+// const getDocumentsByBranchId = require("../../../service/utils/getDocumentsByBranchId");
 const admin = require("../../../config/firebase-admin");
+const getDocumentsByBranchId = require("../../../service/utils/withBranchKey");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const db = admin.firestore();
 const batch = db.batch(); // Create a Firestore batch
 /**
@@ -28,12 +30,19 @@ const WaterTable = async (req, res) => {
       });
     }
 
-    const FileToExport = await getDocumentByBranchOrCallcenterIdAndDelete(
-      data.file,
-      data.branchId,
-      db,
-      batch
-    );
+    let FileToExport;
+
+    if (data.clear) {
+      FileToExport = await getDocumentByBranchOrCallcenterIdAndDelete(
+        data.file,
+        data.branchId,
+        db
+      );
+    } else {
+      FileToExport = await getDocumentsByBranchId(data.file, data.branchId);
+    }
+
+    console.log(FileToExport);
 
     const objectKeys = [];
     for (const key in FileToExport) {
@@ -55,6 +64,8 @@ const WaterTable = async (req, res) => {
         from,
         callcenterId,
         branchId,
+        updatedAt,
+        fromWhere,
         order,
         branchKey,
         deliveryguyId,
@@ -68,7 +79,6 @@ const WaterTable = async (req, res) => {
     const propertyOrder = [
       "name",
       "phone",
-      "branchName",
       "blockHouse",
       "customerKey",
       "billPayerName",
@@ -103,10 +113,24 @@ const WaterTable = async (req, res) => {
       return item;
     });
     // print(finalresult);
+
+    const branch = await getDocumentDataById("branches", data.branchId);
+
+    const reorderedArray = finalresult.map((item) => ({
+      Name: item.Name,
+      Phone: item.Phone,
+      BlockHouse: item.BlockHouse,
+      CustomerKey: item.CustomerKey,
+      BillPayerName: item.BillPayerName,
+      DeliveryguyName: item.DeliveryguyName,
+      Date: item.Date,
+      CallcenterName: item.CallcenterName || branch.manager,
+    }));
+
     await batch.commit();
     // Respond with a success message
     res.status(200).json({
-      data: finalresult,
+      data: reorderedArray,
       message: `Delivery guy salary table exports successfully.`,
     });
   } catch (error) {

@@ -54,8 +54,6 @@ const updateDashboard = async (
       data: updatedBranches,
       totalBudget: newTotalBudget,
     });
-
-    console.log("Dashboard branch information updated successfully.");
   } catch (error) {
     console.error("Error updating dashboard branch information:", error);
     throw error; // Re-throw the error to handle it at the caller's level

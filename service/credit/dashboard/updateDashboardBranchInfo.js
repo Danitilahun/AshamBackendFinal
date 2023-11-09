@@ -78,6 +78,7 @@ const updateDashboardBranchInfo = async (
     const dashboardDocRefBranch = dashboardQuerySnapshotBranch.docs[0].ref;
     const dashboardDataBranch = dashboardQuerySnapshotBranch.docs[0].data();
 
+    console.log(branchId, data);
     const newData = {
       ...dashboardDataBranch[branchId],
       BranchName:
@@ -97,8 +98,6 @@ const updateDashboardBranchInfo = async (
 
     // Add the update operation to the batch
     batch.update(dashboardDocRefBranch, updatedData);
-
-    console.log("Dashboard updated successfully.");
   } catch (error) {
     console.error("Error updating dashboard:", error);
     throw error; // Re-throw the error to handle it at the caller's level

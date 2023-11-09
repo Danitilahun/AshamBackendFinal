@@ -10,11 +10,6 @@ const updateCalculator = async (req, res) => {
       });
     }
     const data = req.body;
-    if (!data) {
-      return res
-        .status(400)
-        .json({ message: "Request body is missing or empty." });
-    }
     await updateCalculatorValue(data, id);
     res.status(200).json({ message: `Calculator updated successfully.` });
   } catch (error) {

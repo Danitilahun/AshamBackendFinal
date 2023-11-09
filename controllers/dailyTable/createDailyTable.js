@@ -79,7 +79,6 @@ const createTable = async (req, res) => {
       if (!branch.cardDate || branch.cardDate !== date) {
         await updateCardCollection(db, batch, branchId);
       }
-
       // Commit the batch
       await batch.commit();
     }

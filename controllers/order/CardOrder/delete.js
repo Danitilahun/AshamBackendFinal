@@ -1,11 +1,10 @@
+const admin = require("../../../config/firebase-admin");
 const deleteDocument = require("../../../service/mainCRUD/deleteDoc");
-const updateDashboardTotalCustomer = require("../../../service/order/updateDashboardTotalCustomer");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const updateFieldInDocument = require("../../../service/utils/updateFieldInDocument");
 const generateCustomID = require("../../../util/generateCustomID");
-const admin = require("../../../config/firebase-admin");
 const payCardDeliveryGuy = require("../../../service/utils/AssignedPay/CardPay");
-const returnDeliveryGuyData = require("../../../service/utils/returnCardAssigned");
+const updateDeliveryGuyData = require("../../../service/utils/cardUpdate");
 
 /**
  * Delete a Card Order document from the "CardOrder" Firestore collection.
@@ -22,14 +21,8 @@ const deleteCardOrder = async (req, res) => {
     // Get document ID from the request parameters
     const { id, cn } = req.params;
 
-    if (!id) {
-      return res.status(400).json({
-        message:
-          "Request parameters missing or empty.Please refresh your browser and try again.",
-      });
-    }
-
     const CardData = await getDocumentDataById("Card", id); // Updated function call
+
     if (!CardData) {
       return res.status(400).json({
         message: "Card Order document does not exist or is empty.",
@@ -37,15 +30,15 @@ const deleteCardOrder = async (req, res) => {
     }
     // Delete the Card Order document from the "Card Order" collection
     await deleteDocument(db, batch, "Card", id); // Updated function call
+
     const Id = generateCustomID(`${CardData.blockHouse}`);
+
     await updateFieldInDocument(db, batch, "customer", Id, "Card", "No"); // Updated function call
-    // await updateDashboardTotalCustomer(-1);
 
     // Respond with a success message
     if (cn === "pay") {
+      await updateDeliveryGuyData(db, CardData, batch);
       await payCardDeliveryGuy(db, CardData, batch, 1);
-    } else {
-      await returnDeliveryGuyData(db, CardData, batch);
     }
     // Commit the batch to execute all operations together
     await batch.commit();

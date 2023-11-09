@@ -27,13 +27,6 @@ const createBranch = async (req, res) => {
     // Step 1: Get data from the request body or use provided branchData
     const data = req.body;
 
-    // Check if data is null or undefined
-    if (!data) {
-      return res
-        .status(400)
-        .json({ message: "Request body is missing or empty." });
-    }
-
     // Step 2: Generate a unique name for the branch
     const count = await getCountOfDocuments("branches");
     data.uniqueName = `B-${count + 1}`;

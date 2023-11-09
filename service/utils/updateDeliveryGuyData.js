@@ -40,7 +40,7 @@ const updateDeliveryGuyData = async (db, data, batch) => {
       },
       batch
     );
-
+    // await batch.commit();
     return null;
   } catch (error) {
     throw error; // Re-throw the error to handle it at the caller's level

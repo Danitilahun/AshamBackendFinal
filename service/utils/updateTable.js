@@ -23,7 +23,7 @@ const updateTable = async (
   batch
 ) => {
   try {
-    console.log("Updating data...", docId, idToUpdate, idToUpdate2, newData);
+    // console.log("Updating data...", docId, idToUpdate, idToUpdate2, newData);
     if (!docId || !idToUpdate || !idToUpdate2) {
       throw new Error(
         "Missing required parameters for update table.Please check you have table Sheet and table for a day."
@@ -37,7 +37,7 @@ const updateTable = async (
     const docSnapshot = await docRef1.get();
     const currentData = docSnapshot.data();
 
-    console.log("currentData", currentData);
+    // console.log("currentData", currentData);
     // Check if the specified IDs exist in the document
     if (!currentData || !currentData[idToUpdate] || !currentData[idToUpdate2]) {
       throw new Error(
@@ -69,7 +69,6 @@ const updateTable = async (
     // Add the update operation for the second ID to the batch
     batch.update(docRef2, updateData2);
 
-    console.log("Data updated successfully.");
     const updatedDocSnapshot = await docRef1.get();
     return updatedDocSnapshot.data();
   } catch (error) {

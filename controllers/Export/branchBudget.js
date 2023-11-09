@@ -13,8 +13,8 @@ const BudgetTable = async (req, res) => {
   try {
     const data = req.body;
 
-    // const db = admin.firestore();
-    // const batch = db.batch(); // Create a Firestore batch
+    const db = admin.firestore();
+    const batch = db.batch(); // Create a Firestore batch
     console.log(data);
 
     if (!data) {
@@ -97,10 +97,13 @@ const BudgetTable = async (req, res) => {
       Totaltax: item.Totaltax,
       ...item,
     }));
-    await updateOrCreateFieldsInDocument(db, batch, "Budget", fields.branchId, {
-      sheetSummary: [],
-    });
-    // await batch.commit();
+
+    if (data.clear === true) {
+      await updateOrCreateFieldsInDocument(db, batch, "Budget", data.branchId, {
+        sheetSummary: [],
+      });
+    }
+    await batch.commit();
     // Respond with a success message
     res.status(200).json({
       data: reorderedArray,

@@ -1,15 +1,10 @@
+const admin = require("../../../config/firebase-admin");
 const createDocument = require("../../../service/mainCRUD/createDoc");
 const createOrUpdateDocument = require("../../../service/order/createOrUpdateDocument");
-const sendFCMNotification = require("../../../service/order/sendFCMNotification");
 const generateCustomID = require("../../../util/generateCustomID");
-const admin = require("../../../config/firebase-admin");
 const getSingleDocFromCollection = require("../../../service/utils/getSingleDocFromCollection");
-const removeFromDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/removeFromDeliveryQueue");
-const addToDeliveryQueue = require("../../../service/users/deliveryGuyActiveness/addToDeliveryQueue");
-const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const moveDeliveryGuyToEndOfQueue = require("../../../service/users/deliveryGuyActiveness/moveDeliveryGuyToEndOfQueue");
-const documentExistsAndHasField = require("../../../service/utils/documentExistsAndHasField");
-const updateDeliveryGuyData = require("../../../service/utils/cardUpdate");
+const createCustomerData = require("../../../util/createCustomerData");
 
 /**
  * Create a Card Order document in the "CardOrder" Firestore collection.
@@ -27,57 +22,7 @@ const createCardOrder = async (req, res) => {
     // Get data from the request body
     const data = req.body;
 
-    if (!data) {
-      return res.status(400).json({
-        message:
-          "Request body is missing or empty.Please refresh your browser and try again.",
-      });
-    }
-
     data.status = "Assigned";
-
-    const check = await documentExistsAndHasField(
-      "tables",
-      data.activeDailySummery,
-      data.date
-    );
-
-    console.log(check);
-    if (!check) {
-      return res.status(400).json({
-        message: `You cannot create an order because there is no daily table available for the date ${data.date}. Please create a daily table for this date. If you believe you have already created a table for this day, this error may be due to an issue with your internet connection. Please check your internet connection and try again.`,
-      });
-    }
-    // console.log(manye);
-    const branch = await getDocumentDataById(
-      "branches",
-      data.cardBranch ? data.cardBranch : data.branchKey
-    );
-    if (
-      !branch ||
-      !branch.active ||
-      !branch.activeSheet ||
-      !branch.activeTable
-    ) {
-      return res.status(400).json({
-        message:
-          "You can't create order since there is no daily table or sheet.",
-      });
-    }
-
-    if (!data.active || !data.activeDailySummery || !data.activeTable) {
-      return res.status(400).json({
-        message:
-          "You can't create order since there is no daily table or sheet.",
-      });
-    }
-
-    if (!data.branchId || !data.deliveryguyId) {
-      return res
-        .status(400)
-        .json({ message: "Branch ID and Delivery Guy ID are required." });
-    }
-    // Create a Card Order document in the "CardOrder" collection
 
     await moveDeliveryGuyToEndOfQueue(
       db,
@@ -87,24 +32,16 @@ const createCardOrder = async (req, res) => {
       data.deliveryguyName
     );
 
-    const customerData = {
-      name: data.name,
-      phone: data.phone,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      blockHouse: data.blockHouse,
-      branchId: data.branchKey,
-      branchName: data.branchName,
-      createdDate: data.createdDate,
-      type: "Card",
-    };
+    const customerData = createCustomerData(data, "Card");
 
-    console.log(customerData);
     const Id = generateCustomID(`${data.blockHouse}`);
+
     await createOrUpdateDocument(db, batch, "customer", Id, customerData);
 
     if (data.from === "branch") {
       data.branchId = data.branchId + " normal";
     }
+
     const companyGain = await getSingleDocFromCollection("companyGain");
 
     if (!companyGain) {
@@ -113,6 +50,7 @@ const createCardOrder = async (req, res) => {
           "You can't create order since there is no company gain information.",
       });
     }
+
     data.dayRemain = parseInt(
       data.amountBirr / parseInt(companyGain.card_price)
     );
@@ -120,10 +58,8 @@ const createCardOrder = async (req, res) => {
 
     await createDocument("Card", data, db, batch);
 
-    await updateDeliveryGuyData(db, data, batch);
     // Commit the batch to execute all operations together
     await batch.commit();
-
     res
       .status(200)
       .json({ message: "Card Order document created successfully." });

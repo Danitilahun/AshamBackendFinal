@@ -36,8 +36,6 @@ const updateDashboardBranchInfo = async (branchId, newExpense, db, batch) => {
     };
 
     await batch.update(dashboardDocRefBranch, updatedData);
-
-    console.log("Dashboard updated successfully.");
   } catch (error) {
     console.error("Error updating dashboard:", error);
     throw error; // Re-throw the error to handle it at the caller's level

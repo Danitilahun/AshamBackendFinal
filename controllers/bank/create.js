@@ -19,20 +19,8 @@ const CreateBank = async (req, res) => {
   try {
     // Extract data from the request body
     const data = req.body;
-    // console.log(data);
 
-    // Check if data is null or undefined
-    if (!data) {
-      return res
-        .status(400)
-        .json({ message: "Request body is missing or empty." });
-    }
-
-    console.log(data);
-    // Initialize Firestore database
     const branchesCollection = db.collection("Bank");
-
-    // Adjust the transaction amount based on the type of transaction
 
     // Set the transaction creation timestamp
     data.createdAt = admin.firestore.FieldValue.serverTimestamp();
@@ -63,18 +51,6 @@ const CreateBank = async (req, res) => {
       data.bankName
     );
 
-    // if (data.source !== "finance") {
-    //   console.log("add bank");
-    //   console.log(data.transaction, data.transaction !== "Withdraw");
-    //   await addBank(
-    //     db,
-    //     batch,
-    //     data.branchId,
-    //     data.bankName,
-    //     data.transactionType !== "Withdraw" ? data.amount : -data.amount
-    //   );
-    // }
-
     await addBank(
       db,
       batch,
@@ -96,7 +72,6 @@ const CreateBank = async (req, res) => {
       await updateBankBalance(data.calculatorId, bank.total, db, batch);
     }
 
-    // print(manye);
     // Commit the batch to execute all operations together
     await batch.commit();
 

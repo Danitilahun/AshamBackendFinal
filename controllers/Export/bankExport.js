@@ -5,7 +5,7 @@ const admin = require("../../config/firebase-admin");
 
 const BankExportTable = async (req, res) => {
   const db = admin.firestore();
-  const batch = db.batch(); // Create a Firestore batch
+  const batch = db.batch();
   try {
     const data = req.body;
 
@@ -16,13 +16,18 @@ const BankExportTable = async (req, res) => {
       });
     }
 
-    const FileToExport = await getDocumentByBranchAndThenDelete(
-      "Bank",
-      data.branchId,
-      db,
-      batch
-    );
-
+    let FileToExport;
+    // console.log(data.clear === false, data.clear === true);
+    if (data.clear) {
+      FileToExport = await getDocumentByBranchAndThenDelete(
+        "Bank",
+        data.branchId,
+        db
+      );
+    } else {
+      FileToExport = await getDocumentsByBranchId("Bank", data.branchId);
+    }
+    // console.log(FileToExport);
     if (
       !FileToExport ||
       (Array.isArray(FileToExport) && FileToExport.length === 0) ||
@@ -111,12 +116,12 @@ const BankExportTable = async (req, res) => {
       return indexA - indexB;
     });
 
-    await batch.commit();
+    // await batch.commit();
     console.log(reorderedArray);
     // Respond with a success message
     res.status(200).json({
       data: reorderedArray,
-      message: `Delivery guy salary table exports successfully.`,
+      message: `Bank table exports successfully.`,
     });
   } catch (error) {
     // Handle any errors that occur during the operation

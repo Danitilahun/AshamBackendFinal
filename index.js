@@ -3,10 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
 require("dotenv").config();
-
-// configration
 
 const app = express();
 
@@ -19,42 +16,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-// routes
-const adminRoute = require("./routes/admin");
-const branchRoute = require("./routes/branch");
-const callCenterRoute = require("./routes/callcenter");
-const financeRoute = require("./routes/finance");
-const deliveryguyRoute = require("./routes/deliveryguy");
-const sheetRoute = require("./routes/sheet");
-const tableRoute = require("./routes/table");
-const priceRoute = require("./routes/gains/price");
-const orderRoute = require("./routes/order");
-const reportRoute = require("./routes/report");
-const creditRoute = require("./routes/credit");
-const statusRoute = require("./routes/status");
-const bankRoute = require("./routes/bank");
-// const dashboardRoute = require("./routes/dashboard");
-const notificationRoute = require("./routes/notification");
-
-app.use("/admin", adminRoute);
-app.use("/branch", branchRoute);
-app.use("/callcenter", callCenterRoute);
-app.use("/finance", financeRoute);
-app.use("/order", orderRoute);
-app.use("/deliveryguy", deliveryguyRoute);
-app.use("/sheet", sheetRoute);
-app.use("/table", tableRoute);
-app.use("/price", priceRoute);
-app.use("/report", reportRoute);
-app.use("/credit", creditRoute);
-app.use("/status", statusRoute);
-app.use("/bank", bankRoute);
-// app.use("/dashboard", dashboardRoute);
-app.use("/notification", notificationRoute);
-
 const apiRoutes = require("./routes/api");
+const priceRoute = require("./routes/gains/price");
 
-app.use("/api", apiRoutes);
+app.use("/price", priceRoute);
+app.use(
+  "/api",
+  (req, res, next) => {
+    console.log(req.body);
+    next();
+  },
+  apiRoutes
+);
 
 app.get("/", (req, res) => {
   res.send("GET request received!");

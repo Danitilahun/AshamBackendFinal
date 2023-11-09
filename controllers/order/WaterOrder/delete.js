@@ -1,11 +1,10 @@
+const admin = require("../../../config/firebase-admin");
 const deleteDocument = require("../../../service/mainCRUD/deleteDoc");
-const updateDashboardTotalCustomer = require("../../../service/order/updateDashboardTotalCustomer");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const updateFieldInDocument = require("../../../service/utils/updateFieldInDocument");
 const generateCustomID = require("../../../util/generateCustomID");
-const admin = require("../../../config/firebase-admin");
 const payWaterDeliveryGuy = require("../../../service/utils/AssignedPay/WaterPay");
-const returnDeliveryGuyData = require("../../../service/utils/waterReturn");
+const updateDeliveryGuyData = require("../../../service/utils/waterUpdate");
 
 /**
  * Delete a Water Order document from the "Water Order" Firestore collection.
@@ -23,28 +22,25 @@ const deleteWaterOrder = async (req, res) => {
     // Get document ID from the request parameters
     const { id, cn } = req.params;
 
-    if (!id) {
-      return res.status(400).json({
-        message:
-          "Request body is missing or empty.Please refresh your browser and try again.",
-      });
-    }
     const WaterData = await getDocumentDataById("Water", id); // Updated function call
+
     if (!WaterData) {
       return res.status(404).json({
         message: `Water Order document does not exist.`,
       });
     }
+
     // Delete the Water Order document from the "Water Order" collection
     await deleteDocument(db, batch, "Water", id); // Updated function call
+
     const Id = generateCustomID(`${WaterData.blockHouse}`);
+
     await updateFieldInDocument(db, batch, "customer", Id, "Water", "No"); // Updated function call
-    // await updateDashboardTotalCustomer(-1);
+
     // Respond with a success message
     if (cn === "pay") {
+      await updateDeliveryGuyData(db, WaterData, batch);
       await payWaterDeliveryGuy(db, WaterData, batch, 1);
-    } else {
-      await returnDeliveryGuyData(db, WaterData, batch);
     }
     await batch.commit();
     res

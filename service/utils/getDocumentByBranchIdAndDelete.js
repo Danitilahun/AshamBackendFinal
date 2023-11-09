@@ -1,19 +1,49 @@
+// const getDocumentByBranchOrCallcenterIdAndDelete = async (
+//   collectionName,
+//   branchIdValue,
+//   db,
+//   batch
+// ) => {
+//   const collectionRef = db.collection(collectionName);
+
+//   try {
+//     const querySnapshot = await collectionRef
+//       .where("branchKey", "==", branchIdValue)
+//       .get();
+
+//     // Merge the results from both queries
+//     const documents = [];
+
+//     querySnapshot.forEach((doc) => {
+//       const documentData = doc.data();
+//       documents.push(documentData);
+//     });
+
+//     // Now, outside of the forEach loop, you can delete the documents in the batch
+//     querySnapshot.forEach((doc) => {
+//       const documentRef = doc.ref;
+//       batch.delete(documentRef);
+//     });
+//     await batch.commit();
+//     return documents;
+//   } catch (error) {
+//     console.error("Error retrieving or deleting documents:", error);
+//     return [];
+//   }
+// };
+
+// module.exports = getDocumentByBranchOrCallcenterIdAndDelete;
 const getDocumentByBranchOrCallcenterIdAndDelete = async (
   collectionName,
   branchIdValue,
-  db,
-  batch
+  db
 ) => {
   const collectionRef = db.collection(collectionName);
+  const batch = db.batch(); // Create a new batch object
 
   try {
     const querySnapshot = await collectionRef
-      .where("branchId", "==", branchIdValue)
-      .get();
-
-    // If you want to include an OR condition with callcenterId
-    const callcenterQuerySnapshot = await collectionRef
-      .where("callcenterId", "==", branchIdValue)
+      .where("branchKey", "==", branchIdValue)
       .get();
 
     // Merge the results from both queries
@@ -22,20 +52,15 @@ const getDocumentByBranchOrCallcenterIdAndDelete = async (
     querySnapshot.forEach((doc) => {
       const documentData = doc.data();
       documents.push(documentData);
+    });
 
-      // Queue the document for deletion within the batch
+    // Now, outside of the forEach loop, you can delete the documents in the batch
+    querySnapshot.forEach((doc) => {
       const documentRef = doc.ref;
       batch.delete(documentRef);
     });
 
-    callcenterQuerySnapshot.forEach((doc) => {
-      const documentData = doc.data();
-      documents.push(documentData);
-
-      // Queue the document for deletion within the batch
-      const documentRef = doc.ref;
-      batch.delete(documentRef);
-    });
+    await batch.commit(); // Commit the batch
 
     return documents;
   } catch (error) {

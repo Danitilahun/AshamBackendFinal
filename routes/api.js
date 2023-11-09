@@ -17,6 +17,8 @@ const CalculatorRoute = require("./calculator/calculator");
 const DashboardRoute = require("./dashboard/dashboard");
 const ExportRoutes = require("./export/export");
 
+const checkRequestBodyMiddleware = require("../middlewares/checkRequestBodyMiddleware");
+
 // Use sub-routes under "/api"
 router.use("/user", userRoute);
 router.use("/credit", CreditRoute);
@@ -26,7 +28,7 @@ router.use("/bank", BankRoute);
 router.use("/essential", EssentialRoute);
 router.use("/expense", ExpenseRoute);
 router.use("/order", OrderRoute);
-router.use("/export", ExportRoutes);
+router.use("/export", checkRequestBodyMiddleware, ExportRoutes);
 router.use("/branch", BranchRoute);
 router.use("/calculator", CalculateRoute);
 router.use("/notification", NotificationRoute);

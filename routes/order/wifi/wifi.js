@@ -6,12 +6,30 @@ const WifiOrderAuth = require("../../../middlewares/JoinedAuth/OrderAuth");
 const createWifiOrder = require("../../../controllers/order/WifiOrder/create");
 const editWifiOrder = require("../../../controllers/order/WifiOrder/edit");
 const deleteWifiOrder = require("../../../controllers/order/WifiOrder/delete");
-const WifiAssigned = require("../../../controllers/order/WifiOrder/orderAssigned");
+
+const checkTableForThatDayExistMiddleware = require("../../../middlewares/checkTableForThatDayExistMiddleware");
+const checkBranchData = require("../../../middlewares/checkBranchData");
+const checkRequestBodyMiddleware = require("../../../middlewares/checkRequestBodyMiddleware");
+const checkOrderData = require("../../../middlewares/checkOrderData");
+const validateIdAndUpdatedData = require("../../../middlewares/validateIdAndUpdatedData");
+const validateIdAndCnParams = require("../../../middlewares/validateIdAndCnParams");
 
 // Define the route for creating data for an admin
-router.post("/", WifiOrderAuth, createWifiOrder);
-router.post("/orderAssigned", AdminMiddleware, WifiAssigned);
-router.put("/:id", WifiOrderAuth, editWifiOrder);
-router.delete("/:id/:cn", WifiOrderAuth, deleteWifiOrder);
+router.post(
+  "/",
+  WifiOrderAuth,
+  checkRequestBodyMiddleware,
+  checkOrderData,
+  checkBranchData,
+  checkTableForThatDayExistMiddleware,
+  createWifiOrder
+);
+router.put("/:id", WifiOrderAuth, validateIdAndUpdatedData, editWifiOrder);
+router.delete(
+  "/:id/:cn",
+  AdminMiddleware,
+  validateIdAndCnParams,
+  deleteWifiOrder
+);
 
 module.exports = router;

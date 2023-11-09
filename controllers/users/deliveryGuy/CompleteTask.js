@@ -154,6 +154,10 @@ const completeTask = async (req, res) => {
       deliveryguyId,
       "total",
       {
+        asbezaNumber: parseInt(AsbezaCount),
+        cardCollect: parseInt(CardCount),
+        waterCollect: parseInt(WaterCount),
+        wifiCollect: parseInt(WifiCount),
         asbezaProfit: parseInt(NOA) * companyGain.asbeza_profit,
         total: parseInt(NOA) * companyGain.asbeza_profit,
       },
@@ -168,6 +172,10 @@ const completeTask = async (req, res) => {
       date,
       "total",
       {
+        asbezaNumber: parseInt(AsbezaCount),
+        cardCollect: parseInt(CardCount),
+        waterCollect: parseInt(WaterCount),
+        wifiCollect: parseInt(WifiCount),
         asbezaProfit: parseInt(NOA) * companyGain.asbeza_profit,
         total: parseInt(NOA) * companyGain.asbeza_profit,
       },
@@ -182,6 +190,10 @@ const completeTask = async (req, res) => {
       deliveryguyId,
       "total",
       {
+        asbezaNumber: parseInt(AsbezaCount),
+        cardCollect: parseInt(CardCount),
+        waterCollect: parseInt(WaterCount),
+        wifiCollect: parseInt(WifiCount),
         asbezaProfit: parseInt(NOA) * companyGain.asbeza_profit,
         total: parseInt(NOA) * companyGain.asbeza_profit,
       },

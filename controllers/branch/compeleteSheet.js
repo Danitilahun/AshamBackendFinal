@@ -1,7 +1,6 @@
+const admin = require("../../config/firebase-admin");
 const checkPreviousSheet = require("../../service/sheet/changeStatusCheck");
 const updateOrCreateFieldsInDocument = require("../../service/utils/updateOrCreateFieldsInDocument");
-
-const admin = require("../../config/firebase-admin");
 const createSheetSummary = require("../../service/sheet/createSheetSummary");
 const updateDashboardBranchInfoWhenNewSheetCreated = require("../../service/utils/updateBranchInfoWhenNewSheetCreated");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
@@ -17,13 +16,6 @@ const deleteDocumentsMatchingBranchId = require("../../service/utils/deleteDocum
 const ChangeSheetStatus = async (req, res) => {
   try {
     const data = req.body;
-
-    // Check if data is null or undefined
-    if (!data) {
-      return res
-        .status(400)
-        .json({ message: "Request body is missing or empty." });
-    }
 
     const db = admin.firestore();
     const batch = db.batch(); // Create a Firestore batch

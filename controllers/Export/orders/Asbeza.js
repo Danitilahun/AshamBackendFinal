@@ -1,8 +1,9 @@
 const deleteDocumentsMatchingBranchId = require("../../../service/utils/deleteDocumentsMatchingBranchId");
 const getDocumentByBranchOrCallcenterIdAndDelete = require("../../../service/utils/getDocumentByBranchIdAndDelete");
 const getDocumentByBranchIdAndDelete = require("../../../service/utils/getDocumentByBranchIdAndDelete");
-const getDocumentsByBranchId = require("../../../service/utils/getDocumentsByBranchId");
 const admin = require("../../../config/firebase-admin");
+const getDocumentsByBranchId = require("../../../service/utils/withBranchKey");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const db = admin.firestore();
 const batch = db.batch(); // Create a Firestore batch
 /**
@@ -32,13 +33,20 @@ const AsbezaTable = async (req, res) => {
       });
     }
 
-    const FileToExport = await getDocumentByBranchOrCallcenterIdAndDelete(
-      data.file,
-      data.branchId,
-      db,
-      batch
-    );
+    console.log(data.clear === false, data.clear === true);
+    let FileToExport;
 
+    if (data.clear) {
+      FileToExport = await getDocumentByBranchOrCallcenterIdAndDelete(
+        data.file,
+        data.branchId,
+        db
+      );
+    } else {
+      FileToExport = await getDocumentsByBranchId(data.file, data.branchId);
+    }
+
+    console.log(FileToExport);
     const objectKeys = [];
     for (const key in FileToExport) {
       if (typeof FileToExport[key] === "object") {
@@ -57,9 +65,10 @@ const AsbezaTable = async (req, res) => {
         status,
         type,
         from,
+        updatedAt,
+        fromWhere,
         callcenterId,
         branchId,
-        order,
         branchKey,
         deliveryguyId,
         ...rest
@@ -67,16 +76,23 @@ const AsbezaTable = async (req, res) => {
       return rest;
     });
 
+    const transformedArray = dataWithoutTotalCredit.map((obj) => ({
+      ...obj,
+      order: obj.order.join(", "),
+    }));
+
+    console.log(transformedArray);
+
     // Define the desired order of properties
     const propertyOrder = [
       "name",
       "phone",
       "blockHouse",
-      "branchName",
       "additionalInfo",
       "deliveryguyName",
       "date",
       "callcenterName",
+      "order",
     ];
 
     // Function to reorder properties based on the desired order
@@ -90,7 +106,7 @@ const AsbezaTable = async (req, res) => {
     };
 
     // Apply the function to each object in the array
-    const result = dataWithoutTotalCredit.map((item) =>
+    const result = transformedArray.map((item) =>
       reorderProperties(item, propertyOrder)
     );
 
@@ -105,10 +121,24 @@ const AsbezaTable = async (req, res) => {
       return item;
     });
 
-    await batch.commit();
+    const branch = await getDocumentDataById("branches", data.branchId);
+
+    const reorderedArray = finalresult.map((item) => ({
+      Name: item.Name,
+      Phone: item.Phone,
+      BlockHouse: item.BlockHouse,
+      CallcenterName: item.CallcenterName || branch.manager,
+      DeliveryguyName: item.DeliveryguyName,
+      Date: item.Date,
+      Order: item.Order,
+      AdditionalInfo: item.AdditionalInfo,
+    }));
+
+    console.log(reorderedArray);
+
     // Respond with a success message
     res.status(200).json({
-      data: finalresult,
+      data: reorderedArray,
       message: `Delivery guy salary table exports successfully.`,
     });
   } catch (error) {
