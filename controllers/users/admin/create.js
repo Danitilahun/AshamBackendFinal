@@ -1,3 +1,5 @@
+const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
+
 const { v4: UUID } = require("uuid");
 const parseForm = require("../../../util/formParser");
 const createUser = require("../../../service/users/firebaseAuth/createUser");
@@ -6,16 +8,17 @@ const uploadProfileImage = require("../../../util/uploadProfileImage");
 const createUserDocument = require("../../../service/users/userManagement/create");
 const updateOrCreateFieldsInDocument = require("../../../service/utils/updateOrCreateFieldsInDocument");
 const pushToFieldArray = require("../../../service/utils/pushToFieldArray");
-const createDocument = require("../../../service/mainCRUD/createDoc");
 const createDocumentWithCustomId = require("../../../service/mainCRUD/createDocumentWithCustomId");
 const getStaffSalaryData = require("../../../util/getStaffSalaryData");
 const addStaffToTable = require("../../../service/users/updateTables/addStaffToTable");
-const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const updateSheetStatus = require("../../../service/credit/updateSheetStatus/updateSheetStatus");
 const updateDashboard = require("../../../service/credit/dashboard/updateDashboard");
 const updateDashboardBranchInfo = require("../../../service/credit/dashboard/updateDashboardBranchInfo");
-const admin = require("../../../config/firebase-admin"); // Import Firebase Admin
 const deleteUser = require("../../../service/users/firebaseAuth/deleteUser");
+
+const createDocument = require("../../../service/mainCRUD/createDoc");
+const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
+
 /**
  * Create admin data by processing a request.
  * @param {Object} req - The request object.

@@ -4,6 +4,7 @@ const handleDeliveryOperations = require("../../service/dailyTable/handleDeliver
 const handleSheetOperations = require("../../service/dailyTable/handleSheetOperations");
 const checkDocumentExistsInTable = require("../../service/utils/checkDocumentExistsInTable");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
+const removeCardsWithZeroDayRemain = require("../../service/utils/removeCardsWithZeroDayRemain");
 const updateCardCollection = require("../../service/utils/updateCardCollection");
 const generateCustomID = require("../../util/generateCustomID");
 
@@ -78,6 +79,7 @@ const createTable = async (req, res) => {
 
       if (!branch.cardDate || branch.cardDate !== date) {
         await updateCardCollection(db, batch, branchId);
+        await removeCardsWithZeroDayRemain(db, batch, branchId);
       }
       // Commit the batch
       await batch.commit();

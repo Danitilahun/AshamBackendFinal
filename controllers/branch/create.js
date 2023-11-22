@@ -8,6 +8,10 @@ const createDocument = require("../../service/mainCRUD/createDoc");
 const createBankCollection = require("../../service/users/finance/createBankCollection");
 const getCountOfDocuments = require("../../service/utils/getCountOfDocuments");
 
+const getRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
 /**
  * Creates a branch document in the Firestore database, along with associated collections and data updates.
  *
@@ -29,7 +33,7 @@ const createBranch = async (req, res) => {
 
     // Step 2: Generate a unique name for the branch
     const count = await getCountOfDocuments("branches");
-    data.uniqueName = `B-${count + 1}`;
+    data.uniqueName = `B-${count + getRandomNumber(1, 1000)}`;
     data.paid = false;
     data.customerNumber = 0;
     data.totalIncome = 0;

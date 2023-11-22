@@ -139,14 +139,17 @@ const editAdmin = async (req, res) => {
       });
 
       // Remove admin from "worker" array in the old branchId
-      await popArrayElement(
-        "worker",
-        { id: id },
-        oldBranchId,
-        "branches",
-        db,
-        batch
-      );
+
+      if (oldBranchId) {
+        await popArrayElement(
+          "worker",
+          { id: id },
+          oldBranchId,
+          "branches",
+          db,
+          batch
+        );
+      }
     }
 
     // Step 10: Update or create fields in the "branches" document for the new branchId

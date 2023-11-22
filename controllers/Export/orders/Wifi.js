@@ -5,6 +5,7 @@ const getDocumentsByBranchId = require("../../../service/utils/withBranchKey");
 const getDocumentDataById = require("../../../service/utils/getDocumentDataById");
 const db = admin.firestore();
 const batch = db.batch(); // Create a Firestore batch
+
 /**
  * Create a bank transaction record and update related data.
  * @param {Object} req - The Express request object.

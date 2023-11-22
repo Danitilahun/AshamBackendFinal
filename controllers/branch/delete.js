@@ -1,3 +1,4 @@
+const admin = require("../../config/firebase-admin");
 const deleteBranchAndUpdateDashboard = require("../../service/branches/dashBoard/deleteBranchDashboard");
 const deleteFieldFromDashboardDataBranch = require("../../service/branches/dashBoard/deleteFieldFromDashboardDataBranch");
 const deleteBranchRelatedDoc = require("../../service/branches/deleteBranchRelatedDoc");
@@ -5,10 +6,8 @@ const deleteDocument = require("../../service/mainCRUD/deleteDoc");
 const editUserDisplayName = require("../../service/users/firebaseAuth/editUserDisplayName");
 const deleteField = require("../../service/utils/deleteField");
 const getDocumentDataById = require("../../service/utils/getDocumentDataById");
-const updateOrCreateFieldsInDocument = require("../../service/utils/updateOrCreateFieldsInDocument");
-const admin = require("../../config/firebase-admin");
-const revokeRefreshTokens = require("../../service/users/firebaseAuth/revokeRefreshTokens");
-const disableUserAccount = require("../../service/users/firebaseAuth/disableUser");
+const deleteAdminAndAssociatedUserInfo = require("../../service/utils/deleteAdminAndAssociatedUser");
+const deleteUser = require("../../service/users/firebaseAuth/deleteUser");
 
 const deleteBranch = async (req, res) => {
   try {
@@ -35,26 +34,16 @@ const deleteBranch = async (req, res) => {
     await deleteDocument(db, batch, "branches", id);
     await editUserDisplayName(branchData.managerId, "");
 
-    // await revokeRefreshTokens(branchData.managerId);
-    // await disableUserAccount(branchData.managerId);
-
     if (branchData.managerId !== "not assigned") {
-      await updateOrCreateFieldsInDocument(
-        db,
-        batch,
-        "admin",
-        branchData.managerId,
-        {
-          branchName: "",
-          branchId: "",
-        }
-      );
+      await deleteAdminAndAssociatedUserInfo(db, batch, branchData.managerId);
+      await deleteUser(id);
     }
+
     // Commit the batch
     await batch.commit();
+
     if (branchData.managerId !== "not assigned") {
-      await revokeRefreshTokens(branchData.managerId);
-      await disableUserAccount(branchData.managerId, true);
+      await deleteUser(id);
     }
 
     res.status(200).json({ message: "Branch document deleted successfully." });

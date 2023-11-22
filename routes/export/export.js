@@ -26,6 +26,7 @@ const FinanceCreditExportTable = require("../../controllers/Export/credit/financ
 const StaffCreditExportTable = require("../../controllers/Export/credit/staff");
 const BonusTable = require("../../controllers/Export/bonus");
 const PenalityTable = require("../../controllers/Export/penality");
+const ExpenseExportTable = require("../../controllers/Export/expense");
 
 // Define the route for creating data for an admin
 router.post("/delSal", BankAuth, ExportDeliveryGuySalaryTable);
@@ -51,5 +52,6 @@ router.post("/financeC", BankAuth, FinanceCreditExportTable);
 router.post("/staffC", BankAuth, StaffCreditExportTable);
 router.post("/bonus", BankAuth, BonusTable);
 router.post("/penality", BankAuth, PenalityTable);
+router.post("/expense", BankAuth, ExpenseExportTable);
 
 module.exports = router;

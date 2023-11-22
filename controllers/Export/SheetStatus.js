@@ -129,7 +129,13 @@ const SheetStatusExport = async (req, res) => {
       OwnerName: "Don't have owner",
       Account: "Don't have Account",
     });
-
+    const Credit = await getDocumentDataById("totalCredit", data.branchId);
+    resultArray.push({
+      Name: "TotalCredit",
+      Amount: Credit?.total ? Credit.total : 0,
+      OwnerName: "Don't have owner",
+      Account: "Don't have Account",
+    });
     console.log(resultArray);
 
     res.status(200).json({
