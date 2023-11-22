@@ -2,6 +2,7 @@ const admin = require("../../../config/firebase-admin");
 const swapCreditDocument = require("../../../service/credit/totalCredit/SwapCredit");
 const updateCreditDocument = require("../../../service/credit/totalCredit/updateCreditDocument");
 const updateCalculator = require("../../../service/credit/updateCalculator/updateCalculator");
+const updateSalaryTable = require("../../../service/credit/updateSalaryTable/updateSalaryTable");
 const payDailySalary = require("../../../service/users/handleDeliveryGuySalaryPay/payDailySalary");
 const swapCredit = require("../../../service/users/handleDeliveryGuySalaryPay/swapCredit");
 const updateDashboardActiveDeliveryGuy = require("../../../service/users/updateDashboard/updateActiveDeliveryGuy");
@@ -57,6 +58,20 @@ const handlePayController = async (req, res) => {
       "StaffCredit",
       credit,
       credit,
+      db,
+      batch
+    );
+
+    const salaryUpdate = {
+      totalCredit: parseInt(data.amount),
+    };
+
+    await updateSalaryTable(
+      "salary",
+      active,
+      id,
+      "total",
+      salaryUpdate,
       db,
       batch
     );

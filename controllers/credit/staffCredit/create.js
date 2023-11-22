@@ -40,53 +40,20 @@ const createCredit = async (req, res) => {
 
     await createDocument("StaffCredit", data, db, batch);
 
-    // // Update Salary table
-    // const salaryUpdate = {
-    //   totalCredit: parseInt(data.amount),
-    //   total: -parseInt(data.amount),
-    // };
-    // const newSalaryTable = await updateSalaryTable(
-    //   collectionName,
-    //   data.active,
-    //   data.employeeId,
-    //   "total",
-    //   salaryUpdate,
-    //   db,
-    //   batch
-    // );
+    // Update Salary table
+    const salaryUpdate = {
+      totalCredit: parseInt(data.amount),
+    };
 
-    // console.log("newSalaryTable", newSalaryTable.total.total);
-    // console.log(man);
-    // Determine the SalaryType based on placement
-    // const SalaryType =
-    //   data.placement === "DeliveryGuy"
-    //     ? "totalDeliveryGuySalary"
-    //     : "totalStaffSalary";
-    // if (newSalaryTable) {
-    //   // Update sheet status with new SalaryType value
-    //   const newStatus = await updateSheetStatus(
-    //     data.active,
-    //     SalaryType,
-    //     newSalaryTable.total.total - parseInt(data.amount),
-    //     db,
-    //     batch
-    //   );
-
-    //   console.log("newStatus", newStatus);
-    //   // console.log(man);
-    //   if (newStatus) {
-    //     // Update the dashboard with the new status
-    //     await updateDashboard(db, batch, data.branchId, newStatus.totalExpense);
-
-    //     // Update dashboard branch info with the new status
-    //     await updateDashboardBranchInfo(
-    //       db,
-    //       batch,
-    //       data.branchId,
-    //       newStatus.totalExpense
-    //     );
-    //   }
-    // }
+    await updateSalaryTable(
+      collectionName,
+      data.active,
+      data.employeeId,
+      "total",
+      salaryUpdate,
+      db,
+      batch
+    );
 
     const newTotalCredit = await updateCreditDocument(
       data.branchId,
@@ -95,9 +62,9 @@ const createCredit = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
+
     if (newTotalCredit && newTotalCredit?.total) {
       await updateCalculator(data.active, newTotalCredit?.total, db, batch);
     }

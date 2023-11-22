@@ -68,56 +68,22 @@ const editCredit = async (req, res) => {
     // Edit the existing credit document in the "CustomerCredit" collection
     await editDocument(db, batch, "StaffCredit", creditId, updatedData);
 
-    // const salaryUpdate = {
-    //   totalCredit: parseInt(newValue),
-    //   total: -parseInt(newValue),
-    // };
+    const salaryUpdate = {
+      totalCredit: parseInt(newValue),
+    };
 
-    // const collectionName =
-    //   updatedData.placement === "DeliveryGuy" ? "salary" : "staffSalary";
+    const collectionName =
+      updatedData.placement === "DeliveryGuy" ? "salary" : "staffSalary";
 
-    // const newSalaryTable = await updateSalaryTable(
-    //   collectionName,
-    //   updatedData.active,
-    //   updatedData.employeeId,
-    //   "total",
-    //   salaryUpdate,
-    //   db,
-    //   batch
-    // );
-
-    // // Determine the SalaryType based on placement
-    // const SalaryType =
-    //   updatedData.placement === "DeliveryGuy"
-    //     ? "totalDeliveryGuySalary"
-    //     : "totalStaffSalary";
-
-    // // Update sheet status with new SalaryType value
-    // const newStatus = await updateSheetStatus(
-    //   updatedData.active,
-    //   SalaryType,
-    //   newSalaryTable.total.total - parseFloat(newValue),
-    //   db,
-    //   batch
-    // );
-
-    // if (newStatus) {
-    //   // Update the dashboard with the new status
-    //   await updateDashboard(
-    //     db,
-    //     batch,
-    //     updatedData.branchId,
-    //     newStatus.totalExpense ? newStatus.totalExpense : 0
-    //   );
-
-    //   // Update dashboard branch info with the new status
-    //   await updateDashboardBranchInfo(
-    //     db,
-    //     batch,
-    //     updatedData.branchId,
-    //     newStatus.totalExpense ? newStatus.totalExpense : 0
-    //   );
-    // }
+    await updateSalaryTable(
+      collectionName,
+      updatedData.active,
+      updatedData.employeeId,
+      "total",
+      salaryUpdate,
+      db,
+      batch
+    );
 
     const newTotalCredit = await updateCreditDocument(
       updatedData.branchId,
