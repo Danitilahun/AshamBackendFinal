@@ -43,7 +43,7 @@ const deleteBranch = async (req, res) => {
     await batch.commit();
 
     if (branchData.managerId !== "not assigned") {
-      await deleteUser(id);
+      await deleteUser(branchData.managerId);
     }
 
     res.status(200).json({ message: "Branch document deleted successfully." });
