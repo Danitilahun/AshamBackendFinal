@@ -36,7 +36,7 @@ const deleteBranch = async (req, res) => {
 
     if (branchData.managerId !== "not assigned") {
       await deleteAdminAndAssociatedUserInfo(db, batch, branchData.managerId);
-      await deleteUser(id);
+      // await deleteUser(id);
     }
 
     // Commit the batch
