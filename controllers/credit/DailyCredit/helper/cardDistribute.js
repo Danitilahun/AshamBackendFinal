@@ -125,7 +125,6 @@ const CardDistribute = async (data, db, batch) => {
     //     batch
     //   );
     // }
-    console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in CardFee:", error);
     throw error;

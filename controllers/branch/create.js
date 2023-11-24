@@ -27,7 +27,6 @@ const createBranch = async (req, res) => {
   const batch = db.batch(); // Initialize a Firestore batch
 
   try {
-    console.log("the new function");
     // Step 1: Get data from the request body or use provided branchData
     const data = req.body;
 
@@ -52,7 +51,6 @@ const createBranch = async (req, res) => {
     await createDeliveryTurnCollection(db, batch);
     await updateBranchData(db, batch, data, branchId);
     await updateDashboardData(db, batch, data, branchId);
-    // console.log(mane);
     // Commit the entire batch as a transaction
     await batch.commit();
 

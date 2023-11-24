@@ -16,7 +16,6 @@ const updateSheetStatus = require("../../../../../service/utils/updateSheetStatu
 const DeliveryGuyHolidayBonus = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
 
     if (!data) {
       throw new Error(
@@ -34,7 +33,6 @@ const DeliveryGuyHolidayBonus = async (req, res) => {
       batch
     );
 
-    console.log(newSalaryTable);
     if (newSalaryTable) {
       // Update sheet status with new SalaryType value
       const newStatus = await updateSheetStatus(

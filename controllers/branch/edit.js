@@ -107,7 +107,6 @@ const editBranch = async (req, res) => {
         newStatus.totalExpense ? newStatus.totalExpense : 0,
         updatedData
       );
-      // console.log(man);
     }
 
     if (updatedData.managerId !== "not assigned") {
@@ -121,8 +120,6 @@ const editBranch = async (req, res) => {
         }
       );
     }
-
-    // console.log(man);
 
     await fetchAndUpdateBranchData(db, batch, id, updatedData);
     await fetchAndUpdateMainData(

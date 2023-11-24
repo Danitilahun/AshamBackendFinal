@@ -61,7 +61,6 @@ const CardDistrubuteReport = async (req, res) => {
     data.reason = "cardDistributeGain";
     data.CHECK_SOURCE = generateCustomID("cardDistribute_Report_Reason");
     // Creating a new credit document in the "CardFee" collection
-    console.log(data);
     const id = await createDocument("cardDistribute", data, db, batch);
     await createDocumentWithCustomId("DailyCredit", id, data, db, batch);
     // Update the total credit and retrieve the updated total
@@ -133,7 +132,6 @@ const CardDistrubuteReport = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {

@@ -78,8 +78,8 @@ const createTable = async (req, res) => {
       await addDayToDaily15DaySummerySheet(db, batch, sheetId, branchId, date);
 
       if (!branch.cardDate || branch.cardDate !== date) {
-        await updateCardCollection(db, batch, branchId);
         await removeCardsWithZeroDayRemain(db, batch, branchId);
+        await updateCardCollection(db, batch, branchId);
       }
       // Commit the batch
       await batch.commit();

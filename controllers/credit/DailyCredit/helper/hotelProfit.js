@@ -105,8 +105,6 @@ const HotelProfit = async (data, db, batch) => {
       data.active,
       newStatus.totalIncome ? newStatus.totalIncome : 0
     );
-
-    console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in HotelProfit:", error);
     throw error;

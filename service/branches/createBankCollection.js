@@ -1,27 +1,3 @@
-// // createBankCollection.js
-// const admin = require("../../config/firebase-admin");
-
-// /**
-//  * Create a Bank collection if it doesn't exist.
-//  * @param {string} documentId - The document ID.
-//  * @returns {Promise<void>} A Promise that resolves when the operation is complete.
-//  */
-// const createBankCollection = async (documentId) => {
-//   const db = admin.firestore();
-//   const bankCollectionRef = db.collection("Bank").doc(documentId);
-//   const bankDocumentSnapshot = await bankCollectionRef.get();
-
-//   if (!bankDocumentSnapshot.exists) {
-//     return bankCollectionRef.set({
-//       withdrawal: 0,
-//       deposit: 0,
-//       total: 0,
-//     });
-//   }
-// };
-
-// module.exports = createBankCollection;
-
 const createBankCollection = async (db, batch, branchId) => {
   try {
     if (!branchId) {

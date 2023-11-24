@@ -69,7 +69,6 @@ const ExpenseExportTable = async (req, res) => {
       return item;
     });
 
-    // console.log(finalresult);
     const reorderedArray = finalresult.map((item) => ({
       Name: item.Name,
       Amount: item.Amount,

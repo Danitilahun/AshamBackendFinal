@@ -8,7 +8,6 @@ const deleteDocumentsMatchingBranchId = require("../../service/utils/deleteDocum
 
 /**
  * Creates a new sheet with multiple steps.
- *
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @returns {Promise<void>} A promise that resolves when the sheet is successfully created.
@@ -95,7 +94,6 @@ const ChangeSheetStatus = async (req, res) => {
     );
 
     const totalCredit = await getDocumentDataById("totalCredit", data.branchId);
-    console.log(totalCredit, "totalCredit");
     await updateOrCreateFieldsInDocument(
       db,
       batch,

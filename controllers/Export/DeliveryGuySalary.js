@@ -10,7 +10,6 @@ const getDocumentDataById = require("../../service/utils/getDocumentDataById");
 const ExportDeliveryGuySalaryTable = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
 
     if (!data) {
       return res.status(400).json({
@@ -39,7 +38,6 @@ const ExportDeliveryGuySalaryTable = async (req, res) => {
       });
     }
 
-    console.log(FileToExport);
     const objectKeys = [];
     for (const key in FileToExport) {
       if (typeof FileToExport[key] === "object") {
@@ -47,11 +45,9 @@ const ExportDeliveryGuySalaryTable = async (req, res) => {
       }
     }
 
-    console.log(objectKeys);
-
     // Remove 'totalCredit' property from each object
     const dataWithoutTotalCredit = objectKeys.map((item) => {
-      const { totalCredit, ...rest } = item;
+      const { ...rest } = item;
       return rest;
     });
 
@@ -72,6 +68,7 @@ const ExportDeliveryGuySalaryTable = async (req, res) => {
       "bonus",
       "holidayBonus",
       "penality",
+      "totalCredit",
       "total",
     ];
 
@@ -103,14 +100,11 @@ const ExportDeliveryGuySalaryTable = async (req, res) => {
 
     // Find the object with name "total"
     const totalObject = finalresult.find((item) => item.Name === "total");
-    console.log(totalObject);
     // Remove the object with name "total" from the array
     const filteredResult = finalresult.filter((item) => item.Name !== "total");
-    console.log(filteredResult);
     // Push the "total" object to the end of the array
     filteredResult.push(totalObject);
 
-    console.log("finalresult", filteredResult);
     // Respond with a success message
     res.status(200).json({
       data: filteredResult,
@@ -118,7 +112,6 @@ const ExportDeliveryGuySalaryTable = async (req, res) => {
     });
   } catch (error) {
     // Handle any errors that occur during the operation
-    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -37,7 +37,6 @@ const CardFeeReport = async (req, res) => {
     }
 
     // Logging the received data
-    console.log(data);
     data.amount = data.price;
     data.total = data.price;
     data.gain = data.price;
@@ -112,14 +111,12 @@ const CardFeeReport = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {
       await updateCalculator(data.active, newTotalCredit?.total, db, batch);
     }
 
-    console.log("data.price", data.price);
     // Commit the batch updates
     await batch.commit();
 

@@ -16,15 +16,12 @@ const admin = require("../../../config/firebase-admin");
 const createPenality = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
 
     if (!data) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Request body is missing or empty.Please refresh your browser and try again.",
-        });
+      return res.status(400).json({
+        message:
+          "Request body is missing or empty.Please refresh your browser and try again.",
+      });
     }
 
     // Create Firestore database instance

@@ -16,7 +16,6 @@ const batch = db.batch(); // Create a Firestore batch
 const AsbezaTable = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
     // return;
 
     if (!data) {
@@ -33,7 +32,6 @@ const AsbezaTable = async (req, res) => {
       });
     }
 
-    console.log(data.clear === false, data.clear === true);
     let FileToExport;
 
     if (data.clear) {
@@ -46,7 +44,6 @@ const AsbezaTable = async (req, res) => {
       FileToExport = await getDocumentsByBranchId(data.file, data.branchId);
     }
 
-    console.log(FileToExport);
     const objectKeys = [];
     for (const key in FileToExport) {
       if (typeof FileToExport[key] === "object") {
@@ -80,8 +77,6 @@ const AsbezaTable = async (req, res) => {
       ...obj,
       order: obj.order.join(", "),
     }));
-
-    console.log(transformedArray);
 
     // Define the desired order of properties
     const propertyOrder = [
@@ -133,8 +128,6 @@ const AsbezaTable = async (req, res) => {
       Order: item.Order,
       AdditionalInfo: item.AdditionalInfo,
     }));
-
-    console.log(reorderedArray);
 
     // Respond with a success message
     res.status(200).json({

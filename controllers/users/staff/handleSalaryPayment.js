@@ -21,7 +21,6 @@ const HandleStaffSalaryPayment = async (req, res) => {
     // Step 1: Extract delivery guy ID from the request parameters
     const { id } = req.params;
     const updatedData = req.body;
-    console.log(updatedData);
     const branch = await getDocumentDataById("branches", updatedData.branchId);
     if (!branch.active) {
       return res.status(400).json({

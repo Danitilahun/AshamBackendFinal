@@ -108,7 +108,6 @@ const completeTask = async (req, res) => {
       date,
       "Assigned"
     );
-    console.log(AsbezaCount, CardCount, WaterCount, WifiCount);
     const total = AsbezaCount + CardCount + WaterCount + WifiCount;
     if (total == 0) {
       return res.status(200).json({
@@ -132,10 +131,8 @@ const completeTask = async (req, res) => {
       WifiCount,
       WaterCount
     );
-    console.log("result", result);
     const totalExp = result[0];
     const oldSalary = result[1];
-    console.log(totalExp, oldSalary);
     const companyGain = await getSingleDocFromCollection("companyGain");
 
     if (!companyGain) {

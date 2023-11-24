@@ -38,7 +38,6 @@ const createStaff = async (req, res) => {
     }
 
     fields.salary = parseInt(fields.salary);
-    console.log(fields);
     // Step 2: Generate a unique identifier (UUID)
     let uuid = UUID();
 

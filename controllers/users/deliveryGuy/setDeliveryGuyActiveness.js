@@ -17,7 +17,6 @@ const setDeliveryGuyActiveness = async (req, res) => {
 
   const { active, branchId, deliveryManId, deliveryGuyName } = req.body;
   try {
-    // console.log(active, branchId, deliveryManId, deliveryGuyName);
     // Wrap the entire function in a setTimeout with a one-minute delay
     await updateDeliveryGuyActiveness(deliveryManId, active, db, batch);
 

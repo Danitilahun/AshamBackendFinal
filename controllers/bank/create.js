@@ -40,7 +40,6 @@ const CreateBank = async (req, res) => {
       parseInt(data.amount)
     );
 
-    console.log(bank);
     // Push the transaction data to a field array within the batch
     await pushToFieldArray(
       db,

@@ -30,7 +30,6 @@ const CreateCompanyGainPrice = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
-    console.log(data);
     const db = admin.firestore();
     const pricesCollection = db.collection("companyGain");
     await pricesCollection.add(data);
@@ -43,12 +42,10 @@ const CreateCompanyGainPrice = async (req, res) => {
 
 const updatePrice = async (req, res) => {
   if (!req.body)
-    return res
-      .status(400)
-      .json({
-        message:
-          "Request body is missing or empty.Please refresh your browser and try again.",
-      });
+    return res.status(400).json({
+      message:
+        "Request body is missing or empty.Please refresh your browser and try again.",
+    });
   try {
     const data = req.body;
     await updateDocumentFields("prices", data);
@@ -60,12 +57,10 @@ const updatePrice = async (req, res) => {
 };
 const updateCompanyGainPrice = async (req, res) => {
   if (!req.body)
-    return res
-      .status(400)
-      .json({
-        message:
-          "Request body is missing or empty.Please refresh your browser and try again.",
-      });
+    return res.status(400).json({
+      message:
+        "Request body is missing or empty.Please refresh your browser and try again.",
+    });
   try {
     const data = req.body;
     await updateDocumentFields("companyGain", data);

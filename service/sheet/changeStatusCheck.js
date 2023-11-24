@@ -7,6 +7,7 @@ const checkPreviousSheet = async (id) => {
         message: `There is no active sheet for this branch.`,
         type: "info",
       };
+
     const prevSheet = await getDocumentDataById("sheets", id);
     if (prevSheet && prevSheet.tablecount < 15) {
       return {

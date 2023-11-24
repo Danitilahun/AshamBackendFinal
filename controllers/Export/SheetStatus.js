@@ -136,7 +136,6 @@ const SheetStatusExport = async (req, res) => {
       OwnerName: "Don't have owner",
       Account: "Don't have Account",
     });
-    console.log(resultArray);
 
     res.status(200).json({
       data: resultArray,

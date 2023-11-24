@@ -40,7 +40,6 @@ const createFinance = async (req, res) => {
     fields.credit = 0;
     fields.balance = 0;
     await createUserDocument(uid, fields, imageUrl, "finance", db, batch);
-    // console.log("fields", fields);
     await createBankCollection(db, batch, uid);
     await createCalculatorData(uid, db, batch);
     await createTotalCreditCollection(db, batch, uid);

@@ -91,7 +91,6 @@ const StaffCreditExportTable = async (req, res) => {
       return item;
     });
 
-    console.log(finalresult);
     const reorderedArray = finalresult.map((item) => ({
       EmployeeName: item.EmployeeName,
       Placement: item.Placement,
@@ -104,7 +103,6 @@ const StaffCreditExportTable = async (req, res) => {
     }));
 
     await batch.commit();
-    console.log(reorderedArray);
     // Respond with a success message
     res.status(200).json({
       data: reorderedArray,

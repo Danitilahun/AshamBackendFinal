@@ -17,7 +17,6 @@ const BankExportTable = async (req, res) => {
     }
 
     let FileToExport;
-    // console.log(data.clear === false, data.clear === true);
     if (data.clear) {
       FileToExport = await getDocumentByBranchAndThenDelete(
         "Bank",
@@ -27,7 +26,6 @@ const BankExportTable = async (req, res) => {
     } else {
       FileToExport = await getDocumentsByBranchId("Bank", data.branchId);
     }
-    // console.log(FileToExport);
     if (
       !FileToExport ||
       (Array.isArray(FileToExport) && FileToExport.length === 0) ||
@@ -89,7 +87,6 @@ const BankExportTable = async (req, res) => {
       return item;
     });
 
-    console.log(finalresult);
     const reorderedArray = finalresult.map((item) => ({
       BankName: item.BankName,
       TransactionType: item.TransactionType,
@@ -117,7 +114,6 @@ const BankExportTable = async (req, res) => {
     });
 
     // await batch.commit();
-    console.log(reorderedArray);
     // Respond with a success message
     res.status(200).json({
       data: reorderedArray,

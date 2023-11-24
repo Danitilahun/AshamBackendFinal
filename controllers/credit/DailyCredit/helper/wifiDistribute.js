@@ -126,8 +126,6 @@ const wifiDistribute = async (data, db, batch) => {
     //     batch
     //   );
     // }
-
-    console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in wifiDistribute:", error);
     throw error;

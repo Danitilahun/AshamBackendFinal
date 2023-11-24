@@ -32,8 +32,6 @@ const editCredit = async (req, res) => {
       });
     }
 
-    console.log(updatedData);
-
     // Edit the existing credit document in the "CustomerCredit" collection within the batch
     const creditRef = db.collection("CustomerCredit").doc(creditId);
     batch.update(creditRef, updatedData);

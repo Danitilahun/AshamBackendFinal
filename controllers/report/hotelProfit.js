@@ -32,7 +32,6 @@ const HotelProfitReport = async (req, res) => {
       });
     }
     // Logging the received data
-    console.log(data);
     data.reason = "hotelProfit";
     data.total = data.amount;
     data.gain = data.amount;

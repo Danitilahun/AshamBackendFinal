@@ -42,8 +42,6 @@ const WaterTable = async (req, res) => {
       FileToExport = await getDocumentsByBranchId(data.file, data.branchId);
     }
 
-    console.log(FileToExport);
-
     const objectKeys = [];
     for (const key in FileToExport) {
       if (typeof FileToExport[key] === "object") {

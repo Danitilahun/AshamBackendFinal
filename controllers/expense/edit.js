@@ -17,7 +17,6 @@ const editExpense = async (req, res) => {
     const batch = db.batch();
     // Get document ID and updated data from the request body
     const updatedData = req.body;
-    console.log(updatedData);
     const { id } = req.params;
     if (!id || !updatedData) {
       return res.status(400).json({

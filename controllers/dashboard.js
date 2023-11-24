@@ -12,7 +12,6 @@ const createDashboard = async (req, res) => {
       BranchIncome: 0,
       BranchExpense: 0,
     }));
-    console.log(branchData);
     const dashboardData = {
       totalBudget: 0,
       totalEmployees: 0,
@@ -30,16 +29,14 @@ const createDashboard = async (req, res) => {
       ],
     };
 
-    console.log(dashboardData);
     const dashboardDocRef = await db.collection("dashboard").add(dashboardData);
-    console.log("Dashboard document created with ID:", dashboardDocRef.id);
 
     return res.status(201).json({
       message: "Dashboard document created successfully",
       docId: dashboardDocRef.id,
     });
   } catch (error) {
-    console.error("Error creating dashboard document:", error);
+    console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -78,7 +75,6 @@ const createBranchData = async (req, res) => {
 
       dataToBeAdded[branchId] = newData;
     });
-    console.log(dataToBeAdded);
     // Add the collected data to the "branchInfo" collection
     const branchInfoRef = db.collection("branchInfo");
     await branchInfoRef.add(dataToBeAdded);
@@ -87,7 +83,7 @@ const createBranchData = async (req, res) => {
       .status(200)
       .send("Data added to branchInfo collection successfully");
   } catch (error) {
-    console.error("Error adding data:", error);
+    console.error(error);
     return res.status(500).send("Error adding data");
   }
 };

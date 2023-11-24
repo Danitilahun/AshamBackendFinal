@@ -45,7 +45,6 @@ const WifiDistributeReport = async (req, res) => {
     data.source = "Report";
     const oneData = Object.assign({}, data);
     oneData.gain = data.amount;
-    console.log(data);
     await createDocument("DailyCredit", oneData, db, batch);
     data.reason = "wifiDistributeGain";
     data.CHECK_SOURCE = generateCustomID("wifiDistribute_Report_Reason");
@@ -56,7 +55,6 @@ const WifiDistributeReport = async (req, res) => {
       data.numberOfCard * companyGain.wifi_distribute_gain
     );
     // Creating a new credit document in the "CardFee" collection
-    console.log(data);
     const id = await createDocument("wifiDistribute", data, db, batch);
     await createDocumentWithCustomId("DailyCredit", id, data, db, batch);
     // Update the total credit and retrieve the updated total
@@ -131,7 +129,6 @@ const WifiDistributeReport = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {

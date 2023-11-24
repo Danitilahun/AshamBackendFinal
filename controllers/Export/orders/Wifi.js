@@ -16,7 +16,6 @@ const batch = db.batch(); // Create a Firestore batch
 const WifiTable = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
     if (!data) {
       return res.status(400).json({
         message:
@@ -32,7 +31,6 @@ const WifiTable = async (req, res) => {
     }
 
     // let FileToExport;
-    // console.log(data.clear === false, data.clear === true);
     let FileToExport;
 
     if (data.clear) {
@@ -45,7 +43,6 @@ const WifiTable = async (req, res) => {
       FileToExport = await getDocumentsByBranchId(data.file, data.branchId);
     }
 
-    console.log(FileToExport);
     const objectKeys = [];
     for (const key in FileToExport) {
       if (typeof FileToExport[key] === "object") {
@@ -115,7 +112,6 @@ const WifiTable = async (req, res) => {
       return item;
     });
 
-    console.log(finalresult);
     const branch = await getDocumentDataById("branches", data.branchId);
     const reorderedArray = finalresult.map((item) => ({
       Name: item.Name,

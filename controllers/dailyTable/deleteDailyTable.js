@@ -28,7 +28,6 @@ const DeleteTable = async (req, res) => {
     if (!tableData) {
       return res.status(404).json({ error: "Table not found." });
     }
-    console.log(tableData.total);
     const hasValueGreaterThanOne = Object.values(tableData.total).some(
       (value) => value > 1
     );
@@ -76,7 +75,6 @@ const DeleteTable = async (req, res) => {
       -1
     );
 
-    // print(manye);
     // Commit the batch
     await batch.commit();
 

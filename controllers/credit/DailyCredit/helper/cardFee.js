@@ -6,7 +6,6 @@ const updateTable = require("../../../../service/utils/updateTable");
 
 const CardFee = async (data, db, batch) => {
   try {
-    console.log(data, "data");
     // First update: Update the "tables" collection with cardFee: 1
     await updateTable(
       db,
@@ -20,7 +19,6 @@ const CardFee = async (data, db, batch) => {
       batch
     );
 
-    console.log(data.activeDailySummery, data.date, "total");
     // Second update: Change the 15 days summary and daily summary tables
     await updateTable(
       db,
@@ -72,7 +70,6 @@ const CardFee = async (data, db, batch) => {
         batch
       );
     }
-    console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in updateDeliveryAndDashboard:", error);
     throw error;

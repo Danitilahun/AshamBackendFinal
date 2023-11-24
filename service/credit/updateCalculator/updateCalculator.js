@@ -1,37 +1,5 @@
 // const admin = require("../../../config/firebase-admin");
 
-// const updateCalculator = async (id, valueToAdd) => {
-//   const db = admin.firestore();
-//   try {
-//     if (!id) {
-//       throw new Error("Document ID cannot be empty.");
-//     }
-//     const docRef = db.collection("Calculator").doc(id);
-//     const docSnapshot = await docRef.get();
-
-//     if (!docSnapshot.exists) {
-//       throw new Error("Document not found");
-//     }
-//     const data = docSnapshot.data();
-//     const newActual = data.actual + data.totalCredit - valueToAdd;
-//     const newBalance = data.sum - newActual;
-
-//     await docRef.update({
-//       actual: newActual,
-//       balance: newBalance,
-//       totalCredit: valueToAdd,
-//     });
-
-//     console.log("Calculator updated successfully");
-//   } catch (error) {
-//     console.log("Error updating Calculator in credit:", error);
-//   }
-// };
-
-// module.exports = updateCalculator;
-
-// const admin = require("../../../config/firebase-admin");
-
 const updateCalculator = async (id, valueToAdd, db, batch) => {
   try {
     if (!id) {

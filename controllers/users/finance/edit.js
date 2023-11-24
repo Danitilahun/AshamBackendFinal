@@ -29,7 +29,6 @@ const editFinance = async (req, res) => {
     });
     // Commit the batch updates
     await batch.commit();
-    // console.log(man);
     if (emailChange) {
       await editUserEmail(id, updatedData.email);
     }

@@ -136,7 +136,6 @@ const waterDistribute = async (data, db, batch) => {
     //     batch
     //   );
     // }
-    console.log("Updates completed successfully.");
   } catch (error) {
     console.error("Error in waterDistribute:", error);
     throw error;

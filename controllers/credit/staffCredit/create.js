@@ -11,7 +11,6 @@ const updateCalculator = require("../../../service/credit/updateCalculator/updat
 const createCredit = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
 
     if (!data || !data.active || !data.branchId || !data.employeeId) {
       return res.status(400).json({

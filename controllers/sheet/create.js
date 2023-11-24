@@ -171,7 +171,6 @@ const createSheet = async (req, res) => {
       );
     }
 
-    // console.log(manye);
     // Commit the batch
     await batch.commit();
 

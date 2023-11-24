@@ -46,7 +46,6 @@ const deleteSheet = async (req, res) => {
     // Step 4: Update the activeSheet in the branches collection
     const branch = await getDocumentDataById("branches", sheetData.branchId);
     if (branch.activeSheet === id) {
-      // console.log(manye);
       await popArrayElement(
         "salaryTable",
         { name: sheetData.name, id: sheetData.active },
@@ -80,7 +79,6 @@ const deleteSheet = async (req, res) => {
       );
     }
 
-    // console.log(manye);
     // Commit the batch to execute all delete operations
     await batch.commit();
     res.status(200).json({ message: "Sheet deleted successfully." });

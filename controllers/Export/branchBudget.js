@@ -15,7 +15,6 @@ const BudgetTable = async (req, res) => {
 
     const db = admin.firestore();
     const batch = db.batch(); // Create a Firestore batch
-    console.log(data);
 
     if (!data) {
       return res.status(400).json({
@@ -43,7 +42,6 @@ const BudgetTable = async (req, res) => {
         message: `No exportable data found. Please ensure you have data to export.`,
       });
     }
-    console.log("here", FileToExport);
 
     const objectKeys = [];
     for (const key in FileToExport) {

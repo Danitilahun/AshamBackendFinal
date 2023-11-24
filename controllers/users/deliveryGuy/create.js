@@ -20,11 +20,9 @@ const admin = require("../../../config/firebase-admin"); // Import Firebase Admi
 
 const createDeliveryGuy = async (req, res) => {
   try {
-    console.log("createDeliveryGuy");
     // Step 1: Parse form data from the request
     const { fields, files } = await parseForm(req);
 
-    console.log(fields);
     if (!fields || !fields.branchId) {
       return res.status(400).json({
         message:
@@ -130,11 +128,11 @@ const createDeliveryGuy = async (req, res) => {
     await updateDashboardTotalEmployees(1, db, batch);
 
     // Commit the batch updates
-    // console.log(man);
     await batch.commit();
     // Step 11: Send a success response
     res.status(200).json({ message: "Delivery guy registration successful!" });
   } catch (error) {
+    console.error(error); // Log the error to the console for debugging purposes
     // Step 12: Handle errors and send an error response
     res.status(500).json({
       message: error.message,

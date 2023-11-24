@@ -111,7 +111,6 @@ const DaySummeryTable = async (req, res) => {
     // Sort the array based on the "date" field
     filteredResult.sort(compareDates);
 
-    console.log(filteredResult);
     // Respond with a success message
     res.status(200).json({
       data: filteredResult,

@@ -28,8 +28,6 @@ const editStaff = async (req, res) => {
     const { nameChange, salaryChange, difference, active, ...updatedData } =
       req.body;
 
-    console.log(req.body);
-
     // Step 3: Edit the delivery guy document in the "deliveryguy" collection
     await editDocument(db, batch, "staff", id, updatedData);
 

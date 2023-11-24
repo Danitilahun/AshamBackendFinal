@@ -88,7 +88,6 @@ const BranchCustomerTable = async (req, res) => {
       return item;
     });
 
-    console.log(finalresult);
     const reorderedArray = finalresult.map((item) => ({
       Name: item.Name,
       Phone: item.Phone,

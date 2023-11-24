@@ -14,7 +14,6 @@ const updateSheetStatus = require("../../../../../service/utils/updateSheetStatu
 const AllStaffBonus = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
     if (!data) {
       throw new Error(
         "Request body is missing or empty.Please refresh your browser and try again."
@@ -31,7 +30,6 @@ const AllStaffBonus = async (req, res) => {
       batch
     );
 
-    console.log(newSalaryTable);
     if (newSalaryTable) {
       // Update sheet status with new SalaryType value
       const newStatus = await updateSheetStatus(

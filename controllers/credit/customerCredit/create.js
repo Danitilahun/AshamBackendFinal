@@ -12,7 +12,6 @@ const createDocument = require("../../../service/mainCRUD/createDoc");
 const createCredit = async (req, res) => {
   try {
     const data = req.body;
-    // console.log(data);
     if (!data || !data.branchId || !data.active) {
       return res.status(400).json({
         message:
@@ -37,7 +36,6 @@ const createCredit = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {

@@ -23,7 +23,6 @@ const handlePayController = async (req, res) => {
     const deliveryGuySnapshot = await deliveryGuyRef.get();
     if (deliveryGuySnapshot.exists) {
       if (deliveryGuySnapshot.data().dailyCredit > 0) {
-        console.log("here");
         credit = await swapCredit(
           id,
           deliveryGuySnapshot.data(),

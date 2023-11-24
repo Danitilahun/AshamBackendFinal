@@ -29,7 +29,6 @@ const AsbezaProfitReport = async (req, res) => {
     // Extracting data from the request body and adding a timestamp
     const data = req.body;
     // Logging the received data
-    console.log(data);
 
     // Check if 'data' object or 'data.id' is null
     if (!data || !data.id) {
@@ -109,7 +108,6 @@ const AsbezaProfitReport = async (req, res) => {
         type: "error",
       });
     }
-    console.log(newIncome);
     // Getting cardFee information from the prices collection
 
     // Updating sheet status with totalDeliveryGuySalary

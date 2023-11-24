@@ -55,15 +55,11 @@ const deleteCredit = async (req, res) => {
       batch.update(deliveryGuyRef, {
         dailyCredit: admin.firestore.FieldValue.increment(newCreditAmount),
       });
-      // Success handling here, after the batch update is committed
-      console.log("Credit update successful");
       // Send a response or perform any other actions as needed
     } else {
       // The delivery guy document does not exist, handle the error here
       throw new Error("Delivery guy does not exist");
     }
-
-    // console.log(creditData);
 
     const CardFeeCheck = generateCustomID("cardFee_Report_Reason");
     const CardDistributeCheck = generateCustomID(

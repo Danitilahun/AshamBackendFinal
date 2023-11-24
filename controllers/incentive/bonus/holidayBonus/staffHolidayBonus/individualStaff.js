@@ -19,7 +19,6 @@ const BonusToIndividualStaff = async (req, res) => {
 
   try {
     const data = req.body;
-    console.log(data);
 
     if (!data) {
       throw new Error(

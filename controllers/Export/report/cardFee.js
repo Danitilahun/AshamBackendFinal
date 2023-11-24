@@ -90,7 +90,6 @@ const CardFeeTable = async (req, res) => {
       return item;
     });
 
-    console.log(finalresult);
     const reorderedArray = finalresult.map((item) => ({
       DeliveryguyName: item.DeliveryguyName,
       NumberOfCard: item.NumberOfCard,
@@ -101,7 +100,6 @@ const CardFeeTable = async (req, res) => {
     }));
 
     await batch.commit();
-    console.log(reorderedArray);
     // Respond with a success message
     res.status(200).json({
       data: reorderedArray,

@@ -22,7 +22,6 @@ const createCredit = async (req, res) => {
           "Request body is missing or empty.Please refresh your browser and try again.",
       });
     }
-    console.log(data);
     data.source = "Credit";
     data.total = parseFloat(data.amount);
 
@@ -48,7 +47,6 @@ const createCredit = async (req, res) => {
       db,
       batch
     );
-    // console.log("new total ", newTotalCredit.total);
 
     // Update the calculator with the new total credit
     if (newTotalCredit && newTotalCredit?.total) {
@@ -61,7 +59,6 @@ const createCredit = async (req, res) => {
     res.status(200).json({ message: `DailyCredit Created successfully.` });
   } catch (error) {
     console.error(error);
-
     // Respond with an error message
     res.status(500).json({ message: error.message });
   }

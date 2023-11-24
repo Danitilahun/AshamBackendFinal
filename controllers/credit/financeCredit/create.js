@@ -18,7 +18,6 @@ const createFinanceCredit = async (req, res) => {
   try {
     // Get data from the request body
     const data = req.body;
-    console.log(data);
     if (!data || !data.branchId) {
       return res.status(400).json({
         message:
